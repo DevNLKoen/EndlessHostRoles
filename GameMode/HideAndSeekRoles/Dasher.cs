@@ -1,6 +1,6 @@
 ﻿using AmongUs.GameOptions;
 
-namespace EHR.GameMode.HideAndSeekRoles
+namespace TOZ.GameMode.HideAndSeekRoles
 {
     public class Dasher : RoleBase, IHideAndSeekRole
     {

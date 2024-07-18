@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using EHR.Crewmate;
-using EHR.Modules;
-using EHR.Neutral;
-using EHR.Patches;
+using TOZ.Crewmate;
+using TOZ.Modules;
+using TOZ.Neutral;
+using TOZ.Patches;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Impostor;
+namespace TOZ.Impostor;
 
 public class BallLightning : RoleBase
 {

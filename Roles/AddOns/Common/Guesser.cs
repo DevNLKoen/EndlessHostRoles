@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.AddOns.Common
+namespace TOZ.AddOns.Common
 {
     internal class Guesser : IAddon
     {

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Romantic : RoleBase
 {

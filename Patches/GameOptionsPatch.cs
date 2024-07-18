@@ -2,7 +2,7 @@ using System;
 using AmongUs.GameOptions;
 using HarmonyLib;
 
-namespace EHR.Patches;
+namespace TOZ.Patches;
 
 [HarmonyPatch(typeof(GameOptionsManager), nameof(GameOptionsManager.SwitchGameMode))]
 class SwitchGameModePatch

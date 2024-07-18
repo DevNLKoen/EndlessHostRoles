@@ -2,14 +2,14 @@
 using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
-using static EHR.Utils;
+using static TOZ.Options;
+using static TOZ.Translator;
+using static TOZ.Utils;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class Druid : RoleBase
     {

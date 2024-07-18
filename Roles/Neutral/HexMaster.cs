@@ -1,7 +1,7 @@
-using EHR.Impostor;
-using static EHR.Options;
+using TOZ.Impostor;
+using static TOZ.Options;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class HexMaster : ISettingHolder
 {

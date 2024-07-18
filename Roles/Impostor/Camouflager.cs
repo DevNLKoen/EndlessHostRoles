@@ -1,6 +1,6 @@
 ﻿using AmongUs.GameOptions;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     public class Camouflager : RoleBase
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AmongUs.GameOptions;
-using EHR.AddOns.GhostRoles;
-using EHR.Neutral;
+using TOZ.AddOns.GhostRoles;
+using TOZ.Neutral;
 using HarmonyLib;
 using UnityEngine;
 
-namespace EHR.Modules
+namespace TOZ.Modules
 {
     internal static class GhostRolesManager
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using AmongUs.GameOptions;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
-using static EHR.Utils;
+using static TOZ.Options;
+using static TOZ.Translator;
+using static TOZ.Utils;
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Sprayer : RoleBase
     {

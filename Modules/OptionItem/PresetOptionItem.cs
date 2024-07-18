@@ -1,4 +1,4 @@
-namespace EHR;
+namespace TOZ;
 
 public class PresetOptionItem(int defaultValue, TabGroup tab) : OptionItem(0, "Preset", defaultValue, tab, true)
 {

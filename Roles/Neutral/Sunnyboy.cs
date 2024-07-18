@@ -1,6 +1,6 @@
 ﻿using AmongUs.GameOptions;
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Sunnyboy : RoleBase
     {

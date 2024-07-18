@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Psychic : RoleBase
 {

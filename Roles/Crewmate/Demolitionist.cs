@@ -1,7 +1,7 @@
-﻿using EHR.Modules;
-using static EHR.Options;
+﻿using TOZ.Modules;
+using static TOZ.Options;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Demolitionist : ISettingHolder
     {

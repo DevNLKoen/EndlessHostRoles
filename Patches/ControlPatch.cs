@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EHR.Modules;
+using TOZ.Modules;
 using HarmonyLib;
 using Rewired;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(ControllerManager), nameof(ControllerManager.Update))]
 internal class ControllerManagerUpdatePatch

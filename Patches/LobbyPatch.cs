@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(LobbyBehaviour), nameof(LobbyBehaviour.FixedUpdate))]
 public static class LobbyFixedUpdatePatch
@@ -20,7 +20,7 @@ public static class LobbyFixedUpdatePatch
                 Paint.name = "Lobby Paint";
                 Paint.transform.localPosition = new(0.042f, -2.59f, -10.5f);
                 SpriteRenderer renderer = Paint.GetComponent<SpriteRenderer>();
-                renderer.sprite = Utils.LoadSprite("EHR.Resources.Images.LobbyPaint.png", 290f);
+                renderer.sprite = Utils.LoadSprite("TOZ.Resources.Images.LobbyPaint.png", 290f);
             }
         }
     }

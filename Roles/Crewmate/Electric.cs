@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Electric : RoleBase
     {

@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
-namespace EHR;
+namespace TOZ;
 
 public static class Translator
 {
@@ -28,8 +28,8 @@ public static class Translator
     {
         try
         {
-            // Get the directory containing the JSON files (e.g., EHR.Resources.Lang)
-            string jsonDirectory = "EHR.Resources.Lang";
+            // Get the directory containing the JSON files (e.g., TOZ.Resources.Lang)
+            string jsonDirectory = "TOZ.Resources.Lang";
             // Get the assembly containing the resources
             var assembly = Assembly.GetExecutingAssembly();
             string[] jsonFileNames = GetJsonFileNames(assembly, jsonDirectory);

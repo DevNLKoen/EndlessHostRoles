@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.Modules;
+using TOZ.Neutral;
 using HarmonyLib;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class ParityCop : RoleBase
 {

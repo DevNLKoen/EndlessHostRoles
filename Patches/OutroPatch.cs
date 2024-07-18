@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.AddOns.Common;
-using EHR.AddOns.GhostRoles;
-using EHR.Crewmate;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.AddOns.Common;
+using TOZ.AddOns.GhostRoles;
+using TOZ.Crewmate;
+using TOZ.Modules;
+using TOZ.Neutral;
 using HarmonyLib;
 using TMPro;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
 class EndGamePatch

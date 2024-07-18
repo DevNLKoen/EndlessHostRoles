@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AmongUs.GameOptions;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Sheriff : RoleBase
 {

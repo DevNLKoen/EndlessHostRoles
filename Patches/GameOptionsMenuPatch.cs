@@ -1,12 +1,12 @@
 using System;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using EHR.Patches;
+using TOZ.Patches;
 using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 // Credit: https://github.com/Yumenopai/TownOfHost_Y
 
@@ -675,8 +675,8 @@ public class GameSettingMenuPatch
             button.activeTextColor = button.inactiveTextColor = Color.white;
             button.selectedTextColor = new(0.7f, 0.7f, 0.7f);
 
-            // var activeButton = Utils.LoadSprite($"EHR.Resources.Images.TabIcon_{tab}.png", 100f);
-            // button.inactiveSprites.GetComponent<SpriteRenderer>().sprite = activeButton /*Utils.LoadSprite($"EHR.Resources.Tab_Small_{tab}.png", 100f)*/;
+            // var activeButton = Utils.LoadSprite($"TOZ.Resources.Images.TabIcon_{tab}.png", 100f);
+            // button.inactiveSprites.GetComponent<SpriteRenderer>().sprite = activeButton /*Utils.LoadSprite($"TOZ.Resources.Tab_Small_{tab}.png", 100f)*/;
             // button.activeSprites.GetComponent<SpriteRenderer>().sprite = activeButton;
             // button.selectedSprites.GetComponent<SpriteRenderer>().sprite = activeButton;
             Color color = tab switch

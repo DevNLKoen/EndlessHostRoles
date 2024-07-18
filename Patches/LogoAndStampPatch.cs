@@ -2,9 +2,9 @@
 using BepInEx.Unity.IL2CPP.Utils;
 using HarmonyLib;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR;
+namespace TOZ;
 
 // Credit：https://github.com/ykundesu/SuperNewRoles/blob/master/SuperNewRoles/Patches/LogoAndStampPatch.cs
 [HarmonyPatch]

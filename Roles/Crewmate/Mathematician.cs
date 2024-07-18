@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Mathematician : RoleBase
     {

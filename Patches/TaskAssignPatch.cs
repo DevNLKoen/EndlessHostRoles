@@ -1,13 +1,13 @@
 using AmongUs.GameOptions;
-using EHR.AddOns.Crewmate;
-using EHR.AddOns.GhostRoles;
-using EHR.Impostor;
-using EHR.Modules;
+using TOZ.AddOns.Crewmate;
+using TOZ.AddOns.GhostRoles;
+using TOZ.Impostor;
+using TOZ.Modules;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Random = UnityEngine.Random;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.AddTasksFromList))]
 class AddTasksFromListPatch

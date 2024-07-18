@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AmongUs.GameOptions;
-using EHR.AddOns.Crewmate;
-using EHR.AddOns.Impostor;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Neutral;
+using TOZ.AddOns.Crewmate;
+using TOZ.AddOns.Impostor;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Neutral;
 using HarmonyLib;
 using Hazel;
 using InnerNet;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 public enum CustomRPC
 {
@@ -43,7 +43,7 @@ public enum CustomRPC
     ShowChat,
     SyncLobbyTimer,
 
-    // EHR
+    // TOZ
     AntiBlackout,
     PlayCustomSound,
     SetKillTimer,
@@ -392,7 +392,7 @@ internal class RPCHandlerPatch
             case CustomRPC.SyncSentry:
             {
                 byte id = reader.ReadByte();
-                if (Main.PlayerStates[id].Role is not EHR.Impostor.Sentry sentry) break;
+                if (Main.PlayerStates[id].Role is not TOZ.Impostor.Sentry sentry) break;
                 sentry.MonitoredRoom = Utils.GetPlayerById(id).GetPlainShipRoom();
                 break;
             }

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Neutral;
+using TOZ.Neutral;
 using HarmonyLib;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 //参考元 : https://github.com/ykundesu/SuperNewRoles/blob/master/SuperNewRoles/Mode/SuperHostRoles/BlockTool.cs
 class DisableDevice

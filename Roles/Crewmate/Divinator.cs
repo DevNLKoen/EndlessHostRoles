@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Divinator : RoleBase
 {

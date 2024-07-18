@@ -1,6 +1,6 @@
-﻿using EHR.Modules;
+﻿using TOZ.Modules;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class Adrenaline : RoleBase
     {

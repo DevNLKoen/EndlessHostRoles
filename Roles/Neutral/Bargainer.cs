@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
 // ReSharper disable PossibleMultipleEnumeration
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Bargainer : RoleBase
     {

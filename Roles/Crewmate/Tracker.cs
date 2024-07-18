@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class Scout : RoleBase
     {

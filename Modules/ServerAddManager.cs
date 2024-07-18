@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using Il2CppInterop.Runtime.InteropTypes;
 using StringComparison = Il2CppSystem.StringComparison;
 
-namespace EHR;
+namespace TOZ;
 
 public static class ServerAddManager
 {

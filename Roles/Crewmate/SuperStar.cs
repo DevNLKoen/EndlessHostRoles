@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class SuperStar : RoleBase
     {

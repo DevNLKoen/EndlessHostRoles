@@ -1,4 +1,4 @@
-﻿namespace EHR.AddOns.Common
+﻿namespace TOZ.AddOns.Common
 {
     public class Onbound : IAddon
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Impostor;
+namespace TOZ.Impostor;
 
 public class Morphling : RoleBase
 {

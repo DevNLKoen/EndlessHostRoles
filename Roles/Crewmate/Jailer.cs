@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Jailor : RoleBase
 {

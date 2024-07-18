@@ -1,6 +1,6 @@
-﻿using static EHR.Options;
+﻿using static TOZ.Options;
 
-namespace EHR.AddOns.Impostor
+namespace TOZ.AddOns.Impostor
 {
     internal class Madmate : IAddon
     {

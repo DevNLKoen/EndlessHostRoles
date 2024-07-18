@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using EHR.Patches;
+using TOZ.Patches;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class Blackmailer : RoleBase
     {

@@ -2,11 +2,11 @@
 using System.Linq;
 using AmongUs.GameOptions;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
-using static EHR.Utils;
+using static TOZ.Options;
+using static TOZ.Translator;
+using static TOZ.Utils;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class PatrollingState(byte sentinelId, int patrolDuration, float patrolRadius, PlayerControl sentinel = null, bool isPatrolling = false, Vector2? startingPosition = null, long patrolStartTimeStamp = 0)
     {

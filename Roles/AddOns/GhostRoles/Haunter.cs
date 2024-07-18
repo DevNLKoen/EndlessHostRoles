@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 
-namespace EHR.AddOns.GhostRoles
+namespace TOZ.AddOns.GhostRoles
 {
     internal class Haunter : IGhostRole, ISettingHolder
     {

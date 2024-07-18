@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Benefactor : RoleBase
     {

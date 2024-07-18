@@ -2,7 +2,7 @@
 using BepInEx.Configuration;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 //来源：https://github.com/tukasa0001/TownOfHost/pull/1265
 public class ClientOptionItem
@@ -64,8 +64,8 @@ public class ClientOptionItem
 
                 var modOptionsButton = Object.Instantiate(mouseMoveToggle, generalTab);
                 modOptionsButton.transform.localPosition = leaveButton?.transform?.localPosition ?? new(0f, -2.4f, 1f);
-                modOptionsButton.name = "EHROptions";
-                modOptionsButton.Text.text = Translator.GetString("EHROptions");
+                modOptionsButton.name = "TOZOptions";
+                modOptionsButton.Text.text = Translator.GetString("TOZOptions");
                 modOptionsButton.Background.color = new Color32(255, 192, 203, byte.MaxValue);
                 var modOptionsPassiveButton = modOptionsButton.GetComponent<PassiveButton>();
                 modOptionsPassiveButton.OnClick = new();

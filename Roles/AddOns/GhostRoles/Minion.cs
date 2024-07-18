@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EHR.AddOns.GhostRoles
+namespace TOZ.AddOns.GhostRoles
 {
     internal class Minion : IGhostRole, ISettingHolder
     {

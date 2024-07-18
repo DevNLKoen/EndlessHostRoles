@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     public class Echo : RoleBase
     {

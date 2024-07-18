@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using AmongUs.GameOptions;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Impostor;
+namespace TOZ.Impostor;
 
 public class Hacker : RoleBase
 {

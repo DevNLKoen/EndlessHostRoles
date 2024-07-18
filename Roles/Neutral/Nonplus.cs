@@ -1,4 +1,4 @@
-﻿namespace EHR.Neutral
+﻿namespace TOZ.Neutral
 {
     public class Nonplus : RoleBase
     {

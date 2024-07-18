@@ -1,6 +1,6 @@
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Chameleon : ISettingHolder
 {

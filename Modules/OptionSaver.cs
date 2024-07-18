@@ -2,14 +2,14 @@
 using System.IO;
 using System.Text.Json;
 
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 // https://github.com/tukasa0001/TownOfHost/blob/main/Modules/OptionSaver.cs
 public static class OptionSaver
 {
-    private static readonly DirectoryInfo SaveDataDirectoryInfo = new("./EHR_DATA/SaveData/");
+    private static readonly DirectoryInfo SaveDataDirectoryInfo = new("./TOZ_DATA/SaveData/");
     private static readonly FileInfo OptionSaverFileInfo = new($"{SaveDataDirectoryInfo.FullName}/Options.json");
-    private static readonly LogHandler Logger = EHR.Logger.Handler(nameof(OptionSaver));
+    private static readonly LogHandler Logger = TOZ.Logger.Handler(nameof(OptionSaver));
     private static readonly FileInfo DefaultPresetFileInfo = new($"{SaveDataDirectoryInfo.FullName}/DefaultPreset.txt");
     private static int DefaultPresetNumber;
 
@@ -55,12 +55,12 @@ public static class OptionSaver
             {
                 if (!singleOptions.TryAdd(option.Id, option.SingleValue))
                 {
-                    EHR.Logger.Warn($"Duplicate SingleOption ID: {option.Id}", "Options Load");
+                    TOZ.Logger.Warn($"Duplicate SingleOption ID: {option.Id}", "Options Load");
                 }
             }
             else if (!presetOptions.TryAdd(option.Id, option.AllValues))
             {
-                EHR.Logger.Warn($"Duplicate preset option ID: {option.Id}", "Options Load");
+                TOZ.Logger.Warn($"Duplicate preset option ID: {option.Id}", "Options Load");
             }
         }
 

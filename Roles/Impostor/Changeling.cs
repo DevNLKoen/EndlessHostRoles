@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
-using static EHR.Options;
+using TOZ.Modules;
+using static TOZ.Options;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class Changeling : RoleBase
     {
@@ -49,11 +49,11 @@ namespace EHR.Impostor
                 IEnumerable<CustomRoles> result = AvailableRoles.GetValue() switch
                 {
                     0 => allRoles,
-                    1 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Impostor or CustomRoles.ImpostorEHR),
-                    2 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Shapeshifter or CustomRoles.ShapeshifterEHR),
+                    1 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Impostor or CustomRoles.ImpostorTOZ),
+                    2 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Shapeshifter or CustomRoles.ShapeshifterTOZ),
                     3 => allRoles.Where(x => x.GetMode() != 0),
-                    4 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Impostor or CustomRoles.ImpostorEHR && x.GetMode() != 0),
-                    5 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Shapeshifter or CustomRoles.ShapeshifterEHR && x.GetMode() != 0),
+                    4 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Impostor or CustomRoles.ImpostorTOZ && x.GetMode() != 0),
+                    5 => allRoles.Where(x => x.GetVNRole() is CustomRoles.Shapeshifter or CustomRoles.ShapeshifterTOZ && x.GetMode() != 0),
                     _ => allRoles
                 };
 
@@ -86,7 +86,7 @@ namespace EHR.Impostor
             catch (InvalidOperationException)
             {
                 Logger.Error("No roles for Changeling", "Changeling");
-                Utils.GetPlayerById(playerId).RpcSetCustomRole(CustomRoles.ImpostorEHR);
+                Utils.GetPlayerById(playerId).RpcSetCustomRole(CustomRoles.ImpostorTOZ);
             }
         }
 

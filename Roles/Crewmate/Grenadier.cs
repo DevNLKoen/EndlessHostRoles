@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.Modules;
-using static EHR.Options;
+using TOZ.Modules;
+using static TOZ.Options;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Grenadier : RoleBase
     {

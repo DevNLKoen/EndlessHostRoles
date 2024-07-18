@@ -1,9 +1,9 @@
-﻿using EHR.Modules;
-using EHR.Neutral;
+﻿using TOZ.Modules;
+using TOZ.Neutral;
 using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class Scavenger : RoleBase
     {

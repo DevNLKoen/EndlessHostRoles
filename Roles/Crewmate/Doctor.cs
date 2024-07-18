@@ -1,6 +1,6 @@
 ﻿using AmongUs.GameOptions;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Doctor : RoleBase
     {

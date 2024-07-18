@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Marshall : RoleBase
 {

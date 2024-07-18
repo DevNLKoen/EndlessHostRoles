@@ -1,4 +1,4 @@
-﻿namespace EHR.AddOns.Crewmate
+﻿namespace TOZ.AddOns.Crewmate
 {
     public class Finder : IAddon
     {

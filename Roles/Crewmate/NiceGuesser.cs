@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class NiceGuesser : ISettingHolder
     {

@@ -6,20 +6,20 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
-using EHR.AddOns.Common;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.AddOns.Common;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Modules;
+using TOZ.Neutral;
 using HarmonyLib;
 using Hazel;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
 // ReSharper disable InconsistentNaming
 
 
-namespace EHR;
+namespace TOZ;
 
 class Command(string[] commandForms, string arguments, string description, Command.UsageLevels usageLevel, Command.UsageTimes usageTime, Action<ChatController, PlayerControl, string, string[]> action, bool isCanceled, string[] argsDescriptions = null)
 {
@@ -168,7 +168,7 @@ internal static class ChatCommands
     public static bool IsPlayerModerator(string friendCode)
     {
         if (friendCode == "" || friendCode == string.Empty || !Options.ApplyModeratorList.GetBool()) return false;
-        const string friendCodesFilePath = "./EHR_DATA/Moderators.txt";
+        const string friendCodesFilePath = "./TOZ_DATA/Moderators.txt";
         var friendCodes = File.ReadAllLines(friendCodesFilePath);
         return friendCodes.Any(code => code.Contains(friendCode, StringComparison.OrdinalIgnoreCase));
     }
@@ -945,7 +945,7 @@ internal static class ChatCommands
         if (remModPc == null) return;
         var remFc = remModPc.FriendCode;
         if (!IsPlayerModerator(remFc)) Utils.SendMessage(GetString("PlayerNotMod"), player.PlayerId);
-        File.WriteAllLines("./EHR_DATA/Moderators.txt", File.ReadAllLines("./EHR_DATA/Moderators.txt").Where(x => !x.Contains(remFc)));
+        File.WriteAllLines("./TOZ_DATA/Moderators.txt", File.ReadAllLines("./TOZ_DATA/Moderators.txt").Where(x => !x.Contains(remFc)));
         Utils.SendMessage(GetString("PlayerRemovedFromModList"), player.PlayerId);
     }
 
@@ -956,7 +956,7 @@ internal static class ChatCommands
         if (newModPc == null) return;
         var fc = newModPc.FriendCode;
         if (IsPlayerModerator(fc)) Utils.SendMessage(GetString("PlayerAlreadyMod"), player.PlayerId);
-        File.AppendAllText("./EHR_DATA/Moderators.txt", $"\n{fc}");
+        File.AppendAllText("./TOZ_DATA/Moderators.txt", $"\n{fc}");
         Utils.SendMessage(GetString("PlayerAddedToModList"), player.PlayerId);
     }
 
@@ -1899,7 +1899,7 @@ internal class UpdateCharCountPatch
     public static void Postfix(FreeChatInputField __instance)
     {
         int length = __instance.textArea.text.Length;
-        __instance.charCountText.SetText(length <= 0 ? GetString("ThankYouForUsingEHR") : $"{length}/{__instance.textArea.characterLimit}");
+        __instance.charCountText.SetText(length <= 0 ? GetString("ThankYouForUsingTOZ") : $"{length}/{__instance.textArea.characterLimit}");
         __instance.charCountText.enableWordWrapping = false;
         if (length < (AmongUsClient.Instance.AmHost ? 1700 : 250))
             __instance.charCountText.color = Color.black;

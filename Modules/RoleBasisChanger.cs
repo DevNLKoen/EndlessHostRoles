@@ -4,7 +4,7 @@ using Hazel;
 using InnerNet;
 using UnityEngine;
 
-namespace EHR.Modules
+namespace TOZ.Modules
 {
     // https://github.com/Rabek009/MoreGamemodes
     internal static class RoleBasisChanger

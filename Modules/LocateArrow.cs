@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 static class LocateArrow
 {

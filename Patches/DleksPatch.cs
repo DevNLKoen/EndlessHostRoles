@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(GameStartManager))]
 class AllMapIconsPatch

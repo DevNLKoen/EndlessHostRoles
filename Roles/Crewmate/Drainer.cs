@@ -2,9 +2,9 @@
 using System.Linq;
 using AmongUs.GameOptions;
 using HarmonyLib;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class Drainer : RoleBase
     {

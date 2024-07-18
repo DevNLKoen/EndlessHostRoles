@@ -1,4 +1,4 @@
-﻿namespace EHR.Impostor
+﻿namespace TOZ.Impostor
 {
     public class Augmenter : RoleBase
     {

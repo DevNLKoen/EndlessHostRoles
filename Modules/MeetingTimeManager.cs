@@ -1,9 +1,9 @@
 ﻿using System;
 using AmongUs.GameOptions;
-using EHR.Crewmate;
-using EHR.Impostor;
+using TOZ.Crewmate;
+using TOZ.Impostor;
 
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 public class MeetingTimeManager
 {

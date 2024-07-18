@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using AmongUs.Data;
-using EHR.Impostor;
-using EHR.Neutral;
+using TOZ.Impostor;
+using TOZ.Neutral;
 
-namespace EHR;
+namespace TOZ;
 
 static class PlayerOutfitExtension
 {

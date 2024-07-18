@@ -1,4 +1,4 @@
-﻿namespace EHR
+﻿namespace TOZ
 {
     internal interface IVanillaSettingHolder
     {

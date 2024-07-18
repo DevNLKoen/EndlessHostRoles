@@ -5,13 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR;
+namespace TOZ;
 
 public static class SpamManager
 {
-    private static readonly string BANEDWORDS_FILE_PATH = "./EHR_DATA/BanWords.txt";
+    private static readonly string BANEDWORDS_FILE_PATH = "./TOZ_DATA/BanWords.txt";
     public static List<string> BanWords = [];
     public static void Init()
     {
@@ -24,7 +24,7 @@ public static class SpamManager
         {
             try
             {
-                if (!Directory.Exists(@"EHR_DATA")) Directory.CreateDirectory(@"EHR_DATA");
+                if (!Directory.Exists(@"TOZ_DATA")) Directory.CreateDirectory(@"TOZ_DATA");
                 if (File.Exists(@"./BanWords.txt")) File.Move(@"./BanWords.txt", BANEDWORDS_FILE_PATH);
                 else
                 {
@@ -39,7 +39,7 @@ public static class SpamManager
                         };
                     else fileName = "English";
                     Logger.Warn($"创建新的 BanWords 文件：{fileName}", "SpamManager");
-                    File.WriteAllText(BANEDWORDS_FILE_PATH, GetResourcesTxt($"EHR.Resources.Config.BanWords.{fileName}.txt"));
+                    File.WriteAllText(BANEDWORDS_FILE_PATH, GetResourcesTxt($"TOZ.Resources.Config.BanWords.{fileName}.txt"));
                 }
             }
             catch (Exception ex)

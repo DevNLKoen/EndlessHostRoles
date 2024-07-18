@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using UnityEngine;
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Tiger : RoleBase
     {

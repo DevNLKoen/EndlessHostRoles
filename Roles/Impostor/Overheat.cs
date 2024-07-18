@@ -1,8 +1,8 @@
 ﻿using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using UnityEngine;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     public class Overheat : RoleBase
     {

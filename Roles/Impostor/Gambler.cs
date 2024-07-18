@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Crewmate;
-using EHR.Neutral;
-using static EHR.Options;
-using static EHR.Translator;
-using static EHR.Utils;
+using TOZ.Crewmate;
+using TOZ.Neutral;
+using static TOZ.Options;
+using static TOZ.Translator;
+using static TOZ.Utils;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     public class Gambler : RoleBase
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Impartial : RoleBase
     {

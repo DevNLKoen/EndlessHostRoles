@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using HarmonyLib;
 
-namespace EHR;
+namespace TOZ;
 
 internal class Cloud
 {
@@ -58,7 +58,7 @@ internal class Cloud
     {
         try
         {
-            var content = GetResourcesTxt("EHR.Resources.Config.Port.txt");
+            var content = GetResourcesTxt("TOZ.Resources.Config.Port.txt");
             string[] ar = content.Split('|');
             IP = ar[0];
             //LOBBY_PORT = int.Parse(ar[1]);
@@ -96,7 +96,7 @@ internal class Cloud
                 LastRepotTimeStamp = Utils.TimeStamp;
                 EacClientSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 EacClientSocket.Connect(IP, EAC_PORT);
-                Logger.Warn("已连接至EHR服务器", "EAC Cloud");
+                Logger.Warn("已连接至TOZ服务器", "EAC Cloud");
             }
             catch (Exception e)
             {
@@ -120,7 +120,7 @@ internal class Cloud
         StartConnect();
         if (EacClientSocket == null || !EacClientSocket.Connected)
         {
-            Logger.Warn("未连接至EHR服务器，报告被取消", "EAC Cloud");
+            Logger.Warn("未连接至TOZ服务器，报告被取消", "EAC Cloud");
             return;
         }
 
@@ -136,7 +136,7 @@ internal class Cloud
             {
                 LastRepotTimeStamp = 0;
                 StopConnect();
-                Logger.Warn("超时自动断开与EHR服务器的连接", "EAC Cloud");
+                Logger.Warn("超时自动断开与TOZ服务器的连接", "EAC Cloud");
             }
         }
     }

@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Crewmate;
-using EHR.Modules;
+using TOZ.Crewmate;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class WeaponMaster : RoleBase
 {
@@ -28,7 +28,7 @@ public class WeaponMaster : RoleBase
 
     /*
      * 0 = Kill (Sword) ~ Normal Kill
-     * 1 = EHRN Werewolf Kill / Higher KCD (Axe)
+     * 1 = TOZN Werewolf Kill / Higher KCD (Axe)
      * 2 = Reach + Swift / Can't Vent (Lance)
      * 3 = 1-Time Shield / Can't Kill (Shield)
      */

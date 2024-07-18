@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Cleanser : RoleBase
 {

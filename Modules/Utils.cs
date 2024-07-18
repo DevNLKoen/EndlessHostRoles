@@ -11,24 +11,24 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AmongUs.Data;
 using AmongUs.GameOptions;
-using EHR.AddOns.Common;
-using EHR.AddOns.Crewmate;
-using EHR.AddOns.GhostRoles;
-using EHR.AddOns.Impostor;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.AddOns.Common;
+using TOZ.AddOns.Crewmate;
+using TOZ.AddOns.GhostRoles;
+using TOZ.AddOns.Impostor;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Modules;
+using TOZ.Neutral;
 using HarmonyLib;
 using Hazel;
 using Il2CppInterop.Runtime.InteropTypes;
 using InnerNet;
 using Newtonsoft.Json;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
 
-namespace EHR;
+namespace TOZ;
 
 /*
 List of symbols that work in game
@@ -309,8 +309,8 @@ public static class Utils
 
     public static void SaveComboInfo()
     {
-        SaveFile("./EHR_DATA/AlwaysCombos.json");
-        SaveFile("./EHR_DATA/NeverCombos.json");
+        SaveFile("./TOZ_DATA/AlwaysCombos.json");
+        SaveFile("./TOZ_DATA/NeverCombos.json");
         return;
 
         void SaveFile(string path)
@@ -341,8 +341,8 @@ public static class Utils
 
     public static void LoadComboInfo()
     {
-        LoadFile("./EHR_DATA/AlwaysCombos.json");
-        LoadFile("./EHR_DATA/NeverCombos.json");
+        LoadFile("./TOZ_DATA/AlwaysCombos.json");
+        LoadFile("./TOZ_DATA/NeverCombos.json");
         return;
 
         void LoadFile(string path)
@@ -441,7 +441,7 @@ public static class Utils
         {
             targetMainRole = Lovers.LovingImpostorRoleForOtherImps.GetValue() switch
             {
-                0 => CustomRoles.ImpostorEHR,
+                0 => CustomRoles.ImpostorTOZ,
                 1 => Lovers.LovingImpostorRole,
                 _ => CustomRoles.LovingImpostor
             };
@@ -1671,7 +1671,7 @@ public static class Utils
             {
                 name = Options.GetSuffixMode() switch
                 {
-                    SuffixModes.EHR => name + $"\r\n<color={Main.ModColor}>EHR v{Main.PluginDisplayVersion}</color>",
+                    SuffixModes.TOZ => name + $"\r\n<color={Main.ModColor}>TOZ v{Main.PluginDisplayVersion}</color>",
                     SuffixModes.Streaming => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.Streaming")}</color></size>",
                     SuffixModes.Recording => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.Recording")}</color></size>",
                     SuffixModes.RoomHost => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.RoomHost")}</color></size>",
@@ -2334,7 +2334,7 @@ public static class Utils
             CustomRoles.Tornado => Tornado.TornadoCooldown.GetInt(),
             CustomRoles.Sentinel => Sentinel.PatrolCooldown.GetInt(),
             CustomRoles.Druid => Druid.VentCooldown.GetInt(),
-            CustomRoles.Sentry => EHR.Impostor.Sentry.ShowInfoCooldown.GetInt(),
+            CustomRoles.Sentry => TOZ.Impostor.Sentry.ShowInfoCooldown.GetInt(),
             CustomRoles.ToiletMaster => ToiletMaster.AbilityCooldown.GetInt(),
             CustomRoles.Sniper => Options.DefaultShapeshiftCooldown.GetInt(),
             CustomRoles.Assassin => Assassin.AssassinateCooldownOpt.GetInt(),
@@ -2554,7 +2554,7 @@ public static class Utils
             Scout.OnPlayerDeath(target);
             Adventurer.OnAnyoneDead(target);
             Soothsayer.OnAnyoneDeath(target.GetRealKiller(), target);
-            EHR.Impostor.Sentry.OnAnyoneMurder(target);
+            TOZ.Impostor.Sentry.OnAnyoneMurder(target);
 
             if (QuizMaster.On) QuizMaster.Data.NumPlayersDeadThisRound++;
 
@@ -2627,15 +2627,15 @@ public static class Utils
 
     public static void DumpLog(bool open = true)
     {
-        string f = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}/EHR_Logs/";
+        string f = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}/TOZ_Logs/";
         string t = DateTime.Now.ToString("yyyy-MM-dd_HH.mm.ss");
-        string filename = $"{f}EHR-v{Main.PluginVersion}-{t}.log";
+        string filename = $"{f}TOZ-v{Main.PluginVersion}-{t}.log";
         if (!Directory.Exists(f)) Directory.CreateDirectory(f);
         FileInfo file = new($"{Environment.CurrentDirectory}/BepInEx/LogOutput.log");
         file.CopyTo(filename);
         if (!open) return;
         if (PlayerControl.LocalPlayer != null)
-            HudManager.Instance?.Chat?.AddChat(PlayerControl.LocalPlayer, string.Format(GetString("Message.DumpfileSaved"), $"EHR v{Main.PluginVersion} {t}.log"));
+            HudManager.Instance?.Chat?.AddChat(PlayerControl.LocalPlayer, string.Format(GetString("Message.DumpfileSaved"), $"TOZ v{Main.PluginVersion} {t}.log"));
         ProcessStartInfo psi = new("Explorer.exe")
             { Arguments = "/e,/select," + filename.Replace("/", "\\") };
         Process.Start(psi);

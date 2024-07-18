@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using TMPro;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR;
+namespace TOZ;
 
 public class ErrorText : MonoBehaviour
 {

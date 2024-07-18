@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Hazel;
 
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 public static class CustomSoundsManager
 {
@@ -47,7 +47,7 @@ public static class CustomSoundsManager
             folder.Attributes = FileAttributes.Hidden;
         if (!File.Exists(path))
         {
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("EHR.Resources.Sounds." + sound + ".wav");
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TOZ.Resources.Sounds." + sound + ".wav");
             if (stream == null)
             {
                 Logger.Warn($"声音文件缺失：{sound}", "CustomSounds");

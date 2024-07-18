@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     using static Options;
     using static Translator;

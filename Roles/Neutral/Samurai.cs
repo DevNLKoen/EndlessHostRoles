@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using AmongUs.GameOptions;
 using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Samurai : RoleBase
     {

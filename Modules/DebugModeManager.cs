@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 public static class DebugModeManager
 {

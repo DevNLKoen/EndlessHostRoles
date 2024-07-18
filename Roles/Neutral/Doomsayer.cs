@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Doomsayer : RoleBase
 {

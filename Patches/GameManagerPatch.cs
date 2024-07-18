@@ -1,7 +1,7 @@
 using HarmonyLib;
 using Hazel;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(GameManager), nameof(GameManager.Serialize))]
 class GameManagerSerializeFix

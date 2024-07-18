@@ -9,8 +9,8 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using EHR;
-using EHR.Neutral;
+using TOZ;
+using TOZ.Neutral;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
 using UnityEngine;
@@ -19,9 +19,9 @@ using UnityEngine;
 [assembly: AssemblyInformationalVersion(Main.PluginVersion)]
 [assembly: AssemblyVersion(Main.PluginVersion)]
 
-namespace EHR;
+namespace TOZ;
 
-[BepInPlugin(PluginGuid, "EHR", PluginVersion)]
+[BepInPlugin(PluginGuid, "TOZ", PluginVersion)]
 [BepInIncompatibility("jp.ykundesu.supernewroles")]
 [BepInIncompatibility("MalumMenu")]
 [BepInProcess("Among Us.exe")]
@@ -39,10 +39,10 @@ public class Main : BasePlugin
     public const float MinSpeed = 0.0001f;
 
     // == プログラム設定 / Program Config ==
-    public const string ModName = "EHR";
+    public const string ModName = "TOZ";
     public const string ModColor = "#00ffff";
     public const bool AllowPublicRoom = true;
-    public const string ForkId = "EHR";
+    public const string ForkId = "TOZ";
     public const string SupportedAUVersion = "2024.6.18";
     public static readonly Version Version = Version.Parse(PluginVersion);
     public static ManualLogSource Logger;
@@ -223,7 +223,7 @@ public class Main : BasePlugin
         Instance = this;
 
         //Client Options
-        HideName = Config.Bind("Client Options", "Hide Game Code Name", "EHR");
+        HideName = Config.Bind("Client Options", "Hide Game Code Name", "TOZ");
         HideColor = Config.Bind("Client Options", "Hide Game Code Color", $"{ModColor}");
         DebugKeyInput = Config.Bind("Authentication", "Debug Key", string.Empty);
         AutoStart = Config.Bind("Client Options", "AutoStart", false);
@@ -242,34 +242,34 @@ public class Main : BasePlugin
         ShowPlayerInfoInLobby = Config.Bind("Client Options", "ShowPlayerInfoInLobby", false);
         LobbyMusic = Config.Bind("Client Options", "LobbyMusic", false);
 
-        Logger = BepInEx.Logging.Logger.CreateLogSource("EHR");
+        Logger = BepInEx.Logging.Logger.CreateLogSource("TOZ");
         coroutines = AddComponent<Coroutines>();
-        EHR.Logger.Enable();
-        EHR.Logger.Disable("NotifyRoles");
-        EHR.Logger.Disable("SwitchSystem");
-        EHR.Logger.Disable("ModNews");
-        EHR.Logger.Disable("CustomRpcSender");
+        TOZ.Logger.Enable();
+        TOZ.Logger.Disable("NotifyRoles");
+        TOZ.Logger.Disable("SwitchSystem");
+        TOZ.Logger.Disable("ModNews");
+        TOZ.Logger.Disable("CustomRpcSender");
         if (!DebugModeManager.AmDebugger)
         {
-            EHR.Logger.Disable("2018k");
-            EHR.Logger.Disable("Github");
-            //EHR.Logger.Disable("ReceiveRPC");
-            EHR.Logger.Disable("SendRPC");
-            EHR.Logger.Disable("SetRole");
-            EHR.Logger.Disable("Info.Role");
-            EHR.Logger.Disable("TaskState.Init");
-            //EHR.Logger.Disable("Vote");
-            EHR.Logger.Disable("RpcSetNamePrivate");
-            //EHR.Logger.Disable("SendChat");
-            EHR.Logger.Disable("SetName");
-            //EHR.Logger.Disable("AssignRoles");
-            //EHR.Logger.Disable("RepairSystem");
-            //EHR.Logger.Disable("MurderPlayer");
-            //EHR.Logger.Disable("CheckMurder");
-            EHR.Logger.Disable("PlayerControl.RpcSetRole");
-            EHR.Logger.Disable("SyncCustomSettings");
+            TOZ.Logger.Disable("2018k");
+            TOZ.Logger.Disable("Github");
+            //TOZ.Logger.Disable("ReceiveRPC");
+            TOZ.Logger.Disable("SendRPC");
+            TOZ.Logger.Disable("SetRole");
+            TOZ.Logger.Disable("Info.Role");
+            TOZ.Logger.Disable("TaskState.Init");
+            //TOZ.Logger.Disable("Vote");
+            TOZ.Logger.Disable("RpcSetNamePrivate");
+            //TOZ.Logger.Disable("SendChat");
+            TOZ.Logger.Disable("SetName");
+            //TOZ.Logger.Disable("AssignRoles");
+            //TOZ.Logger.Disable("RepairSystem");
+            //TOZ.Logger.Disable("MurderPlayer");
+            //TOZ.Logger.Disable("CheckMurder");
+            TOZ.Logger.Disable("PlayerControl.RpcSetRole");
+            TOZ.Logger.Disable("SyncCustomSettings");
         }
-        //EHR.Logger.isDetail = true;
+        //TOZ.Logger.isDetail = true;
 
         // Authentication related - Initialization
         DebugKeyAuth = new(DebugKeyHash, DebugKeySalt);
@@ -305,12 +305,12 @@ public class Main : BasePlugin
                 { CustomRoles.Tracker, "#34ad50" },
                 { CustomRoles.Noisemaker, "#ff4a62" },
                 // Vanilla Remakes
-                { CustomRoles.CrewmateEHR, "#8cffff" },
-                { CustomRoles.EngineerEHR, "#FF6A00" },
-                { CustomRoles.ScientistEHR, "#8ee98e" },
-                { CustomRoles.GuardianAngelEHR, "#77e6d1" },
-                { CustomRoles.TrackerEHR, "#34ad50" },
-                { CustomRoles.NoisemakerEHR, "#ff4a62" },
+                { CustomRoles.CrewmateTOZ, "#8cffff" },
+                { CustomRoles.EngineerTOZ, "#FF6A00" },
+                { CustomRoles.ScientistTOZ, "#8ee98e" },
+                { CustomRoles.GuardianAngelTOZ, "#77e6d1" },
+                { CustomRoles.TrackerTOZ, "#34ad50" },
+                { CustomRoles.NoisemakerTOZ, "#ff4a62" },
                 // Crewmates
                 { CustomRoles.Luckey, "#b8d7a3" },
                 { CustomRoles.Needy, "#a4dffe" },
@@ -632,13 +632,13 @@ public class Main : BasePlugin
         }
         catch (ArgumentException ex)
         {
-            EHR.Logger.Error("错误：字典出现重复项", "LoadDictionary");
-            EHR.Logger.Exception(ex, "LoadDictionary");
+            TOZ.Logger.Error("错误：字典出现重复项", "LoadDictionary");
+            TOZ.Logger.Exception(ex, "LoadDictionary");
             HasArgumentException = true;
         }
         catch (Exception ex)
         {
-            EHR.Logger.Fatal(ex.ToString(), "Main");
+            TOZ.Logger.Fatal(ex.ToString(), "Main");
         }
 
         CustomWinnerHolder.Reset();
@@ -652,9 +652,9 @@ public class Main : BasePlugin
 
         IRandom.SetInstance(new NetRandomWrapper());
 
-        EHR.Logger.Info($"{Application.version}", "AmongUs Version");
+        TOZ.Logger.Info($"{Application.version}", "AmongUs Version");
 
-        var handler = EHR.Logger.Handler("GitVersion");
+        var handler = TOZ.Logger.Handler("GitVersion");
         handler.Info($"{nameof(ThisAssembly.Git.BaseTag)}: {ThisAssembly.Git.BaseTag}");
         handler.Info($"{nameof(ThisAssembly.Git.Commit)}: {ThisAssembly.Git.Commit}");
         handler.Info($"{nameof(ThisAssembly.Git.Commits)}: {ThisAssembly.Git.Commits}");
@@ -669,7 +669,7 @@ public class Main : BasePlugin
         if (!DebugModeManager.AmDebugger) ConsoleManager.DetachConsole();
         else ConsoleManager.CreateConsole();
 
-        EHR.Logger.Msg("========= EHR loaded! =========", "Plugin Load");
+        TOZ.Logger.Msg("========= TOZ loaded! =========", "Plugin Load");
     }
 
     public static void LoadRoleClasses()
@@ -855,7 +855,7 @@ public enum AdditionalWinners
 public enum SuffixModes
 {
     None = 0,
-    EHR,
+    TOZ,
     Streaming,
     Recording,
     RoomHost,

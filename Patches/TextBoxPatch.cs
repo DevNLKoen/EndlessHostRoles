@@ -4,7 +4,7 @@ using HarmonyLib;
 using TMPro;
 using UnityEngine;
 
-namespace EHR.Patches;
+namespace TOZ.Patches;
 
 [HarmonyPatch(typeof(TextBoxTMP), nameof(TextBoxTMP.SetText))]
 class TextBoxTMPSetTextPatch

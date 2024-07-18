@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     using static Options;
     using static Translator;

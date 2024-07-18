@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.Modules;
-using static EHR.Options;
-using static EHR.Translator;
+using TOZ.Modules;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Postman : RoleBase
 {

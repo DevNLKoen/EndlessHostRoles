@@ -1,6 +1,6 @@
 using AmongUs.GameOptions;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class NSerialKiller : RoleBase
 {

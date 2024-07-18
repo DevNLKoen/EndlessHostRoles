@@ -1,6 +1,6 @@
 using AmongUs.GameOptions;
 
-namespace EHR;
+namespace TOZ;
 
 public static class AURoleOptions
 {

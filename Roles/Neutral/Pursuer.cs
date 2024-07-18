@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using EHR.Modules;
+using TOZ.Modules;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Pursuer : RoleBase
 {

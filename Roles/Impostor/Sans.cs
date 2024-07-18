@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Neutral;
-using static EHR.Options;
+using TOZ.Neutral;
+using static TOZ.Options;
 
-namespace EHR.Impostor;
+namespace TOZ.Impostor;
 
 public class Sans : RoleBase
 {

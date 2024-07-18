@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using AmongUs.GameOptions;
 using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Tracefinder : RoleBase
 {

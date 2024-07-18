@@ -7,7 +7,7 @@ using Assets.InnerNet;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
-namespace EHR;
+namespace TOZ;
 
 // ##https://github.com/Yumenopai/TownOfHost_Y
 public class ModNews
@@ -46,14 +46,14 @@ public class ModNewsHistory
     {
         // When creating new news, you can not delete old news
         {
-            // EHR v2.4.3
+            // TOZ v2.4.3
             var news = new ModNews
             {
                 Number = 100001,
                 Title = "TownOfHostEdited v2.5.0",
                 SubTitle = "★★★★Another big update, maybe bigger?★★★★",
-                ShortTitle = "★EHR v2.5.0",
-                Text = "<size=150%>Welcome to EHR v2.5.0.</size>\n\n<size=125%>Support for Among Us v2023.7.11 and v2023.7.12</size>\n"
+                ShortTitle = "★TOZ v2.5.0",
+                Text = "<size=150%>Welcome to TOZ v2.5.0.</size>\n\n<size=125%>Support for Among Us v2023.7.11 and v2023.7.12</size>\n"
                        + "\n【Base】\n - Base on TOH v4.1.2\r\n"
                        + "\n【Fixes】\n - Various bug fixes\n\r"
                        + "\n【Changes】\n - Hex Master hex icon changed to separate it from Spellcaster\n - Fortune Teller moved to Experimentals due to a planned and unfinished rework\n\r"
@@ -66,13 +66,13 @@ public class ModNewsHistory
         }
 
         {
-            // EHR v2.4.2
+            // TOZ v2.4.2
             var news = new ModNews
             {
                 Number = 100000,
                 Title = "TownOfHostEdited v2.4.2",
                 SubTitle = "★★★★Ooooh bigger update★★★★",
-                ShortTitle = "★EHR v2.4.2",
+                ShortTitle = "★TOZ v2.4.2",
                 Text = "Added in some new stuff, along with some bug fixes.\r\nAmong Us v2023.3.28 is recommended so the roles work correctly.\n"
                        + "\n【Base】\n - Base on TOH v4.1.2\r\n"
                        + "\n【Fixes】\n - Fixed various black screen bugs (some still exist but should be less common)\r\n - Other various bug fixes (they're hard to keep track of)\r\n"

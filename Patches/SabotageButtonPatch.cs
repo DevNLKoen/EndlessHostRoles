@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace EHR.Patches;
+namespace TOZ.Patches;
 
 // https://github.com/tukasa0001/TownOfHost/blob/main/Patches/ActionButtonPatch.cs
 

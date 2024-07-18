@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.AddOns.Common;
-using EHR.Impostor;
-using EHR.Neutral;
+using TOZ.AddOns.Common;
+using TOZ.Impostor;
+using TOZ.Neutral;
 
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 internal static class CustomRoleSelector
 {
@@ -137,7 +137,7 @@ internal static class CustomRoleSelector
 
         if (Roles[RoleAssignType.Impostor].Count == 0 && optNeutralKillingNum == 0 && optNonNeutralKillingNum == 0 && !Main.SetRoles.Values.Any(x => x.IsImpostor() || x.IsNK()))
         {
-            Roles[RoleAssignType.Impostor].Add(new(CustomRoles.ImpostorEHR, 100, optImpNum));
+            Roles[RoleAssignType.Impostor].Add(new(CustomRoles.ImpostorTOZ, 100, optImpNum));
             Logger.Warn("Adding Vanilla Impostor", "CustomRoleSelector");
         }
 

@@ -1,4 +1,4 @@
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 internal static class Monitor
 {

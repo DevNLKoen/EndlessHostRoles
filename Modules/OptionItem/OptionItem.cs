@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 public abstract class OptionItem
 {
@@ -113,7 +113,7 @@ public abstract class OptionItem
 
     public OptionItem SetParent(OptionItem parent) => Do(i =>
     {
-        foreach (var role in EHR.Options.CustomRoleSpawnChances.Where(x => x.Value.Name == parent.Name))
+        foreach (var role in TOZ.Options.CustomRoleSpawnChances.Where(x => x.Value.Name == parent.Name))
         {
             var roleName = Translator.GetString(Enum.GetName(typeof(CustomRoles), role.Key));
             ReplacementDictionary ??= [];

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
-using EHR.Patches;
+using TOZ.Modules;
+using TOZ.Patches;
 using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class QuizMaster : RoleBase
     {
@@ -95,11 +95,11 @@ namespace EHR.Neutral
             }, 10f, log: false);
 
             CustomQuestions = [];
-            EnableCustomQuestions = EnableCustomQuestionsOpt.GetBool() && File.Exists("./EHR_DATA/QuizMasterQuestions.txt");
+            EnableCustomQuestions = EnableCustomQuestionsOpt.GetBool() && File.Exists("./TOZ_DATA/QuizMasterQuestions.txt");
 
             if (EnableCustomQuestions)
             {
-                var lines = File.ReadAllLines("./EHR_DATA/QuizMasterQuestions.txt");
+                var lines = File.ReadAllLines("./TOZ_DATA/QuizMasterQuestions.txt");
                 var questions = lines.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x =>
                 {
                     try

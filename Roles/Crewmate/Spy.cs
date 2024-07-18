@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     using static Options;
     using static Utils;

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     using static Options;
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AmongUs.GameOptions;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class Swiftclaw : RoleBase
     {

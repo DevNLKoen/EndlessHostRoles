@@ -1,4 +1,4 @@
-﻿namespace EHR.Neutral;
+﻿namespace TOZ.Neutral;
 
 // 来源：https://github.com/Yumenopai/TownOfHost_Y
 public class Imitator : ISettingHolder

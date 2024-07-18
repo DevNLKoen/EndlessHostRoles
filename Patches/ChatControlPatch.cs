@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data;
-using EHR.Impostor;
-using EHR.Patches;
+using TOZ.Impostor;
+using TOZ.Patches;
 using HarmonyLib;
 using InnerNet;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
 class ChatControllerUpdatePatch
@@ -40,13 +40,13 @@ class ChatControllerUpdatePatch
             __instance.quickChatField.text.color = Color.white;
 
             if (QuickChatIcon == null) QuickChatIcon = GameObject.Find("QuickChatIcon")?.transform.GetComponent<SpriteRenderer>();
-            else QuickChatIcon.sprite = Utils.LoadSprite("EHR.Resources.Images.DarkQuickChat.png", 100f);
+            else QuickChatIcon.sprite = Utils.LoadSprite("TOZ.Resources.Images.DarkQuickChat.png", 100f);
 
             if (OpenBanMenuIcon == null) OpenBanMenuIcon = GameObject.Find("OpenBanMenuIcon")?.transform.GetComponent<SpriteRenderer>();
-            else OpenBanMenuIcon.sprite = Utils.LoadSprite("EHR.Resources.Images.DarkReport.png", 100f);
+            else OpenBanMenuIcon.sprite = Utils.LoadSprite("TOZ.Resources.Images.DarkReport.png", 100f);
 
             if (OpenKeyboardIcon == null) OpenKeyboardIcon = GameObject.Find("OpenKeyboardIcon")?.transform.GetComponent<SpriteRenderer>();
-            else OpenKeyboardIcon.sprite = Utils.LoadSprite("EHR.Resources.Images.DarkKeyboard.png", 100f);
+            else OpenKeyboardIcon.sprite = Utils.LoadSprite("TOZ.Resources.Images.DarkKeyboard.png", 100f);
         }
         else
         {

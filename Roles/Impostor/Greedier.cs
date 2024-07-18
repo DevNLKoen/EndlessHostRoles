@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.Modules;
+using TOZ.Neutral;
 using Hazel;
 
-namespace EHR.Impostor;
+namespace TOZ.Impostor;
 
 // 来源：https://github.com/Yumenopai/TownOfHost_Y
 public class Greedier : RoleBase // Also used for Imitator as the NK version of this

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
-using static EHR.Options;
+using TOZ.Modules;
+using static TOZ.Options;
 
 // From: TOH_Y
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Workaholic : RoleBase
     {

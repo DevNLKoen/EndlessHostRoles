@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Neutral;
-using static EHR.Options;
-using static EHR.Translator;
+using TOZ.Neutral;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     public class Dazzler : RoleBase
     {

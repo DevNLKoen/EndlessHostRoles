@@ -2,7 +2,7 @@
 using AmongUs.GameOptions;
 using UnityEngine;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class Parasite : RoleBase
     {

@@ -1,6 +1,6 @@
-﻿using EHR.Patches;
+﻿using TOZ.Patches;
 
-namespace EHR.Neutral
+namespace TOZ.Neutral
 {
     internal class Cherokious : RoleBase
     {

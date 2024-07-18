@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.AddOns.Crewmate;
-using EHR.AddOns.GhostRoles;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.AddOns.Crewmate;
+using TOZ.AddOns.GhostRoles;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Modules;
+using TOZ.Neutral;
 using InnerNet;
 
-namespace EHR;
+namespace TOZ;
 
 public class PlayerState(byte playerId)
 {
@@ -34,7 +34,7 @@ public class PlayerState(byte playerId)
         Fall,
         AFK,
 
-        // EHR
+        // TOZ
         Gambled,
         Eaten,
         Sacrifice,

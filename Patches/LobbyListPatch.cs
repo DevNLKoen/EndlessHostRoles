@@ -4,7 +4,7 @@ using HarmonyLib;
 using InnerNet;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(FindAGameManager), nameof(FindAGameManager.Update))]
 public static class FindAGameManagerUpdatePatch

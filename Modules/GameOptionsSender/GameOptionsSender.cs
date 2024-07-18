@@ -7,7 +7,7 @@ using InnerNet;
 using Array = Il2CppSystem.Array;
 using Buffer = Il2CppSystem.Buffer;
 
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 public abstract class GameOptionsSender
 {

@@ -1,6 +1,6 @@
-﻿using static EHR.Options;
+﻿using static TOZ.Options;
 
-namespace EHR.AddOns.Crewmate
+namespace TOZ.AddOns.Crewmate
 {
     internal class Physicist : IAddon
     {

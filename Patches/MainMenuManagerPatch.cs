@@ -3,7 +3,7 @@ using HarmonyLib;
 using TMPro;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch]
 public static class MainMenuManagerPatch
@@ -107,7 +107,7 @@ public static class MainMenuManagerPatch
         MgLogo = logoObject.AddComponent<SpriteRenderer>();
         logoTransform.localPosition = new(2f, -0.5f, 1f);
         logoTransform.localScale *= 1.2f;
-        MgLogo.sprite = Utils.LoadSprite("EHR.Resources.Images.EHR-Icon.png", 400f);
+        MgLogo.sprite = Utils.LoadSprite("TOZ.Resources.Images.TOZ-Icon.png", 400f);
 
         // GitHub Button
         if (GitHubButton == null)
@@ -145,7 +145,7 @@ public static class MainMenuManagerPatch
                 new Vector3(1.3f, -1.3f, 1f),
                 new Color32(251, 81, 44, byte.MaxValue),
                 new Color32(211, 77, 48, byte.MaxValue),
-                () => Application.OpenURL("https://sites.google.com/view/ehr-au"),
+                () => Application.OpenURL("https://sites.google.com/view/TOZ-au"),
                 Translator.GetString("Website")); //"Website"
         }
 

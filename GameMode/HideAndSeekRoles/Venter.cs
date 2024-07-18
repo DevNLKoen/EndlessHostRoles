@@ -1,4 +1,4 @@
-﻿namespace EHR.GameMode.HideAndSeekRoles
+﻿namespace TOZ.GameMode.HideAndSeekRoles
 {
     public class Venter : RoleBase, IHideAndSeekRole
     {

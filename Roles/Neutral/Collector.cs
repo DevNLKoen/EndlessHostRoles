@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
-using EHR.Patches;
+using TOZ.Modules;
+using TOZ.Patches;
 using Hazel;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Collector : RoleBase
 {

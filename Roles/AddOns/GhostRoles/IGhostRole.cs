@@ -1,4 +1,4 @@
-﻿namespace EHR.AddOns.GhostRoles
+﻿namespace TOZ.AddOns.GhostRoles
 {
     public interface IGhostRole
     {

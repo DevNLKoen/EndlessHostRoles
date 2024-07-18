@@ -3,7 +3,7 @@ using System.Linq;
 using HarmonyLib;
 using UnityEngine;
 
-namespace EHR
+namespace TOZ
 {
     public class SpeedrunManager
     {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace EHR.GameMode.HideAndSeekRoles
+namespace TOZ.GameMode.HideAndSeekRoles
 {
     public class Detector : RoleBase, IHideAndSeekRole
     {

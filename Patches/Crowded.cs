@@ -6,7 +6,7 @@ using UnityEngine;
 
 // All errors in this file are fake, the build succeeds
 // https://github.com/CrowdedMods/CrowdedMod/blob/master/src/CrowdedMod/Patches/CreateGameOptionsPatches.cs
-namespace EHR.Patches
+namespace TOZ.Patches
 {
     internal static class Crowded
     {

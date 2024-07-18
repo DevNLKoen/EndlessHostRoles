@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using EHR.Patches;
+using TOZ.Patches;
 using Rewired.Utils;
 using UnityEngine;
 
-namespace EHR.Modules
+namespace TOZ.Modules
 {
     internal static class LoadingScreen
     {
@@ -20,7 +20,7 @@ namespace EHR.Modules
                 if (!LoadingAnimation.IsNullOrDestroyed()) Object.Destroy(LoadingAnimation);
 
                 LoadingAnimation = Object.Instantiate(ModManager.Instance.ModStamp);
-                LoadingAnimation.sprite = Utils.LoadSprite("EHR.Resources.Loading.png", 300f);
+                LoadingAnimation.sprite = Utils.LoadSprite("TOZ.Resources.Loading.png", 300f);
                 LoadingAnimation.sortingOrder = 100;
 
                 var basePos = LoadingAnimation.transform.position;

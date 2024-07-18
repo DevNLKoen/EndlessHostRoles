@@ -4,7 +4,7 @@ using System.Linq;
 using AmongUs.GameOptions;
 using UnityEngine;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     public class Abyssbringer : RoleBase
     {

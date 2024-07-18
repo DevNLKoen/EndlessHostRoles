@@ -3,7 +3,7 @@ using HarmonyLib;
 using Hazel;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 public class FallFromLadder
 {

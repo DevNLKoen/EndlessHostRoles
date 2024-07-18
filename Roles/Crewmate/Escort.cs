@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using AmongUs.GameOptions;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class Escort : RoleBase
     {

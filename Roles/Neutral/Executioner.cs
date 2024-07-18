@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Executioner : RoleBase
 {
@@ -27,7 +27,7 @@ public class Executioner : RoleBase
     [
         CustomRoles.Amnesiac,
         CustomRoles.Maverick,
-        CustomRoles.CrewmateEHR,
+        CustomRoles.CrewmateTOZ,
         CustomRoles.Jester,
         CustomRoles.Opportunist,
         CustomRoles.Convict,

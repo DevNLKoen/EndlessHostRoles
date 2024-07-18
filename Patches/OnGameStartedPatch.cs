@@ -6,24 +6,24 @@ using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using EHR.AddOns.Common;
-using EHR.AddOns.Crewmate;
-using EHR.AddOns.Impostor;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Modules;
-using EHR.Neutral;
-using EHR.Patches;
+using TOZ.AddOns.Common;
+using TOZ.AddOns.Crewmate;
+using TOZ.AddOns.Impostor;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Modules;
+using TOZ.Neutral;
+using TOZ.Patches;
 using HarmonyLib;
 using Hazel;
 using InnerNet;
 using UnityEngine;
-using static EHR.Modules.CustomRoleSelector;
-using static EHR.Translator;
+using static TOZ.Modules.CustomRoleSelector;
+using static TOZ.Translator;
 using DateTime = Il2CppSystem.DateTime;
 
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.CoStartGame))]
 internal class ChangeRoleSettings
@@ -930,7 +930,7 @@ internal class SelectRolesPatch
                     if (rolesMap.TryGetValue((seer.PlayerId, target.PlayerId), out var role))
                     {
                         // Change Scientist to Noisemaker when the role is desync and target have the Noisemaker role << Thanks: TommyXL
-                        if (role is RoleTypes.Scientist && RoleResult.Any(x => x.Key.PlayerId == seer.PlayerId && x.Value is CustomRoles.NoisemakerEHR or CustomRoles.Noisemaker))
+                        if (role is RoleTypes.Scientist && RoleResult.Any(x => x.Key.PlayerId == seer.PlayerId && x.Value is CustomRoles.NoisemakerTOZ or CustomRoles.Noisemaker))
                         {
                             Logger.Info($"seer: {seer.PlayerId}, target: {target.PlayerId}, {role} => {RoleTypes.Noisemaker}", "OverrideRoleForDesync");
                             role = RoleTypes.Noisemaker;

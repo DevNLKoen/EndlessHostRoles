@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class EvilGuesser : ISettingHolder
     {

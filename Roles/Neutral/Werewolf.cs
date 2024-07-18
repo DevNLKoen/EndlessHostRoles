@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.Crewmate;
-using EHR.Modules;
+using TOZ.Crewmate;
+using TOZ.Modules;
 using Hazel;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Werewolf : RoleBase
 {

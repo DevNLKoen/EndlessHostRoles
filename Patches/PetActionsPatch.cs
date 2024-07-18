@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Impostor;
-using EHR.Neutral;
+using TOZ.Impostor;
+using TOZ.Neutral;
 using HarmonyLib;
 
-namespace EHR.Patches;
+namespace TOZ.Patches;
 
 /*
  * HUGE THANKS TO

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 static class DoubleTrigger
 {

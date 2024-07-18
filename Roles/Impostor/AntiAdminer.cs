@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Neutral;
+using TOZ.Neutral;
 using UnityEngine;
-using Monitor = EHR.Crewmate.Monitor;
+using Monitor = TOZ.Crewmate.Monitor;
 
-namespace EHR.Impostor;
+namespace TOZ.Impostor;
 
 // Reference: https://github.com/ykundesu/SuperNewRoles/blob/master/SuperNewRoles/Mode/SuperHostRoles/BlockTool.cs
 // Reference：https://github.com/Yumenopai/TownOfHost_Y/tree/AntiAdminer

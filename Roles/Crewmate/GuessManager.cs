@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class GuessManagerRole : RoleBase
     {

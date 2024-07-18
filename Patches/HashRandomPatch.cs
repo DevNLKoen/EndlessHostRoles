@@ -1,6 +1,6 @@
 using HarmonyLib;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(HashRandom))]
 class HashRandomPatch

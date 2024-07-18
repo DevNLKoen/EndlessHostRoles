@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EHR;
+namespace TOZ;
 
 class LateTask
 {

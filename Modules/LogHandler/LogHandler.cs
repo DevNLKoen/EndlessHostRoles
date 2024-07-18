@@ -1,6 +1,6 @@
 using System;
 
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 class LogHandler(string tag) : ILogHandler
 {

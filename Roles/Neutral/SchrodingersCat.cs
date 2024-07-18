@@ -1,4 +1,4 @@
-﻿namespace EHR.Impostor
+﻿namespace TOZ.Impostor
 {
     internal class SchrodingersCat : RoleBase
     {

@@ -1,9 +1,9 @@
-<h1 align="center">Endless Host Roles</h1>
-<h5 align="center">Previously known as TOHE+</h5>
+<h1 align="center">Town Of Zloos</h1>
+<h5 align="center">froked from EHR</h5>
 
 <br>
 
-<img align="left" alt="Cover" src="Resources/Images/EHR-Icon.png" width="50%" height="250" />
+<img align="left" alt="Cover" src="Resources/Images/TOZ-Icon.png" width="50%" height="250" />
 
 <p align="right">
 
@@ -16,7 +16,7 @@
 </p>
 <p align="center">
 
-<a href="https://sites.google.com/view/ehr-au" target="_blank"><img src="https://img.shields.io/badge/Website%20-%231DA1F2.svg?&style=for-the-badge&logo=vuedotjs&logoColor=white&color=3aa675"/></a>
+<a href="https://sites.google.com/view/TOZ-au" target="_blank"><img src="https://img.shields.io/badge/Website%20-%231DA1F2.svg?&style=for-the-badge&logo=vuedotjs&logoColor=white&color=3aa675"/></a>
 <a href="https://discord.gg/m3ayxfumC8" target="_blank"><img src="https://img.shields.io/badge/Discord%20-%231DA1F2.svg?&style=for-the-badge&logo=discord&logoColor=white&color=5662f6"/></a>
 <a href="https://github.com/Gurge44/EndlessHostRoles/releases/latest" target="_blank"><img src="https://img.shields.io/badge/Latest Version%20-%231DA1F2.svg?&style=for-the-badge&logo=github&logoColor=white&color=181717"/></a>
 
@@ -27,9 +27,9 @@
 
 <br>
 
-#### Over 350 roles and add-ons, 7 custom game modes, and a custom team assigner application, making EHR the most extensive mod for Among Us. And it's all free, and only the host needs to have the mod installed for the entire lobby to play!
+#### Over 350 roles and add-ons, 7 custom game modes, and a custom team assigner application, making TOZ the most extensive mod for Among Us. And it's all free, and only the host needs to have the mod installed for the entire lobby to play!
 
-## Visit our website for a list of roles, their descriptions and more features: [EHR](https://sites.google.com/view/ehr-au)
+## Visit our website for a list of roles, their descriptions and more features: [TOZ](https://sites.google.com/view/TOZ-au)
 
 - The website is a work in progress and doesn't have all roles listed yet, but it's a good place to start if you're
   looking for more information about the mod.
@@ -243,12 +243,12 @@
 - Provocateur: No longer suicides after selecting a target
 - Pursuer: Target doesn't die when trying to use their kill button, they'll just have their kill cooldown reset
 
-### To see the full list of unique roles and their descriptions, visit our website: [EHR](https://sites.google.com/view/ehr-au)
+### To see the full list of unique roles and their descriptions, visit our website: [TOZ](https://sites.google.com/view/TOZ-au)
 
 ## Note:
 
 - You can use parts of the code in here, but if you do, you'll have to credit me (Gurge44) or the mod by mentioning its
-  name (EHR) and providing a link to this GitHub page. (Or leaving the in-game credits as they are is also fine!)
+  name (TOZ) and providing a link to this GitHub page. (Or leaving the in-game credits as they are is also fine!)
 - To play the mod, use the given dll in the release section.
 
 <br>
@@ -268,15 +268,16 @@
 ### :star: [TOHE/TONX](https://github.com/KARPED1EM/TownOfHostEdited) :
 
 >
-> - Our repo is a continuation of TOHE
+> - Our repo is a forked of TOHE
 > - TONX reference: Modify character limit for chat messages
 > - TONX reference: Modify and apply cool animations on Main Menu
 >
 
-### :star: [TOH](https://github.com/tukasa0001/TownOfHost) :
+
+### :star: [EHR](https://github.com/Gurge44/EndlessHostRoles) :
 
 >
-> - Our repo is based initially on TOH
+> - Our repo is based forked on EHR
 >
 
 ### :star: [TOHY](https://github.com/Yumenopai/TownOfHost_Y) :
@@ -353,7 +354,7 @@
 > - Reference: Custom Net Objects
 >
 
-### Endless Host Roles (EHR), with Endless Possibilities, brought to you by the Endless Network.
+### Endless Host Roles (TOZ), with Endless Possibilities, brought to you by the Endless Network.
 
 ##### Developers:
 

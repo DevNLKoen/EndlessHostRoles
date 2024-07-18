@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class Soothsayer : RoleBase
     {

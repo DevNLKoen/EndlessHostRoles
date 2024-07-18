@@ -1,11 +1,11 @@
 ﻿using AmongUs.GameOptions;
-using EHR.Crewmate;
-using EHR.Modules;
+using TOZ.Crewmate;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     public class Penguin : RoleBase
     {

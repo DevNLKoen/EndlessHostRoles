@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using InnerNet;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 // 来源：https://github.com/Yumenopai/TownOfHost_Y
 public class DarkHide : RoleBase

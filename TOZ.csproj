@@ -4,8 +4,8 @@
         <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
         <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
         <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-        <Description>EHR</Description>
-        <Authors>Gurge44</Authors>
+        <Description>TOZ</Description>
+        <Authors>NLKoen</Authors>
         <langVersion>preview</langVersion>
         <AmongUs>E:\Program Files\AmongUs</AmongUs>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.Modules;
+using TOZ.Neutral;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Transporter : RoleBase
     {

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Lawyer : RoleBase
 {
@@ -37,7 +37,7 @@ public class Lawyer : RoleBase
 
     public static readonly CustomRoles[] CRoleChangeRoles =
     [
-        CustomRoles.CrewmateEHR,
+        CustomRoles.CrewmateTOZ,
         CustomRoles.Jester,
         CustomRoles.Opportunist,
         CustomRoles.Convict,

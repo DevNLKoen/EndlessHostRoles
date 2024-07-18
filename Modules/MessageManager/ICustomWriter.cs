@@ -1,7 +1,7 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 
-namespace EHR;
+namespace TOZ;
 
 public interface ICustomWriter
 {

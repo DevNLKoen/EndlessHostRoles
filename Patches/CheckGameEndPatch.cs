@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using EHR.AddOns.GhostRoles;
-using EHR.Impostor;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.AddOns.GhostRoles;
+using TOZ.Impostor;
+using TOZ.Modules;
+using TOZ.Neutral;
 using HarmonyLib;
 using Hazel;
 using InnerNet;
 using UnityEngine;
-using static EHR.CustomWinnerHolder;
-using static EHR.Translator;
-using static EHR.Utils;
+using static TOZ.CustomWinnerHolder;
+using static TOZ.Translator;
+using static TOZ.Utils;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria))]
 class GameEndChecker

@@ -1,6 +1,6 @@
 ﻿using AmongUs.GameOptions;
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class Refugee : RoleBase
     {

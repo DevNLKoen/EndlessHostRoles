@@ -4,7 +4,7 @@ using System.Linq;
 using HarmonyLib;
 using UnityEngine;
 
-namespace EHR
+namespace TOZ
 {
     internal class HotPotatoManager
     {

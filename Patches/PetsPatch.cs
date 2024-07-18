@@ -1,6 +1,6 @@
-﻿using EHR.Modules;
+﻿using TOZ.Modules;
 
-namespace EHR;
+namespace TOZ;
 
 public static class PetsPatch
 {

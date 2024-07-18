@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using HarmonyLib;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
 
-namespace EHR.Impostor
+namespace TOZ.Impostor
 {
     internal class Mafia : RoleBase
     {

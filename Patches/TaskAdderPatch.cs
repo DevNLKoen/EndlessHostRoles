@@ -2,7 +2,7 @@ using System;
 using AmongUs.GameOptions;
 using HarmonyLib;
 
-namespace EHR;
+namespace TOZ;
 
 [HarmonyPatch(typeof(TaskAdderGame), nameof(TaskAdderGame.ShowFolder))]
 class ShowFolderPatch

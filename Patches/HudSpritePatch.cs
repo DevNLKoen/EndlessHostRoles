@@ -1,16 +1,16 @@
 ﻿using System;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Neutral;
-using EHR.Patches;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Neutral;
+using TOZ.Patches;
 using HarmonyLib;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 public static class CustomButton
 {
-    public static Sprite Get(string name) => Utils.LoadSprite($"EHR.Resources.Images.Skills.{name}.png", 115f);
+    public static Sprite Get(string name) => Utils.LoadSprite($"TOZ.Resources.Images.Skills.{name}.png", 115f);
 }
 
 [HarmonyPriority(520)]

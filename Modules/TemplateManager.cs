@@ -10,13 +10,13 @@ using AmongUs.Data;
 using HarmonyLib;
 using InnerNet;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR;
+namespace TOZ;
 
 public static class TemplateManager
 {
-    private const string TemplateFilePath = "./EHR_DATA/template.txt";
+    private const string TemplateFilePath = "./TOZ_DATA/template.txt";
 
     private static readonly Dictionary<string, Func<string>> ReplaceDictionary = new()
     {
@@ -52,7 +52,7 @@ public static class TemplateManager
         {
             try
             {
-                if (!Directory.Exists("EHR_DATA")) Directory.CreateDirectory("EHR_DATA");
+                if (!Directory.Exists("TOZ_DATA")) Directory.CreateDirectory("TOZ_DATA");
                 if (File.Exists("./template.txt")) File.Move("./template.txt", TemplateFilePath);
                 else
                 {
@@ -67,7 +67,7 @@ public static class TemplateManager
                         };
                     else fileName = "English";
                     Logger.Warn($"创建新的 Template 文件：{fileName}", "TemplateManager");
-                    File.WriteAllText(TemplateFilePath, GetResourcesTxt($"EHR.Resources.Config.template.{fileName}.txt"));
+                    File.WriteAllText(TemplateFilePath, GetResourcesTxt($"TOZ.Resources.Config.template.{fileName}.txt"));
                 }
             }
             catch (Exception ex)

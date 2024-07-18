@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 using Hazel;
 using UnityEngine;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Bandit : RoleBase
 {

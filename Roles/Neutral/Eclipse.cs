@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using AmongUs.GameOptions;
-using static EHR.Options;
+using static TOZ.Options;
 
-namespace EHR.Neutral;
+namespace TOZ.Neutral;
 
 public class Eclipse : RoleBase
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace EHR.AddOns.Impostor
+namespace TOZ.AddOns.Impostor
 {
     internal class Circumvent : IAddon
     {

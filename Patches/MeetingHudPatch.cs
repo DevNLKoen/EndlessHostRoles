@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
-using EHR.AddOns.Common;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.AddOns.Common;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Modules;
+using TOZ.Neutral;
 using HarmonyLib;
 using UnityEngine;
-using static EHR.Translator;
+using static TOZ.Translator;
 
 
-namespace EHR.Patches;
+namespace TOZ.Patches;
 
 [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
 class CheckForEndVotingPatch
@@ -325,7 +325,7 @@ class CheckForEndVotingPatch
         {
             coloredRole = (Lovers.LovingImpostorRoleForOtherImps.GetValue() switch
             {
-                0 => CustomRoles.ImpostorEHR,
+                0 => CustomRoles.ImpostorTOZ,
                 1 => Lovers.LovingImpostorRole,
                 _ => CustomRoles.LovingImpostor
             }).ToColoredString();

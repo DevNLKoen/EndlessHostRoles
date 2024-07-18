@@ -1,4 +1,4 @@
-﻿namespace EHR.Crewmate
+﻿namespace TOZ.Crewmate
 {
     public class Goose : ISettingHolder
     {

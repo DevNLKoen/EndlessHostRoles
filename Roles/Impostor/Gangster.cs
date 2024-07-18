@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR.Impostor;
+namespace TOZ.Impostor;
 
 public class Gangster : RoleBase
 {

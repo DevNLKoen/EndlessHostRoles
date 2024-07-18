@@ -1,4 +1,4 @@
-﻿namespace EHR.AddOns
+﻿namespace TOZ.AddOns
 {
     internal interface IAddon
     {

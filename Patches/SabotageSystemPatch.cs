@@ -1,10 +1,10 @@
-using EHR.Crewmate;
-using EHR.Modules;
-using EHR.Neutral;
+using TOZ.Crewmate;
+using TOZ.Modules;
+using TOZ.Neutral;
 using HarmonyLib;
 using Hazel;
 
-namespace EHR;
+namespace TOZ;
 
 //Based on:
 //https://github.com/Koke1024/Town-Of-Moss/blob/main/TownOfMoss/Patches/MeltDownBoost.cs

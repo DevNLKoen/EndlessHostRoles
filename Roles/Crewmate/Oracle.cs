@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using static EHR.Options;
-using static EHR.Translator;
+using static TOZ.Options;
+using static TOZ.Translator;
 
-namespace EHR.Crewmate;
+namespace TOZ.Crewmate;
 
 public class Oracle : RoleBase
 {

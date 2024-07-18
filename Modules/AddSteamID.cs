@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using static EHR.Translator;
+using static TOZ.Translator;
 
-namespace EHR;
+namespace TOZ;
 
 public static class AddSteamID
 {

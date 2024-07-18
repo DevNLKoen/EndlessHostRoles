@@ -1,15 +1,15 @@
 using System;
 using System.Linq;
 using AmongUs.Data;
-using EHR.AddOns.Common;
-using EHR.AddOns.Crewmate;
-using EHR.AddOns.Impostor;
-using EHR.Crewmate;
-using EHR.Impostor;
-using EHR.Neutral;
+using TOZ.AddOns.Common;
+using TOZ.AddOns.Crewmate;
+using TOZ.AddOns.Impostor;
+using TOZ.Crewmate;
+using TOZ.Impostor;
+using TOZ.Neutral;
 using HarmonyLib;
 
-namespace EHR.Patches;
+namespace TOZ.Patches;
 
 class ExileControllerWrapUpPatch
 {

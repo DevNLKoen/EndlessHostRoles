@@ -1,12 +1,12 @@
 using AmongUs.Data;
 using HarmonyLib;
 
-namespace EHR;
+namespace TOZ;
 
 // ²Î¿¼£ºhttps://github.com/ykundesu/SuperNewRoles/blob/master/SuperNewRoles/Patches/SNROnlySearch.cs
-public static class EHROnlySearch
+public static class TOZOnlySearch
 {
-    public const string FilterText = "EHR";
+    public const string FilterText = "TOZ";
     [HarmonyPatch(typeof(FilterTagManager), nameof(FilterTagManager.RefreshTags))]
     public static class FilterTagManagerPatch
     {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace EHR.AddOns.Common
+namespace TOZ.AddOns.Common
 {
     public class Sleep : IAddon
     {

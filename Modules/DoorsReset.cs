@@ -1,4 +1,4 @@
-namespace EHR.Modules;
+namespace TOZ.Modules;
 
 public static class DoorsReset
 {

@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace EHR;
+namespace TOZ;
 
 public class SimpleButton
 {
@@ -87,13 +87,13 @@ public class SimpleButton
         baseButton.gameObject.SetActive(false);
         // シーン切替時に破棄されないようにする
         Object.DontDestroyOnLoad(baseButton);
-        baseButton.name = "EHR_SimpleButtonBase";
+        baseButton.name = "TOZ_SimpleButtonBase";
         // 不要なコンポーネントを無効化
         Object.Destroy(baseButton.GetComponent<AspectPosition>());
         label.DestroyTranslator();
         label.fontSize = label.fontSizeMax = label.fontSizeMin = 3.5f;
         label.enableWordWrapping = false;
-        label.text = "EHR SIMPLE BUTTON BASE";
+        label.text = "TOZ SIMPLE BUTTON BASE";
         // 当たり判定がズレてるのを直す
         var buttonCollider = baseButton.GetComponent<BoxCollider2D>();
         buttonCollider.offset = new(0f, 0f);

@@ -2,7 +2,7 @@
 using AmongUs.GameOptions;
 using UnityEngine;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     internal class Perceiver : RoleBase
     {

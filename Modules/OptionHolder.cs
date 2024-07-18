@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EHR.AddOns;
-using EHR.Modules;
+using TOZ.AddOns;
+using TOZ.Modules;
 using HarmonyLib;
 using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 
-namespace EHR;
+namespace TOZ;
 
 [Flags]
 public enum CustomGameMode
@@ -783,7 +783,7 @@ public static class Options
         Logger.Info("Options.Load End", "Options");
         GroupOptions();
         GroupAddons();
-        //Process.Start(@".\EHR_DATA\SettingsUI.exe");
+        //Process.Start(@".\TOZ_DATA\SettingsUI.exe");
 
 #if DEBUG
         // Used for generating the table of roles for the README
@@ -792,7 +792,7 @@ public static class Options
             var sb = new System.Text.StringBuilder();
             var grouped = Enum.GetValues<CustomRoles>().GroupBy(x =>
             {
-                if (x is CustomRoles.GM or CustomRoles.Philantropist or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor or CustomRoles.Convict || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("EHR")) return 4;
+                if (x is CustomRoles.GM or CustomRoles.Philantropist or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor or CustomRoles.Convict || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("TOZ")) return 4;
                 if (x.IsAdditionRole()) return 3;
                 if (x.IsImpostor() || x.IsMadmate()) return 0;
                 if (x.IsNeutral()) return 1;
@@ -1145,9 +1145,9 @@ public static class Options
 
         #endregion
 
-        #region EHRSettings
+        #region TOZSettings
 
-        MainLoadingText = "Building EHR settings";
+        MainLoadingText = "Building TOZ settings";
 
         KickLowLevelPlayer = new IntegerOptionItem(19300, "KickLowLevelPlayer", new(0, 100, 1), 0, TabGroup.SystemSettings)
             .SetValueFormat(OptionFormat.Level)
