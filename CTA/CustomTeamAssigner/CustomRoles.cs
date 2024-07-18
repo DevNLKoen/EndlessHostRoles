@@ -199,12 +199,14 @@ public enum CustomRoles
     Nightmare,
     Observer,
     Oracle,
+    Oxyman,
     Paranoia,
     Perceiver,
     Philantropist,
     Psychic,
     Rabbit,
     Randomizer,
+    Rhapsode,
     Ricochet,
     Safeguard,
     Scout,
@@ -244,6 +246,7 @@ public enum CustomRoles
     Arsonist,
     Bandit,
     Bargainer,
+    Beehive,
     BloodKnight,
     Bubble,
     Chemist,
@@ -397,7 +400,6 @@ public enum CustomRoles
     GA, // Guardian Angel - Ghost role
     Guesser,
     Haste,
-    Haunter, // Ghost role
     Knighted,
     LastImpostor,
     Lazy,
@@ -439,7 +441,6 @@ public enum CustomRoles
     Truant,
     Undead,
     Unlucky,
-    Warden, // Ghost role
     Watcher,
     Workhorse,
     Youtuber

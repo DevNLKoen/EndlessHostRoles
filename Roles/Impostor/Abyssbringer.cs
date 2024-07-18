@@ -62,6 +62,7 @@ namespace TOZ.Impostor
 
         public override bool OnShapeshift(PlayerControl shapeshifter, PlayerControl target, bool shapeshifting)
         {
+            if (!shapeshifting && !Options.UseUnshiftTrigger.GetBool()) return true;
             CreateBlackHole(shapeshifter);
             return false;
         }
