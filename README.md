@@ -73,7 +73,7 @@
 | Enigma            | Fireworker      | Lawyer            | Guardian Angel |
 | Escort            | Freezer         | Magician          | Guesser        |
 | Express           | Gambler         | Vector            | Haste          |
-| Investigator      | Gangster        | Maverick          | Haunter        |
+| Investigator      | Gangster        | Maverick          |                |
 | Fortune Teller    | Generator       | Medusa            | Knighted       |
 | Gaulois           | Godfather       | Mycologist        | Last Impostor  |
 | Goose             | Greedy          | Necromancer       | Lazy           |

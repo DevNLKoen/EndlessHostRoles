@@ -1851,8 +1851,6 @@ public static class Utils
                         if (seer.Is(CustomRoles.Asthmatic)) SelfSuffix.Append(Asthmatic.GetSuffixText(seer.PlayerId));
                         if (seer.Is(CustomRoles.Sonar)) SelfSuffix.Append(Sonar.GetSuffix(seer, isForMeeting));
 
-                        SelfSuffix.Append(Haunter.GetSuffix(seer));
-
                         switch (seerRole)
                         {
                             case CustomRoles.SuperStar when Options.EveryOneKnowSuperStar.GetBool():
@@ -2410,7 +2408,7 @@ public static class Utils
                 GhostRolesManager.NotifyAboutGhostRole(pc);
             }
 
-            if (pc.Is(CustomRoles.Specter) || pc.Is(CustomRoles.Haunter)) pc.RpcResetAbilityCooldown();
+            if (pc.Is(CustomRoles.Specter)) pc.RpcResetAbilityCooldown();
 
             Main.CheckShapeshift[pc.PlayerId] = false;
         }

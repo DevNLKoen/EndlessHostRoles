@@ -21,7 +21,6 @@ namespace TOZ.Modules
             GhostRoles = Enum.GetValues<CustomRoles>().Where(x => x != CustomRoles.EvilSpirit && x.IsGhostRole() && x.IsEnable()).ToList();
 
             Logger.Msg($"Ghost roles: {GhostRoles.Join()}", "GhostRoles");
-            Haunter.AllHauntedPlayers = [];
         }
 
         public static void AssignGhostRole(PlayerControl pc)
@@ -37,8 +36,6 @@ namespace TOZ.Modules
             instance.OnAssign(pc);
             Main.ResetCamPlayerList.Add(pc.PlayerId);
             AssignedGhostRoles[pc.PlayerId] = (suitableRole, instance);
-
-            if (suitableRole == CustomRoles.Haunter) GhostRoles.Remove(suitableRole);
 
             NotifyAboutGhostRole(pc, true);
         }

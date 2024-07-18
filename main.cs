@@ -519,7 +519,6 @@ public class Main : BasePlugin
                 { CustomRoles.Warden, "#32a852" },
                 { CustomRoles.Minion, "#ff1919" },
                 { CustomRoles.Specter, "#b446e3" },
-                { CustomRoles.Haunter, "#d1b1de" },
                 { CustomRoles.GA, "#8cffff" },
                 // GM
                 { CustomRoles.GM, "#ff5b70" },

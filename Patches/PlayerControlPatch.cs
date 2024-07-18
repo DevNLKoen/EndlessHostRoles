@@ -1112,9 +1112,6 @@ class FixedUpdatePatch
                     case Warden warden:
                         warden.Update(__instance);
                         break;
-                    case Haunter haunter:
-                        haunter.Update(__instance);
-                        break;
                 }
             }
             else if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
@@ -1579,7 +1576,6 @@ class FixedUpdatePatch
 
                 if (self)
                 {
-                    Suffix.Append(Haunter.GetSuffix(seer));
                     if (seer.Is(CustomRoles.Asthmatic)) Suffix.Append(Asthmatic.GetSuffixText(seer.PlayerId));
                     if (seer.Is(CustomRoles.Sonar)) Suffix.Append(Sonar.GetSuffix(seer, GameStates.IsMeeting));
                 }

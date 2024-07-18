@@ -397,7 +397,6 @@ public enum CustomRoles
     GA, // Guardian Angel - Ghost role
     Guesser,
     Haste,
-    Haunter, // Ghost role
     Knighted,
     LastImpostor,
     Lazy,

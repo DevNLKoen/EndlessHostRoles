@@ -126,7 +126,7 @@ class RpcSetTasksPatch
 
         var pc = __instance.Object;
         if (pc == null) return;
-        CustomRoles role = GhostRolesManager.AssignedGhostRoles.TryGetValue(pc.PlayerId, out var gr) && gr.Instance is Specter or Haunter ? gr.Role : pc.GetCustomRole();
+        CustomRoles role = GhostRolesManager.AssignedGhostRoles.TryGetValue(pc.PlayerId, out var gr) && gr.Instance is Specter ? gr.Role : pc.GetCustomRole();
 
         // Default number of tasks
         bool hasCommonTasks = true;
@@ -140,7 +140,7 @@ class RpcSetTasksPatch
             NumLongTasks = data.NumLongTasks.GetInt(); // Number of long tasks to allocate
             NumShortTasks = data.NumShortTasks.GetInt(); // Number of short tasks to allocate
             // Longs and shorts are constantly reallocated.
-            if (role is CustomRoles.Specter or CustomRoles.Haunter) Main.PlayerStates[pc.PlayerId].TaskState.AllTasksCount = NumLongTasks + NumShortTasks;
+            if (role is CustomRoles.Specter) Main.PlayerStates[pc.PlayerId].TaskState.AllTasksCount = NumLongTasks + NumShortTasks;
         }
 
         if (pc.Is(CustomRoles.Busy))

@@ -360,11 +360,6 @@ public class TaskState
             if (GhostRolesManager.AssignedGhostRoles.TryGetValue(player.PlayerId, out var ghostRole))
             {
                 if (ghostRole is { Role: CustomRoles.Specter, Instance: Specter specter } && (CompletedTasksCount + 1 >= AllTasksCount)) specter.OnFinishedTasks(player);
-                if (ghostRole is { Role: CustomRoles.Haunter, Instance: Haunter haunter })
-                {
-                    if (CompletedTasksCount + 1 >= AllTasksCount) haunter.OnFinishedTasks(player);
-                    else if (CompletedTasksCount + 1 >= Haunter.TasksBeforeBeingKnown.GetInt()) haunter.OnOneTaskLeft(player);
-                }
             }
 
             Simon.RemoveTarget(player, Simon.Instruction.Task);

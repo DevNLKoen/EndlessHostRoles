@@ -98,7 +98,6 @@ public static class NameColorManager
             }
         }
 
-        if (isMeeting && Haunter.AllHauntedPlayers.Contains(target.PlayerId)) color = Main.ImpostorColor;
 
         var seerRole = seer.GetCustomRole();
         var targetRole = target.GetCustomRole();
