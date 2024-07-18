@@ -735,7 +735,7 @@ class ShapeshiftPatch
             return true;
         }
 
-        if (AmongUsClient.Instance.AmHost && shapeshifting && !Rhapsode.CheckAbilityUse(shapeshifter)) return false;
+        if (AmongUsClient.Instance.AmHost && shapeshifting) return false;
 
         Main.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
         Main.ShapeshiftTarget[shapeshifter.PlayerId] = target.PlayerId;
@@ -1851,12 +1851,6 @@ class CoEnterVentPatch
                 __instance.myPlayer?.Notify(BlockedAction.Vent.GetBlockNotify());
                 __instance.RpcBootFromVent(id);
             }, 0.5f, "RoleBlockedBootFromVent");
-            return true;
-        }
-
-        if (!Rhapsode.CheckAbilityUse(__instance.myPlayer))
-        {
-            LateTask.New(() => __instance.RpcBootFromVent(id), 0.5f, log: false);
             return true;
         }
 

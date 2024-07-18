@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using EHR.Modules;
+using TOZ.Modules;
 
-namespace EHR.Crewmate
+namespace TOZ.Crewmate
 {
     public class Rhapsode : RoleBase
     {

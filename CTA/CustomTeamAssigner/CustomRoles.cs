@@ -400,7 +400,6 @@ public enum CustomRoles
     GA, // Guardian Angel - Ghost role
     Guesser,
     Haste,
-    Haunter, // Ghost role
     Knighted,
     LastImpostor,
     Lazy,
@@ -442,7 +441,6 @@ public enum CustomRoles
     Truant,
     Undead,
     Unlucky,
-    Warden, // Ghost role
     Watcher,
     Workhorse,
     Youtuber
