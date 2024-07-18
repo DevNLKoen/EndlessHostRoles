@@ -92,7 +92,7 @@
 | Luckey            | Mercenary       | Provocateur       | Noisy          |
 | Markseeker        | Miner           | Pursuer           | Oblivious      |
 | Marshall          | Morphling       | Pyromaniac        | Onbound        |
-| Mathematician     | Ninja           | Quiz Master       | Sleep          |
+| Mathematician     | Ninja           |				      | Sleep          |
 | Mayor             | Nuker           | Reckless          | Phantasm       |
 | Mechanic          | Nullifier       | Revolutionist     | Physicist      |
 | Medic             | Overheat        | Ritualist         | Rascal         |

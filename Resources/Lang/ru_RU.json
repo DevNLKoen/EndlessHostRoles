@@ -2166,8 +2166,6 @@
   "CommandDescription.Vote": "Отдаст ваш голос за этого игрока",
   "CommandDescription.Ask": "Задаст вопрос как Mathematician",
   "CommandDescription.Answer": "Ответит на вопрос Mathematician'а",
-  "CommandDescription.QA": "Ответит на вопрос Quiz Master'а",
-  "CommandDescription.QS": "Покажет вопрос, заданный Quiz Master'ом",
   "CommandDescription.Target": "Выбрать цель как Ventriloquist",
   "CommandDescription.Chat": "Отправить сообщение от лица цели как Ventriloquist",
   "CommandDescription.Check": "Проверить, обладает ли данный игрок указанной ролью как Inquirer",

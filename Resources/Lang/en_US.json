@@ -2156,8 +2156,6 @@
   "CommandDescription.Vote": "Vote for a player",
   "CommandDescription.Ask": "Ask a question as the Mathematician",
   "CommandDescription.Answer": "Answer a math question asked by the Mathematician",
-  "CommandDescription.QA": "Answer a question asked by the Quiz Master",
-  "CommandDescription.QS": "View the current question asked by the Quiz Master",
   "CommandDescription.Target": "Target a player as the Ventriloquist",
   "CommandDescription.Chat": "Make your target send a message as the Ventriloquist",
   "CommandDescription.Check": "Check if a player has that role as the Inquirer",
