@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AmongUs.GameOptions;
 using TOZ.AddOns.Common;
 using TOZ.AddOns.Crewmate;
-using TOZ.AddOns.GhostRoles;
 using TOZ.AddOns.Impostor;
 using TOZ.Crewmate;
 using TOZ.Impostor;
