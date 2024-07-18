@@ -407,7 +407,6 @@ internal static class CustomRolesHelper
             CustomRoles.Simon => RoleTypes.Impostor,
             CustomRoles.Chemist => RoleTypes.Impostor,
             CustomRoles.Samurai => RoleTypes.Impostor,
-            CustomRoles.QuizMaster => RoleTypes.Impostor,
             CustomRoles.Bargainer => RoleTypes.Impostor,
             CustomRoles.Tiger => RoleTypes.Impostor,
             CustomRoles.SoulHunter => RoleTypes.Impostor,
@@ -519,7 +518,6 @@ internal static class CustomRolesHelper
         CustomRoles.Tremor or
         CustomRoles.Evolver or
         CustomRoles.Chemist or
-        CustomRoles.QuizMaster or
         CustomRoles.Samurai or
         CustomRoles.Bargainer or
         CustomRoles.Tiger or
@@ -1264,7 +1262,6 @@ public enum CountTypes
     Patroller,
     Simon,
     Chemist,
-    QuizMaster,
     Samurai,
     Bargainer,
     Tiger,

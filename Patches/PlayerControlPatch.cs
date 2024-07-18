@@ -979,11 +979,6 @@ class ReportDeadBodyPatch
                     break;
             }
 
-            if (QuizMaster.On)
-            {
-                QuizMaster.Data.LastPlayerPressedButtonName = player.GetRealName();
-                QuizMaster.Data.NumEmergencyMeetings++;
-            }
         }
         else
         {
@@ -1003,19 +998,8 @@ class ReportDeadBodyPatch
 
             if (Virus.InfectedBodies.Contains(target.PlayerId)) Virus.OnKilledBodyReport(player);
 
-            if (QuizMaster.On)
-            {
-                QuizMaster.Data.LastReporterName = player.GetRealName();
-                QuizMaster.Data.LastReportedPlayer = (Main.PlayerColors[target.PlayerId], target.GetPlayerColorString(), target.Object);
-                if (MeetingStates.FirstMeeting) QuizMaster.Data.FirstReportedBodyPlayerName = target.Object.GetRealName();
-            }
         }
 
-        if (QuizMaster.On)
-        {
-            if (MeetingStates.FirstMeeting) QuizMaster.Data.NumPlayersDeadFirstRound = Main.AllPlayerControls.Count(x => x.Data.IsDead && !x.Is(CustomRoles.GM));
-            QuizMaster.Data.NumMeetings++;
-        }
 
         Enigma.OnReportDeadBody(player, target);
         Mediumshiper.OnReportDeadBody(target);
@@ -1249,8 +1233,6 @@ class FixedUpdatePatch
                 {
                     CustomNetObject.FixedUpdate();
 
-                    if (QuizMaster.On && inTask && !lowLoad && QuizMaster.AllSabotages.Any(IsActive))
-                        QuizMaster.Data.LastSabotage = QuizMaster.AllSabotages.FirstOrDefault(IsActive);
                 }
 
                 if (!lowLoad && player.IsModClient() && player.Is(CustomRoles.Haste)) player.ForceKillTimerContinue = true;

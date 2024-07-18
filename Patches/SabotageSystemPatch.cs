@@ -273,7 +273,6 @@ public static class SabotageSystemTypeRepairDamagePatch
             CustomRoles.Refugee when player.IsAlive() => true,
             _ => Main.PlayerStates[player.PlayerId].Role.CanUseSabotage(player) && Main.PlayerStates[player.PlayerId].Role.OnSabotage(player)
         };
-        if (allow && QuizMaster.On) QuizMaster.Data.NumSabotages++;
 
         return allow;
     }

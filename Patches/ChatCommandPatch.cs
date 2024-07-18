@@ -132,8 +132,6 @@ internal static class ChatCommands
             new(["vote", "голос"], "{id}", GetString("CommandDescription.Vote"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, VoteCommand, true, [GetString("CommandArgs.Vote.Id")]),
             new(["ask", "спр", "спросить"], "{number1} {number2}", GetString("CommandDescription.Ask"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, AskCommand, true, [GetString("CommandArgs.Ask.Number1"), GetString("CommandArgs.Ask.Number2")]),
             new(["ans", "answer", "отв", "ответить"], "{number}", GetString("CommandDescription.Answer"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, AnswerCommand, true, [GetString("CommandArgs.Answer.Number")]),
-            new(["qa", "вопротв"], "{letter}", GetString("CommandDescription.QA"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, QACommand, true, [GetString("CommandArgs.QA.Letter")]),
-            new(["qs", "вопрпоказать"], "", GetString("CommandDescription.QS"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, QSCommand, true),
             new(["target", "цель"], "{id}", GetString("CommandDescription.Target"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, TargetCommand, true, [GetString("CommandArgs.Target.Id")]),
             new(["chat", "сообщение"], "{message}", GetString("CommandDescription.Chat"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, ChatCommand, true, [GetString("CommandArgs.Chat.Message")]),
             new(["check", "проверить"], "{id} {role}", GetString("CommandDescription.Check"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, CheckCommand, true, [GetString("CommandArgs.Check.Id"), GetString("CommandArgs.Check.Role")]),
@@ -671,21 +669,6 @@ internal static class ChatCommands
         if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId) ChatManager.SendPreviousMessagesToAll();
     }
 
-    private static void QSCommand(ChatController __instance, PlayerControl player, string text, string[] args)
-    {
-        if (!QuizMaster.On || !player.IsAlive()) return;
-        var qm2 = (QuizMaster)Main.PlayerStates.Values.First(x => x.Role is QuizMaster).Role;
-        if (qm2.Target != player.PlayerId || !QuizMaster.MessagesToSend.TryGetValue(player.PlayerId, out var msg)) return;
-        Utils.SendMessage(msg, player.PlayerId, GetString("QuizMaster.QuestionSample.Title"));
-    }
-
-    private static void QACommand(ChatController __instance, PlayerControl player, string text, string[] args)
-    {
-        if (args.Length < 2 || !QuizMaster.On || !player.IsAlive()) return;
-        var qm = (QuizMaster)Main.PlayerStates.Values.First(x => x.Role is QuizMaster).Role;
-        if (qm.Target != player.PlayerId) return;
-        qm.Answer(args[1].ToUpper());
-    }
 
     private static void AnswerCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {

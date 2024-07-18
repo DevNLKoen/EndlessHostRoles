@@ -294,7 +294,6 @@ public enum CustomRoles
     Provocateur,
     Pursuer,
     Pyromaniac,
-    QuizMaster,
     Reckless,
     Revolutionist,
     Ritualist,

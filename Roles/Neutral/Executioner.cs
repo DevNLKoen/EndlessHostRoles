@@ -25,11 +25,11 @@ public class Executioner : RoleBase
 
     public static readonly CustomRoles[] CRoleChangeRoles =
     [
-        CustomRoles.Amnesiac,
-        CustomRoles.Maverick,
+        //CustomRoles.Amnesiac,
+        //CustomRoles.Maverick,
         CustomRoles.CrewmateTOZ,
         CustomRoles.Jester,
-        CustomRoles.Opportunist,
+        //CustomRoles.Opportunist,
         CustomRoles.Convict,
         CustomRoles.CyberStar,
         CustomRoles.Bodyguard,

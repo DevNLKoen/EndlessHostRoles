@@ -662,7 +662,6 @@ public static class Utils
             case CustomRoles.Simon:
             case CustomRoles.Chemist:
             case CustomRoles.Samurai:
-            case CustomRoles.QuizMaster:
             case CustomRoles.Bargainer:
             case CustomRoles.Tiger:
             case CustomRoles.SoulHunter:
@@ -2555,8 +2554,6 @@ public static class Utils
             Adventurer.OnAnyoneDead(target);
             Soothsayer.OnAnyoneDeath(target.GetRealKiller(), target);
             TOZ.Impostor.Sentry.OnAnyoneMurder(target);
-
-            if (QuizMaster.On) QuizMaster.Data.NumPlayersDeadThisRound++;
 
             FixedUpdatePatch.LoversSuicide(target.PlayerId, onMeeting);
             if (!target.HasGhostRole())
