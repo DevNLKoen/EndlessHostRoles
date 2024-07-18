@@ -1,5 +1,5 @@
 <h1 align="center">Town Of Zloos</h1>
-<h5 align="center">froked from EHR</h5>
+<h5 align="center">froked from TOZ</h5>
 
 <br>
 
@@ -272,10 +272,10 @@
 >
 
 
-### :star: [EHR](https://github.com/Gurge44/EndlessHostRoles) :
+### :star: [TOZ](https://github.com/Gurge44/EndlessHostRoles) :
 
 >
-> - Our repo is based forked on EHR
+> - Our repo is based forked on TOZ
 >
 
 ### :star: [TOHY](https://github.com/Yumenopai/TownOfHost_Y) :
