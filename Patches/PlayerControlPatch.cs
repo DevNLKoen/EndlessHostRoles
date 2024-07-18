@@ -7,6 +7,7 @@ using AmongUs.GameOptions;
 using TOZ.AddOns.Common;
 using TOZ.AddOns.Crewmate;
 using TOZ.AddOns.Impostor;
+using TOZ.AddOns.GhostRoles;
 using TOZ.Crewmate;
 using TOZ.Impostor;
 using TOZ.Modules;
@@ -1005,7 +1006,6 @@ class ReportDeadBodyPatch
         Mortician.OnReportDeadBody(player, target);
         Spiritualist.OnReportDeadBody(target);
 
-        Bloodmoon.OnMeetingStart();
 
         Main.LastVotedPlayerInfo = null;
         Witness.AllKillers.Clear();
@@ -1114,9 +1114,6 @@ class FixedUpdatePatch
                         break;
                     case Haunter haunter:
                         haunter.Update(__instance);
-                        break;
-                    case Bloodmoon:
-                        Bloodmoon.Update(__instance);
                         break;
                 }
             }
@@ -1582,7 +1579,6 @@ class FixedUpdatePatch
 
                 if (self)
                 {
-                    Suffix.Append(Bloodmoon.GetSuffix(seer));
                     Suffix.Append(Haunter.GetSuffix(seer));
                     if (seer.Is(CustomRoles.Asthmatic)) Suffix.Append(Asthmatic.GetSuffixText(seer.PlayerId));
                     if (seer.Is(CustomRoles.Sonar)) Suffix.Append(Sonar.GetSuffix(seer, GameStates.IsMeeting));

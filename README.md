@@ -48,7 +48,7 @@
 | Autocrat          | Bomber          | Chemist           | Beartrap       |
 | Beacon            | Bounty Hunter   | Cherokious        | Bewilder       |
 | Benefactor        | Butcher         | Collector         | Bloodlust      |
-| Bodyguard         | Camouflager     | Deathknight       | Bloodmoon      |
+| Bodyguard         | Camouflager     | Deathknight       |                |
 | Camera Man        | Capitalist      | Demon             | Charmed        |
 | Celebrity         | Cantankerous    | Doppelganger      | Circumvent     |
 | Chameleon         | Changeling      | Doomsayer         | Cleansed       |

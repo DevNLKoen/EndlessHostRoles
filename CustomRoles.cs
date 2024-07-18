@@ -373,7 +373,6 @@ public enum CustomRoles
     Trapper, // Beartrap
     Bewilder,
     Bloodlust,
-    Bloodmoon, // Ghost role
     Charmed,
     Circumvent,
     Cleansed,

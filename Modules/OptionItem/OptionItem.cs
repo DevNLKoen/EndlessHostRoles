@@ -302,7 +302,8 @@ public enum TabGroup
     CrewmateRoles,
     NeutralRoles,
     Addons,
-    OtherRoles
+    OtherRoles,
+    ZloosSettings
 }
 
 public enum OptionFormat

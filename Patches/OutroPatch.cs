@@ -103,7 +103,6 @@ class EndGamePatch
 
         CustomNetObject.Reset();
         Main.LoversPlayers.Clear();
-        Bloodmoon.OnMeetingStart();
         AFKDetector.ExemptedPlayers.Clear();
 
         foreach (var state in Main.PlayerStates.Values)

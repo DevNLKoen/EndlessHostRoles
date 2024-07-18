@@ -707,6 +707,13 @@ public static class Options
     public static OptionItem MaxWaitAutoStart;
     public static OptionItem PlayerAutoStart;
 
+    //zloos options
+    public static OptionItem Zloosoption1;
+    public static OptionItem Zloosoption2;
+    public static OptionItem Zloosoption3;
+    public static OptionItem Zloosoption4;
+
+
     public static OptionItem DumpLogAfterGameEnd;
 
     private static readonly string[] SuffixModes =
@@ -779,51 +786,51 @@ public static class Options
     }
 
     private static void PostLoadTasks()
-    {
-        Logger.Info("Options.Load End", "Options");
-        GroupOptions();
-        GroupAddons();
-        //Process.Start(@".\TOZ_DATA\SettingsUI.exe");
+        {
+            Logger.Info("Options.Load End", "Options");
+            GroupOptions();
+            GroupAddons();
+            //Process.Start(@".\TOZ_DATA\SettingsUI.exe");
 
 #if DEBUG
-        // Used for generating the table of roles for the README
-        try
-        {
-            var sb = new System.Text.StringBuilder();
-            var grouped = Enum.GetValues<CustomRoles>().GroupBy(x =>
+            // Used for generating the table of roles for the README
+            try
             {
-                if (x is CustomRoles.GM or CustomRoles.Philantropist or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor or CustomRoles.Convict || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("TOZ")) return 4;
-                if (x.IsAdditionRole()) return 3;
-                if (x.IsImpostor() || x.IsMadmate()) return 0;
-                if (x.IsNeutral()) return 1;
-                if (x.IsCrewmate()) return 2;
-                return 4;
-            }).ToDictionary(x => x.Key, x => x.ToArray());
-            var max = grouped.Max(x => x.Value.Length);
-            for (int i = 0; i < max; i++)
-            {
-                var cr = grouped[2].ElementAtOrDefault(i);
-                var crew = Translator.GetString(cr.ToString());
-                var ir = grouped[0].ElementAtOrDefault(i);
-                var imp = Translator.GetString(ir.ToString());
-                if (ir == default) imp = string.Empty;
-                var nr = grouped[1].ElementAtOrDefault(i);
-                var neu = Translator.GetString(nr.ToString());
-                if (nr == default) neu = string.Empty;
-                var a = grouped[3].ElementAtOrDefault(i);
-                var add = Translator.GetString(a.ToString());
-                if (a == default) add = string.Empty;
-                sb.AppendLine($"| {crew,17} | {imp,17} | {neu,17} | {add,17} |");
-            }
+                var sb = new System.Text.StringBuilder();
+                var grouped = Enum.GetValues<CustomRoles>().GroupBy(x =>
+                {
+                    if (x is CustomRoles.GM or CustomRoles.Philantropist or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor or CustomRoles.Convict || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("TOZ")) return 4;
+                    if (x.IsAdditionRole()) return 3;
+                    if (x.IsImpostor() || x.IsMadmate()) return 0;
+                    if (x.IsNeutral()) return 1;
+                    if (x.IsCrewmate()) return 2;
+                    return 4;
+                }).ToDictionary(x => x.Key, x => x.ToArray());
+                var max = grouped.Max(x => x.Value.Length);
+                for (int i = 0; i < max; i++)
+                {
+                    var cr = grouped[2].ElementAtOrDefault(i);
+                    var crew = Translator.GetString(cr.ToString());
+                    var ir = grouped[0].ElementAtOrDefault(i);
+                    var imp = Translator.GetString(ir.ToString());
+                    if (ir == default) imp = string.Empty;
+                    var nr = grouped[1].ElementAtOrDefault(i);
+                    var neu = Translator.GetString(nr.ToString());
+                    if (nr == default) neu = string.Empty;
+                    var a = grouped[3].ElementAtOrDefault(i);
+                    var add = Translator.GetString(a.ToString());
+                    if (a == default) add = string.Empty;
+                    sb.AppendLine($"| {crew,17} | {imp,17} | {neu,17} | {add,17} |");
+                }
 
-            const string path = "./roles.txt";
-            if (!File.Exists(path)) File.Create(path).Close();
-            File.WriteAllText(path, sb.ToString());
-        }
-        catch (Exception e)
-        {
-            Utils.ThrowException(e);
-        }
+                const string path = "./roles.txt";
+                if (!File.Exists(path)) File.Create(path).Close();
+                File.WriteAllText(path, sb.ToString());
+            }
+            catch (Exception e)
+            {
+                Utils.ThrowException(e);
+            }
 #endif
     }
 
@@ -873,6 +880,16 @@ public static class Options
         if (CustomRoleCounts.TryGetValue(role, out var option))
         {
             option.SetValue(count - 1);
+        }
+    }
+
+    public static void SetRoleChance(CustomRoles role, float chance)
+    {
+        //rolechance[role] = chance;
+
+        if (CustomRoleSpawnChances.TryGetValue(role, out var option))
+        {
+            option.SetValue((int)chance - 1);
         }
     }
 
@@ -987,154 +1004,154 @@ public static class Options
 
         #region Roles/AddOns_Settings
 
-        int titleId = 100100;
+            int titleId = 100100;
 
-        LoadingPercentage = 5;
-        MainLoadingText = "Building Add-on Settings";
+            LoadingPercentage = 5;
+            MainLoadingText = "Building Add-on Settings";
 
-        var IAddonType = typeof(IAddon);
-        Dictionary<AddonTypes, IAddon[]> addonTypes = Assembly
-            .GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => IAddonType.IsAssignableFrom(t) && !t.IsInterface)
-            .OrderBy(t => Translator.GetString(t.Name))
-            .Select(type => (IAddon)Activator.CreateInstance(type))
-            .Where(x => x != null)
-            .GroupBy(x => x.Type)
-            .ToDictionary(x => x.Key, x => x.ToArray());
+            var IAddonType = typeof(IAddon);
+            Dictionary<AddonTypes, IAddon[]> addonTypes = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => IAddonType.IsAssignableFrom(t) && !t.IsInterface)
+                .OrderBy(t => Translator.GetString(t.Name))
+                .Select(type => (IAddon)Activator.CreateInstance(type))
+                .Where(x => x != null)
+                .GroupBy(x => x.Type)
+                .ToDictionary(x => x.Key, x => x.ToArray());
 
-        foreach (var addonType in addonTypes)
-        {
-            MainLoadingText = $"Building Add-on Settings ({addonType.Key})";
-            int index = 0;
-
-            new TextOptionItem(titleId, $"ROT.AddonType.{addonType.Key}", TabGroup.Addons)
-                .SetGameMode(CustomGameMode.Standard)
-                .SetColor(addonType.Key.GetAddonTypeColor())
-                .SetHeader(true);
-            titleId += 10;
-
-            foreach (var addon in addonType.Value)
+            foreach (var addonType in addonTypes)
             {
-                index++;
-                RoleLoadingText = $"{addon.GetType().Name} ({index}/{addonType.Value.Length})";
-                Log();
+                MainLoadingText = $"Building Add-on Settings ({addonType.Key})";
+                int index = 0;
 
-                addon.SetupCustomOption();
-            }
-
-            yield return null;
-        }
-
-        LoadingPercentage = 15;
-        MainLoadingText = "Building Role Settings";
-
-        var IVanillaType = typeof(IVanillaSettingHolder);
-        Assembly
-            .GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => IVanillaType.IsAssignableFrom(t) && !t.IsInterface)
-            .OrderBy(t => Translator.GetString(t.Name))
-            .Select(type => (IVanillaSettingHolder)Activator.CreateInstance(type))
-            .Do(x =>
-            {
-                new TextOptionItem(titleId, "ROT.Vanilla", x.Tab)
+                new BooleanOptionItem(titleId, $"ROT.AddonType.{addonType.Key}", false, TabGroup.Addons)
                     .SetGameMode(CustomGameMode.Standard)
-                    .SetColor(Color.white)
+                    .SetColor(addonType.Key.GetAddonTypeColor())
                     .SetHeader(true);
                 titleId += 10;
 
-                RoleLoadingText = x.GetType().Name;
-                Log();
-
-                x.SetupCustomOption();
-            });
-
-        var IType = typeof(ISettingHolder);
-        Dictionary<SimpleRoleOptionType, ISettingHolder[]> simpleRoleClasses = Assembly
-            .GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => IType.IsAssignableFrom(t) && !t.IsInterface)
-            .OrderBy(t => Translator.GetString(t.Name))
-            .GroupBy(x => ((CustomRoles)Enum.Parse(typeof(CustomRoles), ignoreCase: true, value: x.Name)).GetSimpleRoleOptionType())
-            .ToDictionary(x => x.Key, x => x.Select(type => (ISettingHolder)Activator.CreateInstance(type)).ToArray());
-
-        Dictionary<RoleOptionType, RoleBase[]> roleClassesDict = Main.AllRoleClasses
-            .Where(x => x.GetType().Name != "VanillaRole")
-            .GroupBy(x => ((CustomRoles)Enum.Parse(typeof(CustomRoles), ignoreCase: true, value: x.GetType().Name)).GetRoleOptionType())
-            .ToDictionary(x => x.Key, x => x.ToArray());
-
-        foreach (var roleClasses in roleClassesDict)
-        {
-            MainLoadingText = $"Building Role Settings: {roleClasses.Key} Roles";
-            int allRoles = roleClasses.Value.Length;
-            int index = 0;
-
-            var tab = roleClasses.Key.GetTabFromOptionType();
-
-            var key = roleClasses.Key.GetSimpleRoleOptionType();
-            if (simpleRoleClasses.TryGetValue(key, out ISettingHolder[] value) && value.Length > 0)
-            {
-                var categorySuffix = roleClasses.Key switch
+                foreach (var addon in addonType.Value)
                 {
-                    RoleOptionType.Neutral_Killing => "NK",
-                    RoleOptionType.Neutral_NonKilling => "NNK",
-                    _ => string.Empty
-                };
-                new TextOptionItem(titleId, $"ROT.Basic{categorySuffix}", tab)
-                    .SetGameMode(CustomGameMode.Standard)
-                    .SetColor(Color.gray)
-                    .SetHeader(true);
-                titleId += 10;
-
-                foreach (ISettingHolder holder in value)
-                {
-                    RoleLoadingText = $"(Simple {key}) {holder.GetType().Name} (total: {value.Length})";
+                    index++;
+                    RoleLoadingText = $"{addon.GetType().Name} ({index}/{addonType.Value.Length})";
                     Log();
 
-                    holder.SetupCustomOption();
+                    addon.SetupCustomOption();
                 }
-
-                simpleRoleClasses.Remove(key);
-            }
-
-            new TextOptionItem(titleId, $"ROT.{roleClasses.Key}", tab)
-                .SetHeader(true)
-                .SetGameMode(CustomGameMode.Standard)
-                .SetColor(roleClasses.Key.GetRoleOptionTypeColor());
-            titleId += 10;
-
-            foreach (var roleClass in roleClasses.Value)
-            {
-                index++;
-                var type = roleClass.GetType();
-                RoleLoadingText = $"{index}/{allRoles} ({type.Name})";
-                Log();
-                try
-                {
-                    type.GetMethod("SetupCustomOption")?.Invoke(roleClass, null);
-                }
-                catch (Exception e)
-                {
-                    Logger.Exception(e, $"{MainLoadingText} - {RoleLoadingText}");
-                }
-
-                yield return null;
-            }
-
-            if (roleClasses.Key == RoleOptionType.Impostor)
-            {
-                new TextOptionItem(titleId, "ROT.MadMates", TabGroup.ImpostorRoles)
-                    .SetHeader(true)
-                    .SetGameMode(CustomGameMode.Standard)
-                    .SetColor(Palette.ImpostorRed);
-                titleId += 10;
-            }
 
             yield return null;
-        }
+            }
 
-        void Log() => Logger.Info(" " + RoleLoadingText, MainLoadingText);
+            LoadingPercentage = 15;
+            MainLoadingText = "Building Role Settings";
+
+            var IVanillaType = typeof(IVanillaSettingHolder);
+            Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => IVanillaType.IsAssignableFrom(t) && !t.IsInterface)
+                .OrderBy(t => Translator.GetString(t.Name))
+                .Select(type => (IVanillaSettingHolder)Activator.CreateInstance(type))
+                .Do(x =>
+                {
+                    new TextOptionItem(titleId, "ROT.Vanilla", x.Tab)
+                        .SetGameMode(CustomGameMode.Standard)
+                        .SetColor(Color.white)
+                        .SetHeader(true);
+                    titleId += 10;
+
+                    RoleLoadingText = x.GetType().Name;
+                    Log();
+
+                    x.SetupCustomOption();
+                });
+
+            var IType = typeof(ISettingHolder);
+            Dictionary<SimpleRoleOptionType, ISettingHolder[]> simpleRoleClasses = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => IType.IsAssignableFrom(t) && !t.IsInterface)
+                .OrderBy(t => Translator.GetString(t.Name))
+                .GroupBy(x => ((CustomRoles)Enum.Parse(typeof(CustomRoles), ignoreCase: true, value: x.Name)).GetSimpleRoleOptionType())
+                .ToDictionary(x => x.Key, x => x.Select(type => (ISettingHolder)Activator.CreateInstance(type)).ToArray());
+
+            Dictionary<RoleOptionType, RoleBase[]> roleClassesDict = Main.AllRoleClasses
+                .Where(x => x.GetType().Name != "VanillaRole")
+                .GroupBy(x => ((CustomRoles)Enum.Parse(typeof(CustomRoles), ignoreCase: true, value: x.GetType().Name)).GetRoleOptionType())
+                .ToDictionary(x => x.Key, x => x.ToArray());
+
+            foreach (var roleClasses in roleClassesDict)
+            {
+                MainLoadingText = $"Building Role Settings: {roleClasses.Key} Roles";
+                int allRoles = roleClasses.Value.Length;
+                int index = 0;
+
+                var tab = roleClasses.Key.GetTabFromOptionType();
+
+                var key = roleClasses.Key.GetSimpleRoleOptionType();
+                if (simpleRoleClasses.TryGetValue(key, out ISettingHolder[] value) && value.Length > 0)
+                {
+                    var categorySuffix = roleClasses.Key switch
+                    {
+                        RoleOptionType.Neutral_Killing => "NK",
+                        RoleOptionType.Neutral_NonKilling => "NNK",
+                        _ => string.Empty
+                    };
+                    new TextOptionItem(titleId, $"ROT.Basic{categorySuffix}", tab)
+                        .SetGameMode(CustomGameMode.Standard)
+                        .SetColor(Color.gray)
+                        .SetHeader(true);
+                    titleId += 10;
+
+                    foreach (ISettingHolder holder in value)
+                    {
+                        RoleLoadingText = $"(Simple {key}) {holder.GetType().Name} (total: {value.Length})";
+                        Log();
+
+                        holder.SetupCustomOption();
+                    }
+
+                    simpleRoleClasses.Remove(key);
+                }
+
+                new TextOptionItem(titleId, $"ROT.{roleClasses.Key}", tab)
+                    .SetHeader(true)
+                    .SetGameMode(CustomGameMode.Standard)
+                    .SetColor(roleClasses.Key.GetRoleOptionTypeColor());
+                titleId += 10;
+
+                foreach (var roleClass in roleClasses.Value)
+                {
+                    index++;
+                    var type = roleClass.GetType();
+                    RoleLoadingText = $"{index}/{allRoles} ({type.Name})";
+                    Log();
+                    try
+                    {
+                        type.GetMethod("SetupCustomOption")?.Invoke(roleClass, null);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Exception(e, $"{MainLoadingText} - {RoleLoadingText}");
+                    }
+
+                yield return null;
+                }
+
+                if (roleClasses.Key == RoleOptionType.Impostor)
+                {
+                    new TextOptionItem(titleId, "ROT.MadMates", TabGroup.ImpostorRoles)
+                        .SetHeader(true)
+                        .SetGameMode(CustomGameMode.Standard)
+                        .SetColor(Palette.ImpostorRed);
+                    titleId += 10;
+                }
+
+            yield return null;
+            }
+
+            void Log() => Logger.Info(" " + RoleLoadingText, MainLoadingText);
 
         #endregion
 
@@ -1282,7 +1299,6 @@ public static class Options
 
         CEMode = new StringOptionItem(19800, "ConfirmEjectionsMode", ConfirmEjectionsMode, 2, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
-            .SetHeader(true)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
         ShowImpRemainOnEject = new BooleanOptionItem(19810, "ShowImpRemainOnEject", true, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
@@ -1315,7 +1331,6 @@ public static class Options
 
         // Random Maps Mode
         RandomMapsMode = new BooleanOptionItem(19900, "RandomMapsMode", false, TabGroup.GameSettings)
-            .SetHeader(true)
             .SetColor(new Color32(19, 188, 233, byte.MaxValue));
 
         LoadingPercentage = 68;
@@ -1427,7 +1442,6 @@ public static class Options
         // CommsCamouflage
         CommsCamouflage = new BooleanOptionItem(22200, "CommsCamouflage", false, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
-            .SetHeader(true)
             .SetColor(new Color32(243, 96, 96, byte.MaxValue));
         CommsCamouflageDisableOnFungle = new BooleanOptionItem(22202, "CommsCamouflageDisableOnFungle", true, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
@@ -1517,7 +1531,6 @@ public static class Options
 
         DisableShieldAnimations = new BooleanOptionItem(22601, "DisableShieldAnimations", true, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
-            .SetHeader(true)
             .SetColor(new Color32(255, 153, 153, byte.MaxValue));
         DisableKillAnimationOnGuess = new BooleanOptionItem(22602, "DisableKillAnimationOnGuess", true, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
@@ -1960,8 +1973,7 @@ public static class Options
             .SetHeader(true);
         GuesserMode = new BooleanOptionItem(19700, "GuesserMode", false, TabGroup.TaskSettings)
             .SetGameMode(CustomGameMode.Standard)
-            .SetColor(Color.yellow)
-            .SetHeader(true);
+            .SetColor(Color.yellow);
         CrewmatesCanGuess = new BooleanOptionItem(19710, "CrewmatesCanGuess", false, TabGroup.TaskSettings)
             .SetParent(GuesserMode);
         ImpostorsCanGuess = new BooleanOptionItem(19711, "ImpostorsCanGuess", false, TabGroup.TaskSettings)
@@ -1991,7 +2003,6 @@ public static class Options
 
         new TextOptionItem(100037, "MenuTitle.Meeting", TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
-            .SetHeader(true)
             .SetColor(new Color32(147, 241, 240, byte.MaxValue));
 
         SyncButtonMode = new BooleanOptionItem(23300, "SyncButtonMode", false, TabGroup.GameSettings)
@@ -2080,7 +2091,6 @@ public static class Options
             .SetColor(new Color32(193, 255, 209, byte.MaxValue));
 
         LadderDeath = new BooleanOptionItem(23800, "LadderDeath", false, TabGroup.GameSettings)
-            .SetHeader(true)
             .SetColor(new Color32(193, 255, 209, byte.MaxValue));
         LadderDeathChance = new StringOptionItem(23810, "LadderDeathChance", Rates[1..], 0, TabGroup.GameSettings)
             .SetParent(LadderDeath);
@@ -2122,7 +2132,6 @@ public static class Options
 
         GhostCanSeeOtherRoles = new BooleanOptionItem(24300, "GhostCanSeeOtherRoles", true, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
-            .SetHeader(true)
             .SetColor(new Color32(217, 218, 255, byte.MaxValue));
         GhostCanSeeOtherVotes = new BooleanOptionItem(24400, "GhostCanSeeOtherVotes", true, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
@@ -2141,6 +2150,39 @@ public static class Options
             .SetGameMode(CustomGameMode.Standard)
             .SetHeader(true)
             .SetColor(new Color32(215, 227, 84, byte.MaxValue));
+
+        new TextOptionItem(200028, "MenuTitle.Zloos", TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(true)
+            .SetColor(Color.red);
+        //.SetColor(new Color32(255, 80, 80, byte.MaxValue));
+        Zloosoption1 = new FloatOptionItem(200030, "MenuTitle.Zloos", new(1, 2, 33), 2, TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(true);
+        //.SetValueFormat(OptionFormat.Seconds);
+        Zloosoption2 = new BooleanOptionItem(200031, "ee", true, TabGroup.ZloosSettings);
+        Zloosoption4 = new RoleOptionItem(200040, "MenuTitle.Zloos", Rates[1..], 1, TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(false);
+
+        //.SetColor(Color.red);
+        //.SetColor(new Color32(255, 80, 80, byte.MaxValue));
+        new TextOptionItem(200041, "MenuTitle.Zloos", TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(true)
+            .SetColor(Color.red);
+        new TextOptionItem(200042, "MenuTitle.Zloos", TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(true)
+            .SetColor(Color.red);
+        new TextOptionItem(200043, "MenuTitle.Zloos", TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(true)
+            .SetColor(Color.red);
+        new TextOptionItem(200044, "MenuTitle.Zloos", TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(true)
+            .SetColor(Color.red);
 
         CustomTeamManager.LoadCustomTeams();
 

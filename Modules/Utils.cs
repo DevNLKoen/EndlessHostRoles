@@ -1851,7 +1851,6 @@ public static class Utils
                         if (seer.Is(CustomRoles.Asthmatic)) SelfSuffix.Append(Asthmatic.GetSuffixText(seer.PlayerId));
                         if (seer.Is(CustomRoles.Sonar)) SelfSuffix.Append(Sonar.GetSuffix(seer, isForMeeting));
 
-                        SelfSuffix.Append(Bloodmoon.GetSuffix(seer));
                         SelfSuffix.Append(Haunter.GetSuffix(seer));
 
                         switch (seerRole)

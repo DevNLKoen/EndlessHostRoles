@@ -321,7 +321,6 @@ public enum CustomRoles
     VengefulRomantic,
     Virus,
     Vulture,
-    Wraith,
     Werewolf,
     WeaponMaster,
     Workaholic,
@@ -374,7 +373,6 @@ public enum CustomRoles
     Trapper, // Beartrap
     Bewilder,
     Bloodlust,
-    Bloodmoon, // Ghost role
     Charmed,
     Circumvent,
     Cleansed,
