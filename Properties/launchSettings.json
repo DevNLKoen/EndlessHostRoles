@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "EHR": {
+      "commandName": "Project",
+      "commandLineArgs": "cd among"
+    }
+  }
+}

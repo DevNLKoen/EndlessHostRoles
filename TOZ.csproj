@@ -7,7 +7,7 @@
         <Description>TOZ</Description>
         <Authors>NLKoen</Authors>
         <langVersion>preview</langVersion>
-        <AmongUs>E:\Program Files\AmongUs</AmongUs>
+        <AmongUs>C:\Program Files (x86)\Steam\steamapps\common\AmongUs-modded</AmongUs>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Optimize>True</Optimize>
         <AssemblyName>$(MSBuildProjectName)</AssemblyName>

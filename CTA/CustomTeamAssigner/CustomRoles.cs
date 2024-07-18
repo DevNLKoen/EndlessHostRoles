@@ -1,4 +1,4 @@
-﻿namespace EHR;
+﻿namespace TOZ;
 
 public enum CustomRoles
 {
@@ -11,9 +11,9 @@ public enum CustomRoles
     Shapeshifter,
 
     // Vanilla Remakes
-    ImpostorEHR,
-    PhantomEHR,
-    ShapeshifterEHR,
+    ImpostorTOZ,
+    PhantomTOZ,
+    ShapeshifterTOZ,
 
     // Impostors
 
@@ -115,12 +115,12 @@ public enum CustomRoles
     Tracker,
 
     // Vanilla Remakes
-    CrewmateEHR,
-    EngineerEHR,
-    GuardianAngelEHR,
-    NoisemakerEHR,
-    ScientistEHR,
-    TrackerEHR,
+    CrewmateTOZ,
+    EngineerTOZ,
+    GuardianAngelTOZ,
+    NoisemakerTOZ,
+    ScientistTOZ,
+    TrackerTOZ,
 
     // Crewmates
 
