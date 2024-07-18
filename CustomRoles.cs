@@ -438,7 +438,6 @@ public enum CustomRoles
     Truant,
     Undead,
     Unlucky,
-    Warden, // Ghost role
     Watcher,
     Workhorse,
     Youtuber

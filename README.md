@@ -114,7 +114,7 @@
 | Psychic           | Stealth         | Sunnyboy          | Truant         |
 | Rabbit            | Time Thief      | Terrorist         | Undead         |
 | Randomizer        | Trapster        | Tiger             | Unlucky        |
-| Ricochet          | Trickster       | Traitor           | Warden         |
+| Ricochet          | Trickster       | Traitor           |                |
 | Safeguard         | Twister         | Tremor            | Watcher        |
 | Scout             | Underdog        | Vengeance         | Workhorse      |
 | Security Guard    | Undertaker      | Vengeful Romantic | YouTuber       |

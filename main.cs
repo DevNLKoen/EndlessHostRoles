@@ -516,7 +516,6 @@ public class Main : BasePlugin
                 { CustomRoles.Amnesiac, "#7FBFFF" },
                 { CustomRoles.Doomsayer, "#14f786" },
                 // Ghost roles
-                { CustomRoles.Warden, "#32a852" },
                 { CustomRoles.Minion, "#ff1919" },
                 { CustomRoles.Specter, "#b446e3" },
                 { CustomRoles.GA, "#8cffff" },

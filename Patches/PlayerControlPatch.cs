@@ -1105,16 +1105,7 @@ class FixedUpdatePatch
 
         if (AmongUsClient.Instance.AmHost)
         {
-            if (GhostRolesManager.AssignedGhostRoles.TryGetValue(__instance.PlayerId, out var ghostRole))
-            {
-                switch (ghostRole.Instance)
-                {
-                    case Warden warden:
-                        warden.Update(__instance);
-                        break;
-                }
-            }
-            else if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
+            if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
             {
                 GhostRolesManager.AssignGhostRole(__instance);
             }
