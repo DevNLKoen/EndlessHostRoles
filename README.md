@@ -92,7 +92,7 @@
 | Luckey            | Mercenary       | Provocateur       | Noisy          |
 | Markseeker        | Miner           | Pursuer           | Oblivious      |
 | Marshall          | Morphling       | Pyromaniac        | Onbound        |
-| Mathematician     | Ninja           |				      | Sleep          |
+| Mathematician     | Ninja           |	                  | Sleep          |
 | Mayor             | Nuker           | Reckless          | Phantasm       |
 | Mechanic          | Nullifier       | Revolutionist     | Physicist      |
 | Medic             | Overheat        | Ritualist         | Rascal         |
@@ -120,7 +120,7 @@
 | Security Guard    | Undertaker      | Vengeful Romantic | YouTuber       |
 | Sentinel          | Vampire         | Virus             |                |
 | Sentry            | Ventriloquist   | Vulture           |                |
-| Sheriff           | Vindicator      | Wraith            |                |
+| Sheriff           | Vindicator      |	                  |                |
 | Shiftguard        | Visionary       | Werewolf          |                |
 | Snitch            | Warlock         | Weapon Master     |                |
 | Soothsayer        | Wildling        | Workaholic        |                |
@@ -236,8 +236,6 @@
 #### Neutrals
 
 - Medusa: Can only clean bodies if their kill cooldown is up
-- Wraith: Setting whether it can vent normally when invis is on cooldown; Invis Cooldown is visualized next to the role
-  name
 - Poisoner: Kill Cooldown is reset when the poisoned target dies
 - Glitch is now The Glitch from TOU-R, it was completely rewritten, and I worked really hard on it
 - Provocateur: No longer suicides after selecting a target

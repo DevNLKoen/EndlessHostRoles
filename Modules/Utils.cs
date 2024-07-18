@@ -707,7 +707,6 @@ public static class Utils
             case CustomRoles.FFF:
             case CustomRoles.Gamer:
             case CustomRoles.HexMaster:
-            case CustomRoles.Wraith:
             case CustomRoles.Juggernaut:
             case CustomRoles.Ritualist:
             case CustomRoles.DarkHide:

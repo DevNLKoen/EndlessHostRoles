@@ -92,11 +92,6 @@ public class Swooper : RoleBase
                 Duration = Chameleon.ChameleonDuration.GetFloat();
                 VentNormallyOnCooldown = true;
                 break;
-            case CustomRoles.Wraith:
-                Cooldown = Wraith.WraithCooldown.GetFloat();
-                Duration = Wraith.WraithDuration.GetFloat();
-                VentNormallyOnCooldown = Wraith.WraithVentNormallyOnCooldown.GetBool();
-                break;
         }
 
         if (!AmongUsClient.Instance.AmHost || UsedRole == CustomRoles.Swooper) return;
@@ -205,8 +200,7 @@ public class Swooper : RoleBase
         LateTask.New(() =>
         {
             float limit = pc.GetAbilityUseLimit();
-            bool wraith = UsedRole == CustomRoles.Wraith;
-            if (CanGoInvis && (wraith || limit >= 1))
+            if (CanGoInvis && (limit >= 1))
             {
                 ventedId = ventId;
 
@@ -215,7 +209,6 @@ public class Swooper : RoleBase
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                 InvisTime = Utils.TimeStamp;
-                if (!wraith) pc.RpcRemoveAbilityUse();
                 SendRPC();
                 pc.Notify(GetString("SwooperInvisState"), Duration);
             }

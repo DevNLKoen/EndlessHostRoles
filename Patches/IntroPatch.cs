@@ -395,7 +395,6 @@ class BeginCrewmatePatch
                     => PlayerControl.LocalPlayer.KillSfx,
 
                 CustomRoles.Swooper or
-                    CustomRoles.Wraith or
                     CustomRoles.Chameleon or
                     CustomRoles.Drainer
                     => PlayerControl.LocalPlayer.MyPhysics.ImpostorDiscoveredSound,

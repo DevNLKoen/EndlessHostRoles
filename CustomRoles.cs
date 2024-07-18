@@ -321,7 +321,6 @@ public enum CustomRoles
     VengefulRomantic,
     Virus,
     Vulture,
-    Wraith,
     Werewolf,
     WeaponMaster,
     Workaholic,

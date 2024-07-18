@@ -296,9 +296,6 @@ public static class HudSpritePatch
                 case CustomRoles.Chameleon:
                     newAbilityButton = CustomButton.Get("invisible");
                     break;
-                case CustomRoles.Wraith:
-                    newAbilityButton = CustomButton.Get("invisible");
-                    break;
                 case CustomRoles.Escapee:
                     if (Options.UsePets.GetBool())
                         newPetButton = CustomButton.Get("abscond");

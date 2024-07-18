@@ -71,7 +71,6 @@ internal static class CustomRolesHelper
             CustomRoles.Poisoner => new Vampire(),
             CustomRoles.Reckless => new Sans(),
             CustomRoles.Ritualist => new EvilDiviner(),
-            CustomRoles.Wraith => new Swooper(),
             CustomRoles.Goose => new Penguin(),
 
             // Else, the role class is the role name - if the class doesn't exist, it defaults to VanillaRole
@@ -388,7 +387,6 @@ internal static class CustomRolesHelper
             CustomRoles.Medic => UsePets && Medic.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.Gamer => RoleTypes.Impostor,
             CustomRoles.HexMaster => RoleTypes.Impostor,
-            CustomRoles.Wraith => RoleTypes.Impostor,
             CustomRoles.Glitch => RoleTypes.Impostor,
             CustomRoles.Jailor => UsePets && Jailor.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.Juggernaut => RoleTypes.Impostor,
@@ -498,7 +496,6 @@ internal static class CustomRolesHelper
         CustomRoles.Cherokious or
         CustomRoles.Necromancer or
         CustomRoles.Agitater or
-        CustomRoles.Wraith or
         CustomRoles.Bandit or
         CustomRoles.Medusa or
         CustomRoles.Pelican or
@@ -962,7 +959,7 @@ internal static class CustomRolesHelper
         CustomRoles.Haste when !pc.CanUseKillButton() => false,
         CustomRoles.Diseased when pc.Is(CustomRoles.Antidote) => false,
         CustomRoles.Antidote when pc.Is(CustomRoles.Diseased) => false,
-        CustomRoles.Flashman or CustomRoles.Giant when pc.GetCustomRole() is CustomRoles.Swooper or CustomRoles.Wraith or CustomRoles.Chameleon or CustomRoles.Alchemist => false,
+        CustomRoles.Flashman or CustomRoles.Giant when pc.GetCustomRole() is CustomRoles.Swooper  or CustomRoles.Chameleon or CustomRoles.Alchemist => false,
         CustomRoles.Bait when pc.Is(CustomRoles.Unreportable) => false,
         CustomRoles.Busy when !pc.GetTaskState().hasTasks => false,
         CustomRoles.Truant when pc.Is(CustomRoles.SoulHunter) => false,
@@ -1252,7 +1249,6 @@ public enum CountTypes
     Succubus,
     Necromancer,
     HexMaster,
-    Wraith,
     NSerialKiller,
     RouleteGrandeur,
     Nonplus,
