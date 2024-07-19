@@ -196,13 +196,11 @@ internal static class CustomRolesHelper
             CustomRoles.GuessManagerRole => CustomRoles.Crewmate,
             CustomRoles.Altruist => CustomRoles.Crewmate,
             CustomRoles.Transmitter => CustomRoles.Crewmate,
-            CustomRoles.Oxyman => CustomRoles.Engineer,
             CustomRoles.Chef => CustomRoles.Crewmate,
             CustomRoles.Lyncher => CustomRoles.Crewmate,
             CustomRoles.Adrenaline => CustomRoles.Crewmate,
             CustomRoles.Safeguard => CustomRoles.Crewmate,
-            CustomRoles.Clairvoyant => UsePets ? CustomRoles.Crewmate : CustomRoles.Engineer,
-            CustomRoles.Rhapsode => UsePets ? CustomRoles.Crewmate : CustomRoles.Engineer,
+            CustomRoles.Clairvoyant => UsePets ? CustomRoles.Crewmate : CustomRoles.Engineer,           
             CustomRoles.Telekinetic => CustomRoles.Engineer,
             CustomRoles.Autocrat => CustomRoles.Crewmate,
             CustomRoles.Inquirer => CustomRoles.Crewmate,
@@ -400,7 +398,6 @@ internal static class CustomRolesHelper
             CustomRoles.BloodKnight => RoleTypes.Impostor,
             CustomRoles.Poisoner => RoleTypes.Impostor,
             CustomRoles.NSerialKiller => RoleTypes.Impostor,
-            CustomRoles.Beehive => RoleTypes.Impostor,
             CustomRoles.RouleteGrandeur => RoleTypes.Impostor,
             CustomRoles.Nonplus => RoleTypes.Impostor,
             CustomRoles.Tremor => RoleTypes.Impostor,
@@ -515,7 +512,6 @@ internal static class CustomRolesHelper
         CustomRoles.Rogue or
         CustomRoles.Parasite or
         CustomRoles.NSerialKiller or
-        CustomRoles.Beehive or
         CustomRoles.RouleteGrandeur or
         CustomRoles.Nonplus or
         CustomRoles.Tremor or
@@ -1258,7 +1254,6 @@ public enum CountTypes
     Necromancer,
     HexMaster,
     NSerialKiller,
-    Beehive,
     RouleteGrandeur,
     Nonplus,
     Tremor,
