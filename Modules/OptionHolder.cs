@@ -9,6 +9,7 @@ using HarmonyLib;
 using UnityEngine;
 using TOZ.Roles.Core;
 
+// ReSharper disable AccessToModifiedClosure
 // ReSharper disable InconsistentNaming
 
 namespace TOZ;
@@ -687,6 +688,7 @@ public static class Options
     public static OptionItem NoLimitAddonsNumMax;
     public static OptionItem BewilderVision;
     public static OptionItem SunglassesVision;
+
     public static OptionItem MadmateSpawnMode;
     public static OptionItem MadmateCountMode;
     public static OptionItem SheriffCanBeMadmate;
@@ -694,10 +696,10 @@ public static class Options
     public static OptionItem NGuesserCanBeMadmate;
     public static OptionItem SnitchCanBeMadmate;
     public static OptionItem JudgeCanBeMadmate;
-
     public static OptionItem MarshallCanBeMadmate;
-
     public static OptionItem FarseerCanBeMadmate;
+    public static OptionItem PresidentCanBeMadmate;
+
     public static OptionItem MadSnitchTasks;
     public static OptionItem FlashmanSpeed;
     public static OptionItem GiantSpeed;
@@ -2330,8 +2332,6 @@ public static class Options
 
         private OverrideTasksData(int idStart, TabGroup tab, CustomRoles role)
         {
-            IdStart = idStart;
-            Role = role;
             Dictionary<string, string> replacementDic = new() { { "%role%", role.ToColoredString() } };
             DoOverride = new BooleanOptionItem(idStart++, "doOverride", false, tab)
                 .SetParent(CustomRoleSpawnChances[role])
@@ -2353,9 +2353,6 @@ public static class Options
             if (!AllData.ContainsKey(role)) AllData.Add(role, this);
             else Logger.Warn("OverrideTasksData created for duplicate CustomRoles", "OverrideTasksData");
         }
-
-        public CustomRoles Role { get; private set; }
-        public int IdStart { get; private set; }
 
         public static OverrideTasksData Create(int idStart, TabGroup tab, CustomRoles role) => new(idStart, tab, role);
     }

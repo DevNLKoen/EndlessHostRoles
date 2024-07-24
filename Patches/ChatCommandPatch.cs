@@ -149,8 +149,9 @@ internal static class ChatCommands
             new(["sd", "взвук"], "{sound}", GetString("CommandDescription.SD"), Command.UsageLevels.Modded, Command.UsageTimes.Always, SDCommand, true, [GetString("CommandArgs.SD.Sound")]),
             new(["gno", "гно"], "{number}", GetString("CommandDescription.GNO"), Command.UsageLevels.Everyone, Command.UsageTimes.AfterDeathOrLobby, GNOCommand, true, [GetString("CommandArgs.GNO.Number")]),
             new(["poll", "опрос"], "{question} {answerA} {answerB} [answerC] [answerD]", GetString("CommandDescription.Poll"), Command.UsageLevels.HostOrModerator, Command.UsageTimes.Always, PollCommand, true, [GetString("CommandArgs.Poll.Question"), GetString("CommandArgs.Poll.AnswerA"), GetString("CommandArgs.Poll.AnswerB"), GetString("CommandArgs.Poll.AnswerC"), GetString("CommandArgs.Poll.AnswerD")]),
-            new(["pv", "проголосовать"], "{vote}", GetString("CommandDescription.PV"), Command.UsageLevels.Everyone, Command.UsageTimes.Always, PVCommand, true, [GetString("CommandArgs.PV.Vote")]),
+            new(["pv", "проголосовать"], "{vote}", GetString("CommandDescription.PV"), Command.UsageLevels.Everyone, Command.UsageTimes.Always, PVCommand, false, [GetString("CommandArgs.PV.Vote")]),
             new(["hm", "мс", "мессенджер"], "{id}", GetString("CommandDescription.HM"), Command.UsageLevels.Everyone, Command.UsageTimes.AfterDeath, HMCommand, true, [GetString("CommandArgs.HM.Id")]),
+            new(["decree", "постановление"], "{number}", GetString("CommandDescription.Decree"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, DecreeCommand, true, [GetString("CommandArgs.Decree.Number")]),
 
             // Commands with action handled elsewhere
             new(["shoot", "guess", "bet", "st", "bt", "угадать", "бт"], "{id} {role}", GetString("CommandDescription.Guess"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, (_, _, _, _) => { }, true, [GetString("CommandArgs.Guess.Id"), GetString("CommandArgs.Guess.Role")]),
@@ -252,6 +253,25 @@ internal static class ChatCommands
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------
+
+    private static void DecreeCommand(ChatController __instance, PlayerControl player, string text, string[] args)
+    {
+        if (!player.Is(CustomRoles.President)) return;
+
+        if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId)
+            ChatManager.SendPreviousMessagesToAll();
+
+        LateTask.New(() =>
+        {
+            if (args.Length < 2)
+            {
+                Utils.SendMessage(President.GetHelpMessage(), player.PlayerId);
+                return;
+            }
+
+            President.UseDecree(player, args[1]);
+        }, 0.2f, log: false);
+    }
 
     private static void HMCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
@@ -535,6 +555,12 @@ internal static class ChatCommands
             return;
         }
 
+        if (!player.IsHost() && !Options.PlayerCanSetColor.GetBool())
+        {
+            Utils.SendMessage(GetString("DisableUseCommand"), player.PlayerId);
+            return;
+        }
+
         string subArgs = args.Length < 2 ? string.Empty : args[1];
         var color = Utils.MsgToColor(subArgs, true);
         if (color == byte.MaxValue)
@@ -687,15 +713,16 @@ internal static class ChatCommands
     {
         if (text.Length < 6 || !GameStates.IsMeeting) return;
         string toVote = text[6..].Replace(" ", string.Empty);
-        if (!byte.TryParse(toVote, out var voteId)) return;
+        if (!byte.TryParse(toVote, out var voteId) || MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == player.PlayerId)?.DidVote == true) return;
         if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId) ChatManager.SendPreviousMessagesToAll();
-        MeetingHud.Instance?.CastVote(player.PlayerId, voteId);
+        if (!player.IsHost()) MeetingHud.Instance?.CastVote(player.PlayerId, voteId);
+        else MeetingHud.Instance?.CmdCastVote(player.PlayerId, voteId);
     }
 
     private static void SayCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
         if (args.Length > 1)
-            Utils.SendMessage(args.Skip(1).Join(delimiter: " "), title: $"<color=#ff0000>{GetString("MessageFromTheHost")}</color>");
+            Utils.SendMessage(args.Skip(1).Join(delimiter: " "), title: $"<color=#ff0000>{GetString(player.IsHost() ? "MessageFromTheHost" : "SayTitle")}</color>");
     }
 
     private static void DeathCommand(ChatController __instance, PlayerControl player, string text, string[] args)
@@ -757,14 +784,16 @@ internal static class ChatCommands
                 Utils.ShowChildrenSettings(opt, ref settings, disableColor: false);
             settings.Append("</size>");
             if (role.PetActivatedAbility()) sb.Append($"<size=50%>{GetString("SupportsPetMessage")}</size>");
-            sb.Replace(role.ToString(), role.ToColoredString());
-            sb.Replace(role.ToString().ToLower(), role.ToColoredString());
+            var searchStr = GetString(role.ToString());
+            sb.Replace(searchStr, role.ToColoredString());
+            sb.Replace(searchStr.ToLower(), role.ToColoredString());
             sb.Append("<size=70%>");
             foreach (CustomRoles subRole in Main.PlayerStates[player.PlayerId].SubRoles)
             {
                 sb.Append($"\n\n{subRole.ToColoredString()} {Utils.GetRoleMode(subRole)} {GetString($"{subRole}InfoLong")}");
-                sb.Replace(subRole.ToString(), subRole.ToColoredString());
-                sb.Replace(subRole.ToString().ToLower(), subRole.ToColoredString());
+                var searchSubStr = GetString(subRole.ToString());
+                sb.Replace(searchSubStr, subRole.ToColoredString());
+                sb.Replace(searchSubStr.ToLower(), subRole.ToColoredString());
             }
 
             if (settings.Length > 0) Utils.SendMessage("\n", player.PlayerId, settings.ToString());

@@ -362,6 +362,8 @@
 
 - Dx
 - PH_Gaming
+- TommyXL
+- Drakos
 
 ##### Special Thanks:
 

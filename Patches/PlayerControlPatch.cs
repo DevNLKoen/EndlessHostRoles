@@ -729,12 +729,6 @@ class ShapeshiftPatch
 
         var shapeshifting = shapeshifter.PlayerId != target.PlayerId;
 
-        if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
-        {
-            // Don't know how you would get here but ok
-            return true;
-        }
-
         if (AmongUsClient.Instance.AmHost && shapeshifting) return false;
 
         Main.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
@@ -806,8 +800,10 @@ class ShapeshiftPatch
             var rndTarget = Main.AllAlivePlayerControls.Without(shapeshifter).RandomElement();
             var outfit = shapeshifter.Data.DefaultOutfit;
             shapeshifter.RpcShapeshift(rndTarget, false);
+            Main.CheckShapeshift[shapeshifter.PlayerId] = false;
             RpcChangeSkin(shapeshifter, outfit);
             NotifyRoles(SpecifySeer: shapeshifter, SpecifyTarget: shapeshifter, NoCache: true);
+            shapeshifter.RpcResetAbilityCooldown();
         }
 
         return isSSneeded || (!shouldCancel && !forceCancel) || (!shapeshifting && !shouldAlwaysCancel && !unshiftTrigger);
@@ -824,7 +820,7 @@ class ShapeshiftPatch
         {
             if (pc.Is(CustomRoles.Shiftguard))
             {
-                pc.Notify(shapeshifting ? GetString("ShiftguardNotifySS") : "ShiftguardNotifyUnshift");
+                pc.Notify(shapeshifting ? GetString("ShiftguardNotifySS") : GetString("ShiftguardNotifyUnshift"));
             }
 
             switch (Main.PlayerStates[pc.PlayerId].Role)
@@ -1098,6 +1094,7 @@ class FixedUpdatePatch
     private static readonly Dictionary<byte, int> DeadBufferTime = [];
     private static readonly Dictionary<byte, long> LastUpdate = [];
     private static long LastAddAbilityTime;
+    private static bool ChatOpen;
 
     public static async void Postfix(PlayerControl __instance)
     {
@@ -1122,10 +1119,24 @@ class FixedUpdatePatch
         }
 
         if (AmongUsClient.Instance.AmHost)
-        {
             if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
             {
                 GhostRolesManager.AssignGhostRole(__instance);
+            }
+        }
+
+        if (GameStates.IsMeeting)
+        {
+            switch (ChatOpen)
+            {
+                case false when DestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening:
+                    ChatOpen = true;
+                    break;
+                case true when DestroyableSingleton<HudManager>.Instance.Chat.IsClosedOrClosing:
+                    ChatOpen = false;
+                    if (GameStates.IsVoting)
+                        GuessManager.CreateIDLabels(MeetingHud.Instance);
+                    break;
             }
         }
 

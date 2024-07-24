@@ -31,6 +31,7 @@ public static class ModGameOptionsMenu
     public static Dictionary<OptionBehaviour, int> OptionList = new();
     public static Dictionary<int, OptionBehaviour> BehaviourList = new();
     public static Dictionary<int, CategoryHeaderMasked> CategoryHeaderList = new();
+    public static readonly System.Collections.Generic.Dictionary<OptionBehaviour, CustomRoles> HelpIcons = [];
     public static Dictionary<int, RoleOptionSetting> RoleOptionList = new();
     public static Dictionary<int, CategoryHeaderMasked> categoryHeaderEditRole = new();
 }
@@ -655,8 +656,10 @@ public static class GameOptionsMenuPatch
                 break;
 
             case OptionTypes.String:
-                optionBehaviour.transform.FindChild("PlusButton (1)").localPosition += new Vector3(option.IsText ? 500f : 1.7f, option.IsText ? 500f : 0f, option.IsText ? 500f : 0f);
-                optionBehaviour.transform.FindChild("MinusButton (1)").localPosition += new Vector3(option.IsText ? 500f : 0.9f, option.IsText ? 500f : 0f, option.IsText ? 500f : 0f);
+                var plusButton = optionBehaviour.transform.FindChild("PlusButton (1)");
+                var minusButton = optionBehaviour.transform.FindChild("MinusButton (1)");
+                plusButton.localPosition += new Vector3(option.IsText ? 500f : 1.7f, option.IsText ? 500f : 0f, option.IsText ? 500f : 0f);
+                minusButton.localPosition += new Vector3(option.IsText ? 500f : 0.9f, option.IsText ? 500f : 0f, option.IsText ? 500f : 0f);
                 var valueTMP = optionBehaviour.transform.FindChild("Value_TMP (1)");
                 valueTMP.localPosition += new Vector3(1.3f, 0f, 0f);
                 valueTMP.GetComponent<RectTransform>().sizeDelta = new(2.3f, 0.4f);
@@ -797,6 +800,19 @@ public static class GameOptionsMenuPatch
 
         return baseGameSetting;
     }
+
+    public static void ReloadUI(bool preset = false)
+    {
+        GameSettingMenu.Instance?.Close();
+        LateTask.New(() =>
+        {
+            if (GameStates.IsLobby) GameObject.Find("Host Buttons")?.transform.FindChild("Edit")?.GetComponent<PassiveButton>()?.ReceiveClickDown();
+        }, 0.1f, log: false);
+        LateTask.New(() =>
+        {
+            if (GameStates.IsLobby) GameSettingMenu.Instance?.ChangeTab(preset ? 3 : 4, Controller.currentTouchType == Controller.TouchType.Joystick);
+        }, 0.28f, log: false);
+    }
 }
 
 [HarmonyPatch(typeof(ToggleOption))]
@@ -901,6 +917,7 @@ public static class NumberOptionPatch
                     break;
                 case PresetOptionItem presetOptionItem:
                     presetOptionItem.SetValue(presetOptionItem.Rule.GetNearestIndex(__instance.GetInt()));
+                    GameOptionsMenuPatch.ReloadUI(preset: true);
                     break;
             }
 
@@ -992,12 +1009,19 @@ public static class StringOptionPatch
         {
             var item = OptionItem.AllOptions[index];
             var name = item.GetName();
-            if (Enum.GetValues<CustomRoles>().Any(x => Translator.GetString($"{x}") == name.RemoveHtmlTags()))
+            string name1 = name;
+            if (Enum.GetValues<CustomRoles>().Find(x => Translator.GetString($"{x}") == name1.RemoveHtmlTags(), out var role))
             {
-                name = $"<size=3.5>{name}</size>";
+                name = name.RemoveHtmlTags();
+                if (Options.UsePets.GetBool() && role.PetActivatedAbility()) name += Translator.GetString("SupportsPetIndicator");
+                if (!Options.UsePets.GetBool() && role.OnlySpawnsWithPets()) name += Translator.GetString("RequiresPetIndicator");
                 __instance.TitleText.fontWeight = FontWeight.Black;
                 __instance.TitleText.outlineColor = new(255, 255, 255, 255);
                 __instance.TitleText.outlineWidth = 0.04f;
+                __instance.LabelBackground.color = Utils.GetRoleColor(role);
+                __instance.TitleText.color = Color.white;
+                name = $"<size=3.5>{name}</size>";
+                SetupHelpIcon(role, __instance);
             }
 
             __instance.TitleText.text = name;
@@ -1007,6 +1031,21 @@ public static class StringOptionPatch
         return true;
     }
 
+    private static void SetupHelpIcon(CustomRoles role, StringOption option)
+    {
+        var template = option.transform.FindChild("MinusButton (1)");
+        var icon = Object.Instantiate(template, template.parent, true);
+        icon.name = $"{role}HelpIcon";
+        var text = icon.FindChild("Plus_TMP").GetComponent<TextMeshPro>();
+        text.text = "?";
+        text.color = Color.white;
+        icon.FindChild("InactiveSprite").GetComponent<SpriteRenderer>().color = Color.black;
+        icon.FindChild("ActiveSprite").GetComponent<SpriteRenderer>().color = Color.gray;
+        icon.localPosition += new Vector3(-0.8f, 0f, 0f);
+        icon.SetAsLastSibling();
+        ModGameOptionsMenu.HelpIcons[option] = role;
+    }
+
     [HarmonyPatch(nameof(StringOption.UpdateValue)), HarmonyPrefix]
     private static bool UpdateValuePrefix(StringOption __instance)
     {
@@ -1014,6 +1053,7 @@ public static class StringOptionPatch
         {
             var item = OptionItem.AllOptions[index];
             item.SetValue(__instance.GetInt());
+            if (item.Name == "GameMode") GameOptionsMenuPatch.ReloadUI();
             return false;
         }
 
@@ -1061,6 +1101,21 @@ public static class StringOptionPatch
     [HarmonyPatch(nameof(StringOption.Decrease)), HarmonyPrefix]
     public static bool DecreasePrefix(StringOption __instance)
     {
+        if (ModGameOptionsMenu.OptionList.TryGetValue(__instance, out var index) && !__instance.transform.FindChild("MinusButton (1)").GetComponent<PassiveButton>().activeSprites.activeSelf)
+        {
+            var item = OptionItem.AllOptions[index];
+            var name = item.GetName();
+            if (Enum.GetValues<CustomRoles>().Find(x => Translator.GetString($"{x}") == name.RemoveHtmlTags(), out var role))
+            {
+                var roleName = role.IsVanilla() ? role + "EHR" : role.ToString();
+                var str = Translator.GetString($"{roleName}InfoLong");
+                var infoLong = str[(str.IndexOf('\n') + 1)..(str.Split("\n\n")[0].Length)];
+                var info = $"<size=70%>{role.ToColoredString()}: {infoLong}</size>";
+                GameSettingMenu.Instance.MenuDescriptionText.text = info;
+                return false;
+            }
+        }
+
         if (__instance.Value == 0)
         {
             __instance.Value = __instance.Values.Length - 1;
@@ -1281,10 +1336,8 @@ public class GameSettingMenuPatch
     [HarmonyPatch(nameof(GameSettingMenu.Close)), HarmonyPostfix]
     public static void ClosePostfix()
     {
-        foreach (var button in ModSettingsButtons.Values)
-            Object.Destroy(button);
-        foreach (var tab in ModSettingsTabs.Values)
-            Object.Destroy(tab);
+        foreach (var button in ModSettingsButtons.Values) Object.Destroy(button);
+        foreach (var tab in ModSettingsTabs.Values) Object.Destroy(tab);
         ModSettingsButtons = [];
         ModSettingsTabs = [];
     }

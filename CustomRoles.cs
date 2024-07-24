@@ -202,6 +202,7 @@ public enum CustomRoles
     Paranoia,
     Perceiver,
     Philantropist,
+    President,
     Psychic,
     Rabbit,
     Randomizer,

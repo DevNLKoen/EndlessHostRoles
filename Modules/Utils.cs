@@ -806,14 +806,14 @@ public static class Utils
                    (pc.Is(CustomRoles.Judge) && !Options.JudgeCanBeMadmate.GetBool()) ||
                    (pc.Is(CustomRoles.Marshall) && !Options.MarshallCanBeMadmate.GetBool()) ||
                    (pc.Is(CustomRoles.Farseer) && !Options.FarseerCanBeMadmate.GetBool()) ||
+                   (pc.Is(CustomRoles.President) && !Options.PresidentCanBeMadmate.GetBool()) ||
                    pc.Is(CustomRoles.NiceSwapper) ||
+                   pc.Is(CustomRoles.Speedrunner) ||
                    pc.Is(CustomRoles.Needy) ||
                    pc.Is(CustomRoles.Lazy) ||
                    pc.Is(CustomRoles.Loyal) ||
                    pc.Is(CustomRoles.SuperStar) ||
                    pc.Is(CustomRoles.CyberStar) ||
-                   pc.Is(CustomRoles.Demolitionist) ||
-                   pc.Is(CustomRoles.NiceEraser) ||
                    pc.Is(CustomRoles.Egoist) ||
                    pc.Is(CustomRoles.DualPersonality)
                );
@@ -1496,7 +1496,7 @@ public static class Utils
     public static void ShowHelp(byte ID)
     {
         var player = GetPlayerById(ID);
-        SendMessage(ChatCommands.AllCommands.Where(x => x.CanUseCommand(player)).Aggregate("<size=70%>", (s, c) => s + $"\n<b>/{c.CommandForms.Where(f => f.All(char.IsAscii)).MinBy(f => f.Length)}{(c.Arguments.Length == 0 ? string.Empty : $" {c.Arguments.Split(' ').Select((x, i) => ColorString(GetColor(i), x)).Join(delimiter: " ")}")}</b> \u2192 {c.Description}"), ID, title: GetString("CommandList"));
+        SendMessage(ChatCommands.AllCommands.Where(x => x.CanUseCommand(player, checkTime: false)).Aggregate("<size=70%>", (s, c) => s + $"\n<b>/{c.CommandForms.Where(f => f.All(char.IsAscii)).MinBy(f => f.Length)}{(c.Arguments.Length == 0 ? string.Empty : $" {c.Arguments.Split(' ').Select((x, i) => ColorString(GetColor(i), x)).Join(delimiter: " ")}")}</b> \u2192 {c.Description}"), ID, title: GetString("CommandList"));
         return;
 
         Color GetColor(int i) => i switch
@@ -1539,7 +1539,7 @@ public static class Utils
 
     public static void CheckAndSpawnAdditionalRefugee(NetworkedPlayerInfo deadPlayer)
     {
-        if (Options.CurrentGameMode != CustomGameMode.Standard || deadPlayer == null || deadPlayer.Object.Is(CustomRoles.Refugee) || !Options.SpawnAdditionalRefugeeOnImpsDead.GetBool() || Main.AllAlivePlayerControls.Length < Options.SpawnAdditionalRefugeeMinAlivePlayers.GetInt() || CustomRoles.Refugee.RoleExist(countDead: true) || Main.AllAlivePlayerControls == null || Main.AllAlivePlayerControls.Length == 0 || Main.AllAlivePlayerControls.Any(x => x.PlayerId != deadPlayer.PlayerId && (x.Is(CustomRoleTypes.Impostor) || (x.IsNeutralKiller() && !Options.SpawnAdditionalRefugeeWhenNKAlive.GetBool())))) return;
+        if (Options.CurrentGameMode != CustomGameMode.Standard || deadPlayer == null || deadPlayer.Object.Is(CustomRoles.Refugee) || Main.HasJustStarted || !GameStates.InGame || !Options.SpawnAdditionalRefugeeOnImpsDead.GetBool() || Main.AllAlivePlayerControls.Length < Options.SpawnAdditionalRefugeeMinAlivePlayers.GetInt() || CustomRoles.Refugee.RoleExist(countDead: true) || Main.AllAlivePlayerControls == null || Main.AllAlivePlayerControls.Length == 0 || Main.AllAlivePlayerControls.Any(x => x.PlayerId != deadPlayer.PlayerId && (x.Is(CustomRoleTypes.Impostor) || (x.IsNeutralKiller() && !Options.SpawnAdditionalRefugeeWhenNKAlive.GetBool())))) return;
 
         PlayerControl[] ListToChooseFrom = Options.UsePets.GetBool() ? Main.AllAlivePlayerControls.Where(x => x.PlayerId != deadPlayer.PlayerId && x.Is(CustomRoleTypes.Crewmate) && !x.Is(CustomRoles.Loyal)).ToArray() : Main.AllAlivePlayerControls.Where(x => x.PlayerId != deadPlayer.PlayerId && x.Is(CustomRoleTypes.Crewmate) && x.GetCustomRole().GetRoleTypes() == RoleTypes.Impostor && !x.Is(CustomRoles.Loyal)).ToArray();
 
@@ -1603,9 +1603,9 @@ public static class Utils
                 var sentText = shortenedText;
                 shortenedText = line + "\n";
 
-                if (sentText.Contains("<size") && !sentText.Contains("</size>"))
+                if (Regex.Matches(sentText, "<size").Count > Regex.Matches(sentText, "</size>").Count)
                 {
-                    var sizeTag = Regex.Match(sentText, @"<size=\d+\.?\d*%?>").Value;
+                    var sizeTag = Regex.Matches(sentText, @"<size=\d+\.?\d*%?>")[^1].Value;
                     shortenedText = sizeTag + shortenedText;
                 }
             }
@@ -2396,7 +2396,7 @@ public static class Utils
             CustomRoles.QuickShooter => QuickShooter.ShapeshiftCooldown.GetInt(),
             CustomRoles.Disperser => Disperser.DisperserShapeshiftCooldown.GetInt(),
             CustomRoles.Twister => Twister.ShapeshiftCooldown.GetInt(),
-            CustomRoles.Warlock => Warlock.IsCursed ? -1 : (int)Options.DefaultKillCooldown,
+            CustomRoles.Warlock => Warlock.IsCursed ? -1 : Warlock.ShapeshiftCooldown.GetInt(),
             CustomRoles.Swiftclaw => Swiftclaw.DashCD.GetInt() + (includeDuration ? Swiftclaw.DashDuration.GetInt() : 0),
             CustomRoles.Parasite => (int)Parasite.SSCD + (includeDuration ? (int)Parasite.SSDur : 0),
             CustomRoles.Tiger => Tiger.EnrageCooldown.GetInt() + (includeDuration ? Tiger.EnrageDuration.GetInt() : 0),
@@ -2454,6 +2454,7 @@ public static class Utils
                     var target = Main.AllAlivePlayerControls.Without(pc).RandomElement();
                     var outfit = pc.Data.DefaultOutfit;
                     pc.RpcShapeshift(target, false);
+                    Main.CheckShapeshift[pc.PlayerId] = false;
                     RpcChangeSkin(pc, outfit);
                 }
 
@@ -2796,12 +2797,12 @@ public static class Utils
                 : summary;
     }
 
-    public static string GetRemainingKillers(bool notify = false, bool forClairvoyant = false)
+    public static string GetRemainingKillers(bool notify = false)
     {
         int impnum = 0;
         int neutralnum = 0;
-        bool impShow = forClairvoyant || Options.ShowImpRemainOnEject.GetBool();
-        bool nkShow = forClairvoyant || Options.ShowNKRemainOnEject.GetBool();
+        bool impShow = Options.ShowImpRemainOnEject.GetBool();
+        bool nkShow = Options.ShowNKRemainOnEject.GetBool();
 
         foreach (PlayerControl pc in Main.AllAlivePlayerControls)
         {
@@ -2935,7 +2936,7 @@ public static class Utils
 
         if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame)
         {
-            name = "Local Games";
+            name = "Local Game";
             return name;
         }
 
