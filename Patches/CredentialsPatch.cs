@@ -63,8 +63,8 @@ internal class VersionShowerStartPatch
 {
     private static void Postfix(VersionShower __instance)
     {
-        Main.CredentialsText = $"<size=1.5><color={Main.ModColor}>Endless Host Roles</color> v{Main.PluginDisplayVersion} <color=#a54aff>by</color> <color=#ffff00>Gurge44</color>";
-        const string menuText = $"<color={Main.ModColor}>Endless Host Roles</color> v{Main.PluginDisplayVersion}\r\n<color=#a54aff>By</color> <color=#ffff00>Gurge44</color>";
+        Main.CredentialsText = $"<size=1.5><color={Main.ModColor}>Town Of ZLoos</color> v{Main.PluginDisplayVersion} <color=#a54aff>by</color> <color=#ffff00>Gurge44</color>";
+        const string menuText = $"<color={Main.ModColor}>Town Of ZLoos</color> v{Main.PluginDisplayVersion}\r\n<color=#a54aff>By</color> <color=#ffff00>Gurge44</color>";
 
         if (Main.IsAprilFools) Main.CredentialsText = "<color=#00bfff>Endless Madness</color> v11.45.14 <color=#a54aff>by</color> <color=#ffff00>No one</color>";
 

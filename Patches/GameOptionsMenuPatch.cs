@@ -1107,7 +1107,7 @@ public static class StringOptionPatch
             var name = item.GetName();
             if (Enum.GetValues<CustomRoles>().Find(x => Translator.GetString($"{x}") == name.RemoveHtmlTags(), out var role))
             {
-                var roleName = role.IsVanilla() ? role + "EHR" : role.ToString();
+                var roleName = role.IsVanilla() ? role + "TOZ" : role.ToString();
                 var str = Translator.GetString($"{roleName}InfoLong");
                 var infoLong = str[(str.IndexOf('\n') + 1)..(str.Split("\n\n")[0].Length)];
                 var info = $"<size=70%>{role.ToColoredString()}: {infoLong}</size>";
