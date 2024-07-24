@@ -698,7 +698,6 @@ public static class Options
     public static OptionItem JudgeCanBeMadmate;
     public static OptionItem MarshallCanBeMadmate;
     public static OptionItem FarseerCanBeMadmate;
-    public static OptionItem PresidentCanBeMadmate;
 
     public static OptionItem MadSnitchTasks;
     public static OptionItem FlashmanSpeed;

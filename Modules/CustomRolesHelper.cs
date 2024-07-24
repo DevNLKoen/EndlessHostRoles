@@ -787,9 +787,6 @@ internal static class CustomRolesHelper
         CustomRoles.Markseeker when Markseeker.CancelVote.GetBool() => true,
         CustomRoles.Godfather when Options.GodfatherCancelVote.GetBool() => true,
         CustomRoles.Socialite when Socialite.CancelVote.GetBool() => true,
-
-        CustomRoles.President => true,
-
         _ => false
     };
 

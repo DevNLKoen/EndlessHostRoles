@@ -1119,6 +1119,7 @@ class FixedUpdatePatch
         }
 
         if (AmongUsClient.Instance.AmHost)
+        { 
             if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
             {
                 GhostRolesManager.AssignGhostRole(__instance);

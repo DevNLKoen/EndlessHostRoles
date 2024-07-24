@@ -322,10 +322,6 @@ public static class GuessManager
                             if (!isUI) Utils.SendMessage(GetString("GuessSuperStar"), pc.PlayerId);
                             else pc.ShowPopUp(GetString("GuessSuperStar"));
                             return true;
-                        case CustomRoles.President when Main.PlayerStates[target.PlayerId].Role is President { IsRevealed: true }:
-                            if (!isUI) Utils.SendMessage(GetString("GuessPresident"), pc.PlayerId);
-                            else pc.ShowPopUp(GetString("GuessPresident"));
-                            return true;
                         case CustomRoles.Eraser when Eraser.ErasedPlayers.Contains(target.PlayerId) && pc.Is(CustomRoles.Eraser):
                         case CustomRoles.NiceEraser when NiceEraser.ErasedPlayers.Contains(target.PlayerId) && pc.Is(CustomRoles.NiceEraser):
                             if (!isUI) Utils.SendMessage(GetString("GuessErased"), pc.PlayerId);

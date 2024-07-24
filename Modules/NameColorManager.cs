@@ -163,7 +163,6 @@ public static class NameColorManager
             CustomRoles.Necromancer or CustomRoles.Deathknight when seer.Is(CustomRoles.Undead) => Main.RoleColors[targetRole],
             CustomRoles.Succubus when seer.Is(CustomRoles.Charmed) => Main.RoleColors[CustomRoles.Succubus],
             CustomRoles.Crewpostor when seer.Is(CustomRoleTypes.Impostor) && Options.AlliesKnowCrewpostor.GetBool() => Main.RoleColors[CustomRoles.Madmate],
-            CustomRoles.President when ((President)Main.PlayerStates[target.PlayerId].Role).IsRevealed => Main.RoleColors[CustomRoles.President],
             _ => color
         };
 
