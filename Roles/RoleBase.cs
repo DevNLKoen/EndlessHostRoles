@@ -35,6 +35,15 @@ namespace TOZ
         public abstract void Init();
         public abstract void Add(byte playerId);
 
+        /// <summary>
+        /// Defines the custom role
+        /// </summary>
+        public CustomRoles ThisCustomRole => System.Enum.Parse<CustomRoles>(GetType().Name, true);
+        public virtual bool IsExperimental => false;
+
+        public RoleOptionType ThisRoleType => RoleOptionType.Neutral_NonKilling; //{ get; }
+
+
         // Some virtual methods that trigger actions, like venting, petting, CheckMurder, etc. These are not abstract because they have a default implementation. These should also have the same name as the methods in the derived classes.
         public virtual void SetKillCooldown(byte id)
         {

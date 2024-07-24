@@ -15,6 +15,7 @@ using UnityEngine;
 using static TOZ.CustomWinnerHolder;
 using static TOZ.Translator;
 using static TOZ.Utils;
+using TOZ.Crewmate;
 
 namespace TOZ;
 

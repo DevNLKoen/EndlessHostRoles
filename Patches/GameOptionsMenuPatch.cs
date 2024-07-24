@@ -3,11 +3,22 @@ using System.Linq;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
-using Il2CppSystem.Collections.Generic;
+//using Il2CppSystem.Collections.Generic;
 using TMPro;
 using TOZ.Modules;
 using Unity.Services.Core.Internal;
 using UnityEngine;
+//using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using static TOZ.Translator;
+using unityobjecty = UnityEngine.Object;
+using TOZ.Roles.Core;
+using static Il2CppSystem.Net.Http.Headers.Parser;
+using LibCpp2IL;
+//using System.Collections.Generic;
+//using System.Collections.Generic;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using TOZ.Neutral;
+using System.Collections.Generic;
 
 namespace TOZ;
 
@@ -21,6 +32,7 @@ public static class ModGameOptionsMenu
     public static Dictionary<int, OptionBehaviour> BehaviourList = new();
     public static Dictionary<int, CategoryHeaderMasked> CategoryHeaderList = new();
     public static Dictionary<int, RoleOptionSetting> RoleOptionList = new();
+    public static Dictionary<int, CategoryHeaderMasked> categoryHeaderEditRole = new();
 }
 
 [HarmonyPatch(typeof(GameOptionsMenu))]
@@ -92,6 +104,192 @@ public static class GameOptionsMenuPatch
         option.chanceText.text = option.roleChance.ToString();
     }
 
+    private static void CreateCustomQuotaOption(RolesSettingsMenu inst, RoleBase dog, ref float yPos)
+    {
+        RoleOptionSetting roleOptionSetting = Object.Instantiate(inst.roleOptionSettingOrigin, Vector3.zero, Quaternion.identity, inst.RoleChancesSettings.transform);
+        roleOptionSetting.transform.localPosition = new Vector3(-0.15f, yPos, -2f);
+        roleOptionSetting.transform.Find("Role #").gameObject.SetActive(false);
+
+        // Set Role
+        SpriteRenderer[] componentsInChildren = roleOptionSetting.GetComponentsInChildren<SpriteRenderer>(true);
+        for (int i = 0; i < componentsInChildren.Length; i++)
+        {
+            componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
+        }
+        foreach (TextMeshPro textMeshPro in roleOptionSetting.GetComponentsInChildren<TextMeshPro>(true))
+        {
+            textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
+            textMeshPro.fontMaterial.SetFloat("_Stencil", 20);
+        }
+        roleOptionSetting.role = RoleManager.Instance.AllRoles[0];
+        roleOptionSetting.titleText.text = Utils.GetRoleName(dog.ThisCustomRole);
+
+        if (dog.ThisCustomRole.IsImpostorTeam())
+        {
+            roleOptionSetting.labelSprite.color = Palette.ImpostorRoleRed;
+        }
+        else if (dog.ThisCustomRole.IsNeutral())
+        {
+            _ = ColorUtility.TryParseHtmlString("#7f8c8d", out Color c);
+            roleOptionSetting.labelSprite.color = c;
+        }
+        else
+        {
+            roleOptionSetting.labelSprite.color = Palette.CrewmateRoleBlue;
+        }
+
+        PassiveButton minusButton = roleOptionSetting.transform.Find("Chance %").Find("MinusButton (1)").GetComponent<PassiveButton>();
+        PassiveButton plusButton = roleOptionSetting.transform.Find("Chance %").Find("PlusButton (1)").GetComponent<PassiveButton>();
+
+        plusButton.OnClick.RemoveAllListeners();
+        minusButton.OnClick.RemoveAllListeners();
+        plusButton.OnClick.AddListener(new Action(() => IncreaseChance(roleOptionSetting, dog.ThisCustomRole)));
+        minusButton.OnClick.AddListener(new Action(() => DecreaseChance(roleOptionSetting, dog.ThisCustomRole)));
+
+        roleOptionSetting.OnValueChanged = new Action<OptionBehaviour>((OptionBehaviour a) => OnValueChanged(a, dog.ThisCustomRole));
+        roleOptionSetting.SetClickMask(inst.ButtonClickMask);
+        inst.roleChances.Add(roleOptionSetting);
+        List<UiElement> quotaMono = inst.QuotaTabSelectables.ToManaged();
+        quotaMono.AddRange(roleOptionSetting.ControllerSelectable.ToManaged());
+        inst.QuotaTabSelectables = quotaMono.ToIl2Cpp();
+        OnValueChanged(roleOptionSetting, Enum.Parse<CustomRoles>(dog.GetType().Name, true));
+        yPos -= 0.43f;
+    }
+
+    private static void LoadRoleOptions(RolesSettingsMenu thiz, VanillaLikeRoleTypes type)
+    {
+        Logger.Info(type.ToString(), "LoadRoleOptions");
+
+        foreach (var header in thiz.RoleChancesSettings.GetComponentsInChildren<CategoryHeaderEditRole>())
+        {
+            Object.Destroy(header.gameObject);
+        }
+
+        foreach (var opt in thiz.roleChances)
+        {
+            if (opt != null)
+            {
+                Object.Destroy(opt.gameObject);
+            }
+        }
+        thiz.roleChances.Clear();
+
+        Dictionary<string, List<RoleBase>> roles = new Dictionary<string, List<RoleBase>>();
+        switch (type)
+        {
+            case VanillaLikeRoleTypes.Crewmate:
+                roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_Normal));
+                roles.Add("Imposter based", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_ImpostorBased));
+                //roles.Add("Vanilla Ghost", CustomRoleManager.GetNormalOptions(CustomRoleTypes.CrewmateVanillaGhosts));
+                //roles.Add("Ghost", CustomRoleManager.GetNormalOptions(RoleOptionType.CrewmateGhosts));
+                break;
+            case VanillaLikeRoleTypes.Impostor:
+                roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Impostor));
+                //roles.Add("Support", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorSupport));
+                //roles.Add("Killing", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorKilling));
+                //roles.Add("Hindering", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorHindering));
+                //roles.Add("Concealing", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorConcealing));
+                //roles.Add("Ghost", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorGhosts));
+                break;
+            case VanillaLikeRoleTypes.Neutral:
+                roles.Add("Benign", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_NonKilling));
+                roles.Add("Evil", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_Killing));
+                //roles.Add("Killing", CustomRoleManager.GetNormalOptions(RoleOptionType.NeutralKilling));
+                //roles.Add("Chaos", CustomRoleManager.GetNormalOptions(RoleOptionType.NeutralChaos));
+                break;
+        }
+
+        float num = 0.662f;
+
+        CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(thiz.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, thiz.RoleChancesSettings.transform);
+
+        // Set Header
+        categoryHeaderEditRole.Title.text = type.ToString();//GetString(type.ToString());
+        categoryHeaderEditRole.Background.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Divider?.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_StencilComp", 3f);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_Stencil", 20);
+
+        categoryHeaderEditRole.transform.localPosition = new Vector3(4.986f, num, -2f);
+        num -= 0.522f;
+        int num3 = 0;
+        foreach (var roleCategory in roles)
+        {
+            CreateHeader(roleCategory.Key, thiz, ref num);
+            num3++;
+            foreach (var role in roleCategory.Value)
+            {
+                CreateCustomQuotaOption(thiz, role, ref num);
+                num3++;
+            }
+        }
+
+        thiz.scrollBar.ContentYBounds.max = (num3 / 2.4f); // 2.5f works better sometimes, needs to find the correct number
+        Logger.Info($"{type} Count: {roles.Count}", "LoadRoleOptions");
+    }
+
+    // Additional methods
+
+    private static void CreateHeader(string name, RolesSettingsMenu thiz, ref float yPos)
+    {
+        CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(thiz.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, thiz.RoleChancesSettings.transform);
+        categoryHeaderEditRole.transform.Find("QuotaHeader").gameObject.SetActive(false); ;
+        categoryHeaderEditRole.transform.localPosition = new Vector3(4.98f, yPos - 0.1f, -2f);
+        categoryHeaderEditRole.Title.text = name;
+        categoryHeaderEditRole.Background.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Divider?.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_StencilComp", 3f);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_Stencil", 20);
+        yPos -= 0.43f;
+    }
+
+    private static void SetTabColor(RoleSettingsTabButton tab, string hex)
+    {
+        if (tab == null) return;
+
+        Color color = Color.blue;
+        hex = hex.TrimStart('#');
+
+        if (hex.Length != 6)
+        {
+            throw new InvalidOperationException("Hex color should be 6 characters long excluding the '#' symbol.");
+        }
+
+        float r = Convert.ToInt32(hex.Substring(0, 2), 16) / 255f;
+        float g = Convert.ToInt32(hex.Substring(2, 2), 16) / 255f;
+        float b = Convert.ToInt32(hex.Substring(4, 2), 16) / 255f;
+
+        color = new Color(r, g, b);
+        if (tab.button.inactiveSprites.GetComponent<SpriteRenderer>() != null && tab.button.activeSprites.GetComponent<SpriteRenderer>() != null)
+        {
+            SpriteRenderer inactiveSprite = tab.button.inactiveSprites.GetComponent<SpriteRenderer>();
+            SpriteRenderer activeSprite = tab.button.inactiveSprites.GetComponent<SpriteRenderer>();
+            inactiveSprite.color = GetInactiveColor(color);
+            activeSprite.color = color;
+        }
+    }
+
+    private static Color GetInactiveColor(this Color color, float shadowFactor = 0.5f)
+    {
+        shadowFactor = Mathf.Max(1.0f, shadowFactor);
+
+        Color shadowColor = new(
+            color.r / shadowFactor,
+            color.g / shadowFactor,
+            color.b / shadowFactor,
+            color.a
+        );
+
+        return shadowColor;
+    }
+
+    enum VanillaLikeRoleTypes : int
+    {
+        Crewmate = 0,
+        Impostor = 1,
+        Neutral = 2,
+    }
+
     [HarmonyPatch(nameof(GameOptionsMenu.CreateSettings)), HarmonyPrefix]
     private static bool CreateSettingsPrefix(GameOptionsMenu __instance)
     {
@@ -121,17 +319,51 @@ public static class GameOptionsMenuPatch
                     categoryHeaderMasked.Title.text = option.GetName();
                     categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
                     categoryHeaderMasked.transform.localPosition = new(-0.903f, num, posZ);
-                    var chmText = categoryHeaderMasked.transform.FindChild("HeaderText").GetComponent<TextMeshPro>();
-                    chmText.fontStyle = FontStyles.Bold;
-                    chmText.outlineWidth = 0.17f;
+                    //var chmText = categoryHeaderMasked.transform.FindChild("HeaderText").GetComponent<TextMeshPro>();
+                    //chmText.fontStyle = FontStyles.Bold;
+                    //chmText.outlineWidth = 0.17f;
                     categoryHeaderMasked.gameObject.SetActive(enabled);
                     ModGameOptionsMenu.CategoryHeaderList.TryAdd(index, categoryHeaderMasked);
 
                     if (enabled) num -= 0.63f;
                 }
+                else if (option is RoleTitleOptionItem)
+                {
+                    /*CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(__instance.RolesMenu.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
+
+                    // Set Header
+                    categoryHeaderEditRole.SetHeader(StringNames.RolesCategory, 20);
+                    categoryHeaderEditRole.Title.text = option.GetName();
+                    categoryHeaderEditRole.Divider.color = Color.white;
+                    categoryHeaderEditRole.chanceLabel.color = Color.white;
+                    //categoryHeaderEditRole.gameObject.SetActive(enabled);
+                    categoryHeaderEditRole.blankLabel.color = Palette.CrewmateRoleHeaderVeryDarkBlue;
+                    categoryHeaderEditRole.Background.color = Palette.CrewmateRoleHeaderBlue;
+                    //categoryHeaderEditRole.blankLabel.color = Palette.CrewmateRoleHeaderVeryDarkBlue;
+                    // Set Role
+                    SpriteRenderer[] componentsInChildren = categoryHeaderEditRole.GetComponentsInChildren<SpriteRenderer>(true);
+                    for (int i = 0; i < componentsInChildren.Length; i++)
+                    {
+                        componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
+                    }
+                    foreach (TextMeshPro textMeshPro in categoryHeaderEditRole.GetComponentsInChildren<TextMeshPro>(true))
+                    {
+                        textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
+                        textMeshPro.fontMaterial.SetFloat("_Stencil", 20);
+                    };
+                    categoryHeaderEditRole.Title.fontMaterial.SetFloat("_StencilComp", 3f);
+                    categoryHeaderEditRole.Title.fontMaterial.SetFloat("_Stencil", 20);
+                    categoryHeaderEditRole.Title.color = Palette.CrewmateRoleHeaderDarkBlue;
+                    categoryHeaderEditRole.transform.localPosition = new Vector3(4.952f - 0.6f, num, 2f);
+                    categoryHeaderEditRole.gameObject.SetActive(enabled);
+                    ModGameOptionsMenu.categoryHeaderEditRole.TryAdd(index, categoryHeaderEditRole);
+
+                    if (enabled) num -= 0.63f;*/
+                    CreateHeader("test", __instance.RolesMenu, ref num);
+                }
                 else if (option is RoleOptionItem)
                 {
-                    CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(__instance.RolesMenu.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
+                    /*CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(__instance.RolesMenu.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
 
                     // Set Header
                     categoryHeaderEditRole.Title.text = "Crewmates";
@@ -140,19 +372,20 @@ public static class GameOptionsMenuPatch
                     categoryHeaderEditRole.blankLabel.color = Palette.CrewmateRoleHeaderVeryDarkBlue;
                     categoryHeaderEditRole.chanceLabel.color = Palette.CrewmateRoleHeaderDarkBlue;
                     categoryHeaderEditRole.countLabel.color = Palette.CrewmateRoleHeaderDarkBlue;
-                    //categoryHeaderEditRole.blankLabel.material.SetInt(PlayerMaterial.MaskLayer, 20);
-                    //categoryHeaderEditRole.chanceLabel.material.SetInt(PlayerMaterial.MaskLayer, 20);
-                    //categoryHeaderEditRole.countLabel.material.SetInt(PlayerMaterial.MaskLayer, 20);
-                    //categoryHeaderEditRole.Divider?.material.SetInt(PlayerMaterial.MaskLayer, 20);
+                    categoryHeaderEditRole.blankLabel.material.SetInt(PlayerMaterial.MaskLayer, 20);
+                    categoryHeaderEditRole.chanceLabel.material.SetInt(PlayerMaterial.MaskLayer, 20);
+                    categoryHeaderEditRole.countLabel.material.SetInt(PlayerMaterial.MaskLayer, 20);
+                    categoryHeaderEditRole.Divider?.material.SetInt(PlayerMaterial.MaskLayer, 20);
                     categoryHeaderEditRole.Title.fontMaterial.SetFloat("_StencilComp", 3f);
                     categoryHeaderEditRole.Title.fontMaterial.SetFloat("_Stencil", 20);
                     categoryHeaderEditRole.Title.color = Palette.CrewmateRoleHeaderDarkBlue;
 
-                    categoryHeaderEditRole.transform.localPosition = new Vector3(4.952f - 0.6f, num, 2f);
+                    categoryHeaderEditRole.transform.localPosition = new Vector3(4.952f - 0.6f, num, 2f);*/
                     RoleOptionSetting roleOptionSetting = Object.Instantiate(__instance.RolesMenu.roleOptionSettingOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
                     roleOptionSetting.transform.localPosition = new Vector3(-0.15f - posX + 0.6f, num - 0.5f, posZ);
                     roleOptionSetting.transform.Find("Role #").gameObject.SetActive(true);
-
+                    Dictionary<string, List<RoleBase>> roles = [];
+                    //CreateCustomQuotaOption(__instance.RolesMenu, roles, ref num);
                     // Set Role
                     SpriteRenderer[] componentsInChildren = roleOptionSetting.GetComponentsInChildren<SpriteRenderer>(true);
                     for (int i = 0; i < componentsInChildren.Length; i++)
@@ -263,6 +496,7 @@ public static class GameOptionsMenuPatch
 
                 if (option is TextOptionItem) continue;
                 else if (option is RoleOptionItem) continue;
+                else if (option is RoleTitleOptionItem) continue;
 
                 //else if (option.IsHeader && enabled) num -= 0.3f;
 
@@ -1062,5 +1296,600 @@ public class RpcSyncSettingsPatch
     public static void Postfix()
     {
         OptionItem.SyncAllOptions();
+    }
+}
+
+[HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.ChangeTab))]
+public class TabChange
+{
+    public static void Prefix(ref int tabNum, [HarmonyArgument(1)] bool previewOnly)
+    {
+        if (tabNum == 0)
+        { // Disables preset menu in any instances
+            tabNum = 1;
+        }
+    }
+    public static void Postfix(GameSettingMenu __instance, [HarmonyArgument(0)] int tabNum)
+    {
+
+        if (tabNum == 1 && __instance.GameSettingsTab.isActiveAndEnabled)
+        {
+            _ = new LateTask(() => __instance.MenuDescriptionText.text = DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameSettingsDescription), 0.05f, "Fix Menu Description Text");
+            return;
+        }
+
+    }
+
+
+
+}
+[HarmonyPatch(typeof(RolesSettingsMenu), nameof(RolesSettingsMenu.Start))]
+public static class RolesSettingsMenuAwakePatch
+{
+    public static void Postfix(RolesSettingsMenu __instance)
+    {
+        //Transform mainAreaTransform = __instance.transform.Find("MainArea");
+        //RolesSettingsMenu roleTabMenu = mainAreaTransform.Find("ROLES TAB").GetComponent<RolesSettingsMenu>();
+        //Logger.Info($"{roleTabMenu == null}", "Check");
+        //if (roleTabMenu == null) return;
+
+        //__instance.
+        //roleTabMenu.
+
+        //var toheRoleSettings = Object.Instantiate(roleTabMenu, roleTabMenu.transform.parent);
+
+        //toheRoleSettings.name = "TEST ADSDSF";
+        //toheRoleSettings.enabled = true;
+        //toheRoleSettings.
+    }
+}
+//[HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Update))]
+public class GameOptionsMenuUpdatePatch
+{
+    private static float _timer = 1f;
+
+    public static void Postfix(GameOptionsMenu __instance)
+    {
+        if (__instance.transform.parent.parent.name == "Game Settings") return;
+
+        /*if (GameStates.IsHideNSeek)
+        {
+            Main.HideNSeekOptions.NumImpostors = Options.NumImpostorsHnS.GetInt();
+        }*/
+
+        foreach (var tab in EnumHelper.GetAllValues<TabGroup>())
+        {
+            string tabcolor = tab switch
+            {
+                TabGroup.SystemSettings => Main.ModColor,
+                TabGroup.GameSettings => "#59ef83",
+                TabGroup.TaskSettings => "#EF59AF",
+                TabGroup.ImpostorRoles => "#f74631",
+                TabGroup.CrewmateRoles => "#8cffff",
+                TabGroup.NeutralRoles => "#7f8c8d",
+                TabGroup.Addons => "#ff9ace",
+                _ => "#ffffff",
+            };
+            if (__instance.transform.parent.parent.name != tab + "Tab") continue;
+            __instance.transform.Find("../../GameGroup/Text").GetComponent<TextMeshPro>().SetText($"<color={tabcolor}>"); //+ GetString("TabGroup." + tab) + "</color>");
+
+            _timer += Time.deltaTime;
+            if (_timer < 0.1f) return;
+            _timer = 0f;
+
+            float numItems = __instance.Children.Count;
+            var offset = 2.7f;
+
+            foreach (var option in OptionItem.AllOptions.Where(opt => tab == opt.Tab && opt.OptionBehaviour != null && opt.OptionBehaviour.gameObject != null).ToArray())
+            {
+                var enabled = true;
+                var parent = option.Parent;
+
+                enabled = AmongUsClient.Instance.AmHost &&
+                    !option.IsHiddenOn(Options.CurrentGameMode);
+
+                var opt = option.OptionBehaviour.transform.Find("Background").GetComponent<SpriteRenderer>();
+                opt.size = new(5.0f, 0.45f);
+                while (parent != null && enabled)
+                {
+                    enabled = parent.GetBool() && !parent.IsHiddenOn(Options.CurrentGameMode);
+                    parent = parent.Parent;
+                    opt.color = new(0f, 1f, 0f);
+                    opt.size = new(4.8f, 0.45f);
+
+                    /*if (!Main.Made.Value)
+                    {
+                        opt.transform.localPosition = new Vector3(0.11f, 0f);
+                        option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-1.08f, 0f);
+                        option.OptionBehaviour.transform.Find("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(5.1f, 0.28f);
+                        if (option.Parent?.Parent != null)
+                        {
+                            opt.color = new(0f, 0f, 1f);
+                            opt.size = new(4.6f, 0.45f);
+                            opt.transform.localPosition = new Vector3(0.24f, 0f);
+                            option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.88f, 0f);
+                            option.OptionBehaviour.transform.Find("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(4.9f, 0.28f);
+                            if (option.Parent?.Parent?.Parent != null)
+                            {
+                                opt.color = new(1f, 0f, 0f);
+                                opt.size = new(4.4f, 0.45f);
+                                opt.transform.localPosition = new Vector3(0.37f, 0f);
+                                option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.68f, 0f);
+                                option.OptionBehaviour.transform.Find("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(4.7f, 0.28f);
+                            }
+                        }
+                    }*/
+                    //else
+                    if (true)
+                    {
+                        option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.95f, 0f);
+                        option.OptionBehaviour.transform.Find("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(3.4f, 0.37f);
+                        if (option.Parent?.Parent != null)
+                        {
+                            opt.color = new(0f, 0f, 1f);
+                            opt.size = new(4.6f, 0.45f);
+                            opt.transform.localPosition = new Vector3(0.24f, 0f);
+                            option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.7f, 0f);
+                            option.OptionBehaviour.transform.Find("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(3.3f, 0.37f);
+                            if (option.Parent?.Parent?.Parent != null)
+                            {
+                                opt.color = new(1f, 0f, 0f);
+                                opt.size = new(4.4f, 0.45f);
+                                opt.transform.localPosition = new Vector3(0.37f, 0f);
+                                option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.55f, 0f);
+                                option.OptionBehaviour.transform.Find("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(3.2f, 0.37f);
+                            }
+                        }
+                    }
+                }
+
+                if (option.IsText)
+                {
+                    opt.color = new(0, 0, 0);
+                    opt.transform.localPosition = new(300f, 300f, 300f);
+                }
+
+                option.OptionBehaviour.gameObject.SetActive(enabled);
+                if (enabled)
+                {
+                    offset -= option.IsHeader ? 0.7f : 0.5f;
+                    option.OptionBehaviour.transform.localPosition = new Vector3(
+                        option.OptionBehaviour.transform.localPosition.x,
+                        offset,
+                        option.OptionBehaviour.transform.localPosition.z);
+
+                    if (option.IsHeader)
+                    {
+                        //if (!Main.ModeForSmallScreen.Value)
+                        //    numItems += 0.3f;
+                        //else
+                            numItems += 0.5f;
+                    }
+                }
+                else
+                {
+                    numItems--;
+                }
+            }
+            __instance.GetComponentInParent<Scroller>().ContentYBounds.max = (-offset) - 1.5f;
+        }
+    }
+}
+
+[HarmonyPatch(typeof(StringOption), nameof(StringOption.SetUpFromData))]
+public class StringOptionEnablePatch
+{
+    public static void Postfix(StringOption __instance)
+    {
+        var option = OptionItem.AllOptions.FirstOrDefault(opt => opt.OptionBehaviour == __instance);
+        if (option == null) return;
+
+        __instance.OnValueChanged = new Action<OptionBehaviour>((o) => { });
+        /*if (option.van)
+        {
+            __instance.TitleText.text = option.GetNameVanilla();
+        }
+        else*/ if(true)
+        {
+            __instance.TitleText.text = option.GetName();
+        }
+        __instance.Value = __instance.oldValue = option.CurrentValue;
+        __instance.ValueText.text = option.GetString();
+    }
+}
+
+[HarmonyPatch(typeof(StringOption), nameof(StringOption.Increase))]
+public class StringOptionIncreasePatch
+{
+    public static bool Prefix(StringOption __instance)
+    {
+        var option = OptionItem.AllOptions.FirstOrDefault(opt => opt.OptionBehaviour == __instance);
+        if (option == null) return true;
+
+        if (option.Name == "GameMode")
+        {
+            var gameModeCount = Options.GameMode.CurrentValue - 1;
+            switch (GameOptionsManager.Instance.CurrentGameOptions.GameMode)
+            {
+                // To prevent the Host from selecting CustomGameMode.HidenSeekTOHE
+                case GameModes.NormalFools when option.CurrentValue == 0:
+                case GameModes.Normal when option.CurrentValue == gameModeCount - 1:
+                // To prevent the Host from selecting CustomGameMode.Standard/FFA
+                case GameModes.SeekFools when option.CurrentValue == gameModeCount:
+                case GameModes.HideNSeek when option.CurrentValue == gameModeCount:
+                    return false;
+                default:
+                    break;
+            }
+        }
+
+        option.SetValue(option.CurrentValue + (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? 5 : 1));
+
+        if (option.Name == "Preset")
+        {
+            /*if (GameStates.hid)
+            {
+                // Set Hide & Seek game mode
+                Options.GameMode.SetValue(2);
+            }
+            else if (Options.CurrentGameMode != CustomGameMode.Standard)
+            {
+                // Set standart game mode
+                Options.GameMode.SetValue(0);
+            }*/
+        }
+        return false;
+    }
+}
+
+[HarmonyPatch(typeof(StringOption), nameof(StringOption.Decrease))]
+public class StringOptionDecreasePatch
+{
+    public static bool Prefix(StringOption __instance)
+    {
+        var option = OptionItem.AllOptions.FirstOrDefault(opt => opt.OptionBehaviour == __instance);
+        if (option == null) return true;
+
+        if (option.Name == "GameMode")
+        {
+            switch (GameOptionsManager.Instance.CurrentGameOptions.GameMode)
+            {
+                // To prevent the Host from selecting CustomGameMode.HidenSeekTOHE
+                case GameModes.NormalFools when option.CurrentValue == 0:
+                case GameModes.Normal when option.CurrentValue == 0:
+                // To prevent the Host from selecting CustomGameMode.Standard/FFA
+                case GameModes.SeekFools when option.CurrentValue == Options.GameMode.CurrentValue - 1:
+                case GameModes.HideNSeek when option.CurrentValue == Options.GameMode.CurrentValue - 1:
+                    return false;
+                default:
+                    break;
+            }
+        }
+
+        option.SetValue(option.CurrentValue - (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? 5 : 1));
+
+        if (option.Name == "Preset")
+        {
+            /*if (GameStates.IsHideNSeek)
+            {
+                // Set Hide & Seek game mode
+                Options.GameMode.SetValue(2);
+            }
+            else if (Options.CurrentGameMode == CustomGameMode.HideAndSeek)
+            {
+                // Set standart game mode
+                Options.GameMode.SetValue(0);
+            }*/
+        }
+        return false;
+    }
+}
+[HarmonyPatch(typeof(RolesSettingsMenu), nameof(RolesSettingsMenu.ChangeTab))]
+public static class RolesSettingsMenu_ChangeTabPatch
+{
+    public static void Postfix(RolesSettingsMenu __instance)
+    {
+        //if (GameStates.IsHideNSeek) return;
+
+        foreach (var ob in __instance.advancedSettingChildren.ToArray())
+        {
+            switch (ob.Title)
+            {
+                case StringNames.EngineerCooldown:
+                    ob.Cast<NumberOption>().ValidRange = new FloatRange(0, 180);
+                    break;
+                case StringNames.ShapeshifterCooldown:
+                    ob.Cast<NumberOption>().ValidRange = new FloatRange(0, 180);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+[HarmonyPatch(typeof(RolesSettingsMenu))]
+public static class RolesSettingsMenu_ChanceTabPatch
+{
+    [HarmonyPatch(nameof(RolesSettingsMenu.SetQuotaTab)), HarmonyPrefix]
+    public static bool SetQuotaTab(RolesSettingsMenu __instance)
+    {
+        //if (GameStates.IsHideNSeek) return true;
+
+        float num2 = -1.928f;
+        __instance.roleTabs = new List<PassiveButton>().ToIl2Cpp();
+
+        List<RoleRulesCategory> list = GameManager.Instance.GameSettingsList.AllRoles.ToManaged().FindAll((RoleRulesCategory cat) => cat.Role.TeamType == RoleTeamTypes.Crewmate);
+        List<RoleRulesCategory> list2 = GameManager.Instance.GameSettingsList.AllRoles.ToManaged().FindAll((RoleRulesCategory cat) => cat.Role.TeamType == RoleTeamTypes.Impostor);
+
+        // Impostor Tab
+        AddRoleTabCustom(__instance, VanillaLikeRoleTypes.Impostor, ref num2);
+
+        // Neutral Tab
+        AddRoleTabCustom(__instance, VanillaLikeRoleTypes.Neutral, ref num2);
+        return false;
+    }
+
+    [HarmonyPatch(nameof(RolesSettingsMenu.OpenChancesTab)), HarmonyPrefix]
+    public static bool OpenChancesTab(RolesSettingsMenu __instance)
+    {
+        __instance.selectedRoleTab = 0;
+        __instance.RoleChancesSettings.SetActive(true);
+
+        _ = new LateTask(() =>
+        {
+            LoadRoleOptions(__instance, VanillaLikeRoleTypes.Crewmate);
+        }, 0.1f, "OpenFirstChancesTab");
+
+        return false;
+    }
+
+    public static void CreateCustomQuotaOption(RolesSettingsMenu inst, RoleBase dog, ref float yPos)
+    {
+        RoleOptionSetting roleOptionSetting = Object.Instantiate(inst.roleOptionSettingOrigin, Vector3.zero, Quaternion.identity, inst.RoleChancesSettings.transform);
+        roleOptionSetting.transform.localPosition = new Vector3(-0.15f, yPos, -2f);
+        roleOptionSetting.transform.Find("Role #").gameObject.SetActive(false);
+
+        // Set Role
+        SpriteRenderer[] componentsInChildren = roleOptionSetting.GetComponentsInChildren<SpriteRenderer>(true);
+        for (int i = 0; i < componentsInChildren.Length; i++)
+        {
+            componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
+        }
+        foreach (TextMeshPro textMeshPro in roleOptionSetting.GetComponentsInChildren<TextMeshPro>(true))
+        {
+            textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
+            textMeshPro.fontMaterial.SetFloat("_Stencil", 20);
+        }
+        roleOptionSetting.role = RoleManager.Instance.AllRoles[0];
+        roleOptionSetting.titleText.text = Utils.GetRoleName(dog.ThisCustomRole);
+
+        if (dog.ThisCustomRole.IsImpostorTeam())
+        {
+            roleOptionSetting.labelSprite.color = Palette.ImpostorRoleRed;
+        }
+        else if (dog.ThisCustomRole.IsNeutral())
+        {
+            _ = ColorUtility.TryParseHtmlString("#7f8c8d", out Color c);
+            roleOptionSetting.labelSprite.color = c;
+        }
+        else
+        {
+            roleOptionSetting.labelSprite.color = Palette.CrewmateRoleBlue;
+        }
+
+        PassiveButton minusButton = roleOptionSetting.transform.Find("Chance %").Find("MinusButton (1)").GetComponent<PassiveButton>();
+        PassiveButton plusButton = roleOptionSetting.transform.Find("Chance %").Find("PlusButton (1)").GetComponent<PassiveButton>();
+
+        plusButton.OnClick.RemoveAllListeners();
+        minusButton.OnClick.RemoveAllListeners();
+        plusButton.OnClick.AddListener(new Action(() => IncreaseChance(roleOptionSetting, dog.ThisCustomRole)));
+        minusButton.OnClick.AddListener(new Action(() => DecreaseChance(roleOptionSetting, dog.ThisCustomRole)));
+
+        roleOptionSetting.OnValueChanged = new Action<OptionBehaviour>((OptionBehaviour a) => OnValueChanged(a, dog.ThisCustomRole));
+        roleOptionSetting.SetClickMask(inst.ButtonClickMask);
+        inst.roleChances.Add(roleOptionSetting);
+        List<UiElement> quotaMono = inst.QuotaTabSelectables.ToManaged();
+        //quotaMono.AddRange(roleOptionSetting.ControllerSelectable.ToManaged());
+        inst.QuotaTabSelectables = quotaMono.ToIl2Cpp();
+        OnValueChanged(roleOptionSetting, Enum.Parse<CustomRoles>(dog.GetType().Name, true));
+        yPos -= 0.43f;
+    }
+
+    private static void IncreaseChance(OptionBehaviour option, CustomRoles role)
+    {
+        float chance = Options.GetRoleChance(role);
+
+        Options.SetRoleChance(role, chance + 1f);
+        OnValueChanged(option, role);
+    }
+
+    private static void DecreaseChance(OptionBehaviour option, CustomRoles role)
+    {
+        float chance = Options.GetRoleChance(role);
+
+        Options.SetRoleChance(role, chance - 1f);
+        OnValueChanged(option, role);
+    }
+
+    private static void OnValueChanged(OptionBehaviour optionnonconv, CustomRoles role)
+    {
+        RoleOptionSetting option = optionnonconv as RoleOptionSetting;
+        if (option == null) return;
+
+        float roleChance = Options.GetRoleChance(role) * 5f;
+        int roleCount = Options.GetRoleCount(role);
+
+        option.roleMaxCount = roleCount;
+        option.roleChance = (int)roleChance;
+        option.countText.text = option.roleMaxCount.ToString();
+        option.chanceText.text = option.roleChance.ToString();
+    }
+
+
+    private static RoleSettingsTabButton AddRoleTabCustom(RolesSettingsMenu thiz, VanillaLikeRoleTypes roleType, ref float tabXPos)
+    {
+        thiz.selectedRoleTab = (int)roleType;
+        RoleSettingsTabButton tab = null;
+        switch (roleType)
+        {
+            case VanillaLikeRoleTypes.Crewmate:
+                tab = Object.Instantiate(thiz.roleSettingsTabButtonOrigin, Vector3.zero, Quaternion.identity, thiz.tabParent);
+                break;
+            case VanillaLikeRoleTypes.Impostor:
+                tab = Object.Instantiate(thiz.roleSettingsTabButtonOriginImpostor, Vector3.zero, Quaternion.identity, thiz.tabParent);
+                break;
+            case VanillaLikeRoleTypes.Neutral:
+                tab = Object.Instantiate(thiz.roleSettingsTabButtonOrigin, Vector3.zero, Quaternion.identity, thiz.tabParent);
+                RoleBehaviour impRole = RoleManager.Instance.AllRoles.Where(r => r.Role == RoleTypes.Shapeshifter).FirstOrDefault();
+                tab.icon.sprite = impRole.RoleIconWhite;
+                SetTabColor(tab, "#7f8c8d");
+                break;
+            default:
+                throw new InvalidOperationException("Only Crewmate, Impostor and Neutral are supported!");
+        }
+        tab.transform.localPosition = new Vector3(tabXPos, 2.27f, -2f);
+
+        tab.button.OnClick.AddListener(new Action(() =>
+        {
+            LoadRoleOptions(thiz, roleType);
+        }));
+        tabXPos += 0.762f;
+        thiz.roleTabs.Add(tab.Button);
+        return tab;
+    }
+
+    private static void LoadRoleOptions(RolesSettingsMenu thiz, VanillaLikeRoleTypes type)
+    {
+        Logger.Info(type.ToString(), "LoadRoleOptions");
+
+        foreach (var header in thiz.RoleChancesSettings.GetComponentsInChildren<CategoryHeaderEditRole>())
+        {
+            Object.Destroy(header.gameObject);
+        }
+
+        foreach (var opt in thiz.roleChances)
+        {
+            if (opt != null)
+            {
+                Object.Destroy(opt.gameObject);
+            }
+        }
+        thiz.roleChances.Clear();
+
+        Dictionary<string, List<RoleBase>> roles = [];
+        switch (type)
+        {
+            case VanillaLikeRoleTypes.Crewmate:
+                roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_Normal));
+                roles.Add("Imposter based", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_ImpostorBased));
+                //roles.Add("Vanilla Ghost", CustomRoleManager.GetNormalOptions(CustomRoleTypes.CrewmateVanillaGhosts));
+                //roles.Add("Ghost", CustomRoleManager.GetNormalOptions(RoleOptionType.CrewmateGhosts));
+                break;
+            case VanillaLikeRoleTypes.Impostor:
+                roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Impostor));
+                //roles.Add("Support", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorSupport));
+                //roles.Add("Killing", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorKilling));
+                //roles.Add("Hindering", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorHindering));
+                //roles.Add("Concealing", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorConcealing));
+                //roles.Add("Ghost", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorGhosts));
+                break;
+            case VanillaLikeRoleTypes.Neutral:
+                roles.Add("Benign", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_NonKilling));
+                roles.Add("Evil", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_Killing));
+                //roles.Add("Killing", CustomRoleManager.GetNormalOptions(RoleOptionType.NeutralKilling));
+                //roles.Add("Chaos", CustomRoleManager.GetNormalOptions(RoleOptionType.NeutralChaos));
+                break;
+        }
+
+        float num = 0.662f;
+
+        CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(thiz.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, thiz.RoleChancesSettings.transform);
+
+        // Set Header
+        categoryHeaderEditRole.Title.text = type.ToString();//GetString(type.ToString());
+        categoryHeaderEditRole.Background.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Divider?.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_StencilComp", 3f);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_Stencil", 20);
+
+        categoryHeaderEditRole.transform.localPosition = new Vector3(4.986f, num, -2f);
+        num -= 0.522f;
+        int num3 = 0;
+        foreach (var roleCategory in roles)
+        {
+            CreateHeader(roleCategory.Key, thiz, ref num);
+            num3++;
+            foreach (var role in roleCategory.Value)
+            {
+                Debug.Log(role.ToString());
+                CreateCustomQuotaOption(thiz, role, ref num);
+                num3++;
+            }
+        }
+
+        thiz.scrollBar.ContentYBounds.max = (num3 / 2.4f); // 2.5f works better sometimes, needs to find the correct number
+        Logger.Info($"{type} Count: {roles.Count}", "LoadRoleOptions");
+    }
+
+    // Additional methods
+
+    private static void CreateHeader(string name, RolesSettingsMenu thiz, ref float yPos)
+    {
+        CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(thiz.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, thiz.RoleChancesSettings.transform);
+        categoryHeaderEditRole.transform.Find("QuotaHeader").gameObject.SetActive(false); ;
+        categoryHeaderEditRole.transform.localPosition = new Vector3(4.98f, yPos - 0.1f, -2f);
+        categoryHeaderEditRole.Title.text = name;
+        categoryHeaderEditRole.Background.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Divider?.material.SetInt(PlayerMaterial.MaskLayer, 20);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_StencilComp", 3f);
+        categoryHeaderEditRole.Title.fontMaterial.SetFloat("_Stencil", 20);
+        yPos -= 0.43f;
+    }
+
+    private static void SetTabColor(RoleSettingsTabButton tab, string hex)
+    {
+        if (tab == null) return;
+
+        Color color = Color.blue;
+        hex = hex.TrimStart('#');
+
+        if (hex.Length != 6)
+        {
+            throw new InvalidOperationException("Hex color should be 6 characters long excluding the '#' symbol.");
+        }
+
+        float r = Convert.ToInt32(hex.Substring(0, 2), 16) / 255f;
+        float g = Convert.ToInt32(hex.Substring(2, 2), 16) / 255f;
+        float b = Convert.ToInt32(hex.Substring(4, 2), 16) / 255f;
+
+        color = new Color(r, g, b);
+        if (tab.button.inactiveSprites.GetComponent<SpriteRenderer>() != null && tab.button.activeSprites.GetComponent<SpriteRenderer>() != null)
+        {
+            SpriteRenderer inactiveSprite = tab.button.inactiveSprites.GetComponent<SpriteRenderer>();
+            SpriteRenderer activeSprite = tab.button.inactiveSprites.GetComponent<SpriteRenderer>();
+            inactiveSprite.color = GetInactiveColor(color);
+            activeSprite.color = color;
+        }
+    }
+
+    private static Color GetInactiveColor(this Color color, float shadowFactor = 0.5f)
+    {
+        shadowFactor = Mathf.Max(1.0f, shadowFactor);
+
+        Color shadowColor = new(
+            color.r / shadowFactor,
+            color.g / shadowFactor,
+            color.b / shadowFactor,
+            color.a
+        );
+
+        return shadowColor;
+    }
+
+    enum VanillaLikeRoleTypes : int
+    {
+        Crewmate = 0,
+        Impostor = 1,
+        Neutral = 2,
     }
 }

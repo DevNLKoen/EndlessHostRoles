@@ -7,6 +7,7 @@ using TOZ.AddOns;
 using TOZ.Modules;
 using HarmonyLib;
 using UnityEngine;
+using TOZ.Roles.Core;
 
 // ReSharper disable InconsistentNaming
 
@@ -885,7 +886,7 @@ public static class Options
         }
     }
 
-    public static void SetRoleChance(CustomRoles role, float chance)
+    /*public static void SetRoleChance(CustomRoles role, float chance)
     {
         //rolechance[role] = chance;
 
@@ -893,7 +894,7 @@ public static class Options
         {
             option.SetValue((int)chance - 1);
         }
-    }
+    }*/
 
     public static int GetRoleSpawnMode(CustomRoles role) => CustomRoleSpawnChances.TryGetValue(role, out var sc) ? sc.GetChance() : 0;
 
@@ -907,6 +908,27 @@ public static class Options
     {
         return CustomRoleSpawnChances.TryGetValue(role, out var option) ? option.GetValue() /* / 10f */ : roleSpawnChances[role];
     }
+    public static void SetRoleChance(CustomRoles role, float chance)
+    {
+        if (chance < 0f)
+        {
+            chance = 20f; // Reset
+        }
+        if (chance > 100f)
+        {
+            chance = 0f;
+        }
+
+        if (CustomRoleSpawnChances.TryGetValue(role, out var option))
+        {
+            option.SetValue((int)chance);
+        }
+        else
+        {
+            roleSpawnChances[role] = chance;
+        }
+    }
+
 
     private static System.Collections.IEnumerator Load()
     {
@@ -994,6 +1016,7 @@ public static class Options
         NoLimitAddonsNumMax = new IntegerOptionItem(211, "NoLimitAddonsNumMax", new(1, 90, 1), 1, TabGroup.Addons)
             .SetGameMode(CustomGameMode.Standard);
 
+        CustomRoleManager.GetNormalOptions(RoleOptionType.Impostor);//.ForEach(r => r.ApplyGameOptions());
 
         RoleLoadingText = "Add-ons\n.";
 
@@ -2159,6 +2182,10 @@ public static class Options
             //.SetGameMode(CustomGameMode.Standard)
             .SetHeader(true)
             .SetColor(Color.red);
+        new RoleTitleOptionItem(200045, "MenuTitle.Zloos", TabGroup.ZloosSettings)
+            //.SetGameMode(CustomGameMode.Standard)
+            .SetHeader(true)
+            .SetColor(Palette.CrewmateRoleHeaderTextBlue);
         //.SetColor(new Color32(255, 80, 80, byte.MaxValue));
         Zloosoption1 = new FloatOptionItem(200030, "MenuTitle.Zloos", new(1, 2, 33), 2, TabGroup.ZloosSettings)
             //.SetGameMode(CustomGameMode.Standard)

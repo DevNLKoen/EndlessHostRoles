@@ -18,15 +18,16 @@ class LateTask
     /// <param name="time">The time to wait until the task is run</param>
     /// <param name="name">The name of the task</param>
     /// <param name="log">Whether to send log of the creation and completion of the Late Task</param>
-    private LateTask(Action action, float time, string name, bool log)
+    public LateTask(Action action, float time, string name = "No Name Task", bool log = true)
     {
         this.action = action;
-        timer = time;
+        this.timer = time;
         this.name = name;
         this.log = log;
         Tasks.Add(this);
-        if (log && name is not "" and not "No Name Task")
-            Logger.Info("\"" + name + "\" is created", "LateTask");
+        if (name != "")
+            if (log)
+                Logger.Info("\"" + name + "\" is created", "LateTask");
     }
 
     private bool Run(float deltaTime)

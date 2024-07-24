@@ -14,6 +14,7 @@ namespace TOZ.Neutral
         public static OptionItem VentCooldown;
         public static OptionItem MaxInVentTime;
         public override bool IsEnable => On;
+        //public override RoleOptionType ThisRoleType => RoleOptionType.Neutral_NonKilling;
 
         public static void SetupCustomOption()
         {
