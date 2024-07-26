@@ -18,6 +18,7 @@ using LibCpp2IL;
 //using System.Collections.Generic;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using TOZ.Neutral;
+using AmongUs.GameOptions;
 //using System.Collections.Generic;
 
 namespace TOZ;
@@ -33,9 +34,6 @@ public static class ModGameOptionsMenu
     public static Dictionary<int, CategoryHeaderMasked> CategoryHeaderList = new();
     public static Dictionary<int, RoleOptionSetting> RoleOptionList = new();
     public static readonly System.Collections.Generic.Dictionary<OptionBehaviour, CustomRoles> HelpIcons = [];
->>>>>>>>> Temporary merge branch 2
-    public static readonly System.Collections.Generic.Dictionary<OptionBehaviour, CustomRoles> HelpIcons = [];
->>>>>>>>> Temporary merge branch 2
 }
 
 [HarmonyPatch(typeof(GameOptionsMenu))]
@@ -1025,53 +1023,11 @@ public static class StringOptionPatch
     [HarmonyPatch(nameof(StringOption.Initialize)), HarmonyPrefix]
     private static bool InitializePrefix(StringOption __instance)
     {
-            item.OptionBehaviour = __instance;
-            if (Enum.GetValues<CustomRoles>().Any(x => Translator.GetString($"{x}") == name.RemoveHtmlTags()))
-            {
-                name = $"<size=3.5>{name}</size>";
-                __instance.TitleText.fontWeight = FontWeight.Black;
-                __instance.TitleText.outlineColor = new(255, 255, 255, 255);
-                __instance.TitleText.outlineWidth = 0.04f;
-=========
-            if (Enum.GetValues<CustomRoles>().Any(x => Translator.GetString($"{x}") == name.RemoveHtmlTags()))
-            {
-                name = $"<size=3.5>{name}</size>";
-                __instance.TitleText.fontWeight = FontWeight.Black;
-                __instance.TitleText.outlineColor = new(255, 255, 255, 255);
-                __instance.TitleText.outlineWidth = 0.04f;
-=========
-            if (Enum.GetValues<CustomRoles>().Any(x => Translator.GetString($"{x}") == name.RemoveHtmlTags()))
-            {
-                name = $"<size=3.5>{name}</size>";
-                __instance.TitleText.fontWeight = FontWeight.Black;
-                __instance.TitleText.outlineColor = new(255, 255, 255, 255);
-                __instance.TitleText.outlineWidth = 0.04f;
-=========
-            if (Enum.GetValues<CustomRoles>().Any(x => Translator.GetString($"{x}") == name.RemoveHtmlTags()))
-            {
-                name = $"<size=3.5>{name}</size>";
-                __instance.TitleText.fontWeight = FontWeight.Black;
-                __instance.TitleText.outlineColor = new(255, 255, 255, 255);
-                __instance.TitleText.outlineWidth = 0.04f;
-=========
+        if (ModGameOptionsMenu.OptionList.TryGetValue(__instance, out var index))
         {
-<<<<<<<<< Temporary merge branch 1
-            if (Enum.GetValues<CustomRoles>().Any(x => Translator.GetString($"{x}") == name.RemoveHtmlTags()))
-            {
-                name = $"<size=3.5>{name}</size>";
-                __instance.TitleText.fontWeight = FontWeight.Black;
-                __instance.TitleText.outlineColor = new(255, 255, 255, 255);
-                __instance.TitleText.outlineWidth = 0.04f;
-=========
+            var item = OptionItem.AllOptions[index];
             var name = item.GetName();
-<<<<<<<<< Temporary merge branch 1
-            if (Enum.GetValues<CustomRoles>().Any(x => Translator.GetString($"{x}") == name.RemoveHtmlTags()))
-            {
-                name = $"<size=3.5>{name}</size>";
-                __instance.TitleText.fontWeight = FontWeight.Black;
-                __instance.TitleText.outlineColor = new(255, 255, 255, 255);
-                __instance.TitleText.outlineWidth = 0.04f;
-=========
+            item.OptionBehaviour = __instance;
             string name1 = name;
             if (Enum.GetValues<CustomRoles>().Find(x => Translator.GetString($"{x}") == name1.RemoveHtmlTags(), out var role))
             {

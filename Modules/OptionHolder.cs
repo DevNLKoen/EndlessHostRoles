@@ -7,6 +7,7 @@ using TOZ.Modules;
 using HarmonyLib;
 using UnityEngine;
 using TOZ.Roles.Core;
+using System.IO;
 
 // ReSharper disable AccessToModifiedClosure
 // ReSharper disable InconsistentNaming
