@@ -39,9 +39,12 @@ public static class ModGameOptionsMenu
 [HarmonyPatch(typeof(GameOptionsMenu))]
 public static class GameOptionsMenuPatch
 {
+    public static GameOptionsMenu Instance;
+
     [HarmonyPatch(nameof(GameOptionsMenu.Initialize)), HarmonyPrefix]
     private static bool InitializePrefix(GameOptionsMenu __instance)
     {
+        Instance ??= __instance;
         if (ModGameOptionsMenu.TabIndex < 3) return true;
 
         if (__instance.Children == null || __instance.Children.Count == 0)
@@ -706,7 +709,7 @@ public static class GameOptionsMenuPatch
         return false;
     }
 
-    private static void ReCreateSettings(GameOptionsMenu __instance)
+    public static void ReCreateSettings(GameOptionsMenu __instance)
     {
         if (ModGameOptionsMenu.TabIndex < 3) return;
         var modTab = (TabGroup)(ModGameOptionsMenu.TabIndex - 3);
@@ -1072,6 +1075,23 @@ public static class StringOptionPatch
             var item = OptionItem.AllOptions[index];
             item.SetValue(__instance.GetInt());
             if (item.Name == "GameMode") GameOptionsMenuPatch.ReloadUI(ModGameOptionsMenu.TabIndex);
+
+            var name = item.GetName();
+            string name1 = name;
+            if (Enum.GetValues<CustomRoles>().Find(x => Translator.GetString($"{x}") == name1.RemoveHtmlTags(), out var role))
+            {
+                name = name.RemoveHtmlTags();
+                if (Options.UsePets.GetBool() && role.PetActivatedAbility()) name += Translator.GetString("SupportsPetIndicator");
+                if (!Options.UsePets.GetBool() && role.OnlySpawnsWithPets()) name += Translator.GetString("RequiresPetIndicator");
+                __instance.TitleText.fontWeight = FontWeight.Black;
+                __instance.TitleText.outlineColor = new(255, 255, 255, 255);
+                __instance.TitleText.outlineWidth = 0.04f;
+                __instance.LabelBackground.color = Utils.GetRoleColor(role);
+                __instance.TitleText.color = Color.white;
+                name = $"<size=3.5>{name}</size>";
+            }
+
+            __instance.TitleText.text = name;
             return false;
         }
 
@@ -1175,8 +1195,6 @@ public class GameSettingMenuPatch
 
     public static FreeChatInputField InputField;
     private static System.Collections.Generic.List<OptionItem> HiddenBySearch = [];
-     //public static System.Collections.Generic.List<OptionItem> SearchWinners = [];
-    private static bool ShouldReveal;
 
     [HarmonyPatch(nameof(GameSettingMenu.Start)), HarmonyPrefix]
     [HarmonyPriority(Priority.First)]
@@ -1250,11 +1268,8 @@ public class GameSettingMenuPatch
             }
         }
 
-        if (ShouldReveal)
-        {
-            HiddenBySearch.Do(x => x.SetHidden(false));
-            HiddenBySearch.Clear();
-        }
+        HiddenBySearch.Do(x => x.SetHidden(false));
+        HiddenBySearch.Clear();
 
         SetupExtendedUI(__instance);
     }
@@ -1403,9 +1418,8 @@ public class GameSettingMenuPatch
 
             Result.ForEach(x => x.SetHidden(true));
 
-            ShouldReveal = false;
-            GameOptionsMenuPatch.ReloadUI(ModGameOptionsMenu.TabIndex);
-            LateTask.New(() => ShouldReveal = true, 0.48f);
+            GameOptionsMenuPatch.ReCreateSettings(GameOptionsMenuPatch.Instance);
+            textField.Clear();
         }
     }
 
@@ -1440,7 +1454,14 @@ public class GameSettingMenuPatch
     [HarmonyPatch(nameof(GameSettingMenu.ChangeTab)), HarmonyPrefix]
     public static bool ChangeTabPrefix(GameSettingMenu __instance, ref int tabNum, [HarmonyArgument(1)] bool previewOnly)
     {
-        ModGameOptionsMenu.TabIndex = tabNum;
+        if (HiddenBySearch.Any())
+        {
+            HiddenBySearch.Do(x => x.SetHidden(false));
+            GameOptionsMenuPatch.ReCreateSettings(GameOptionsMenuPatch.Instance);
+            HiddenBySearch.Clear();
+        }
+
+        if (!previewOnly || tabNum != 1) ModGameOptionsMenu.TabIndex = tabNum;
 
         GameOptionsMenu settingsTab;
         PassiveButton button;
@@ -1462,12 +1483,6 @@ public class GameSettingMenuPatch
                     button.SelectButton(false);
                 }
             }
-        }
-
-        if (ShouldReveal)
-        {
-            HiddenBySearch.Do(x => x.SetHidden(false));
-            HiddenBySearch.Clear();
         }
 
         if (tabNum < 3) return true;
