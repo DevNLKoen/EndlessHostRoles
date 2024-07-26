@@ -400,6 +400,12 @@ class CheckMurderPatch
             return false;
         }
 
+        if (!Bodyguard.OnAnyoneCheckMurder(killer, target))
+        {
+            Notify("BodyguardProtected");
+            return false;
+        }
+
         if (Echo.On)
         {
             foreach (Echo echo in Echo.Instances)
@@ -729,13 +735,7 @@ class ShapeshiftPatch
 
         var shapeshifting = shapeshifter.PlayerId != target.PlayerId;
 
-        if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
-        {
-            // Don't know how you would get here but ok
-            return true;
-        }
-
-        if (AmongUsClient.Instance.AmHost && shapeshifting) return false;
+        if (AmongUsClient.Instance.AmHost && shapeshifting && !Rhapsode.CheckAbilityUse(shapeshifter)) return false;
 
         Main.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
         Main.ShapeshiftTarget[shapeshifter.PlayerId] = target.PlayerId;
@@ -806,8 +806,10 @@ class ShapeshiftPatch
             var rndTarget = Main.AllAlivePlayerControls.Without(shapeshifter).RandomElement();
             var outfit = shapeshifter.Data.DefaultOutfit;
             shapeshifter.RpcShapeshift(rndTarget, false);
+            Main.CheckShapeshift[shapeshifter.PlayerId] = false;
             RpcChangeSkin(shapeshifter, outfit);
             NotifyRoles(SpecifySeer: shapeshifter, SpecifyTarget: shapeshifter, NoCache: true);
+            shapeshifter.RpcResetAbilityCooldown();
         }
 
         return isSSneeded || (!shouldCancel && !forceCancel) || (!shapeshifting && !shouldAlwaysCancel && !unshiftTrigger);
@@ -824,7 +826,7 @@ class ShapeshiftPatch
         {
             if (pc.Is(CustomRoles.Shiftguard))
             {
-                pc.Notify(shapeshifting ? GetString("ShiftguardNotifySS") : "ShiftguardNotifyUnshift");
+                pc.Notify(shapeshifting ? GetString("ShiftguardNotifySS") : GetString("ShiftguardNotifyUnshift"));
             }
 
             switch (Main.PlayerStates[pc.PlayerId].Role)
@@ -1098,8 +1100,9 @@ class FixedUpdatePatch
     private static readonly Dictionary<byte, int> DeadBufferTime = [];
     private static readonly Dictionary<byte, long> LastUpdate = [];
     private static long LastAddAbilityTime;
+    private static bool ChatOpen;
 
-    public static async void Postfix(PlayerControl __instance)
+    public static void Postfix(PlayerControl __instance)
     {
         if (__instance == null || __instance.PlayerId == 255) return;
 
@@ -1122,10 +1125,38 @@ class FixedUpdatePatch
         }
 
         if (AmongUsClient.Instance.AmHost)
-        {
+            if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
+                {
+                    case Warden warden:
+                        warden.Update(__instance);
+                        break;
+                    case Haunter haunter:
+                        haunter.Update(__instance);
+                        break;
+                    case Bloodmoon:
+                        Bloodmoon.Update(__instance);
+                        break;
+                }
+            }
+            else if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
             if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
             {
                 GhostRolesManager.AssignGhostRole(__instance);
+            }
+        }
+
+        if (GameStates.IsMeeting)
+        {
+            switch (ChatOpen)
+            {
+                case false when DestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening:
+                    ChatOpen = true;
+                    break;
+                case true when DestroyableSingleton<HudManager>.Instance.Chat.IsClosedOrClosing:
+                    ChatOpen = false;
+                    if (GameStates.IsVoting)
+                        GuessManager.CreateIDLabels(MeetingHud.Instance);
+                    break;
             }
         }
 
@@ -1145,7 +1176,7 @@ class FixedUpdatePatch
 
         try
         {
-            await DoPostfix(__instance);
+            DoPostfix(__instance);
         }
         catch (Exception ex)
         {

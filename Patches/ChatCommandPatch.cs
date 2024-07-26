@@ -116,7 +116,7 @@ internal static class ChatCommands
             new(["up"], "{role}", GetString("CommandDescription.Up"), Command.UsageLevels.Host, Command.UsageTimes.InLobby, UpCommand, true, [GetString("CommandArgs.Up.Role")]),
             new(["setrole", "сетроль"], "{id} {role}", GetString("CommandDescription.SetRole"), Command.UsageLevels.Host, Command.UsageTimes.InLobby, SetRoleCommand, true, [GetString("CommandArgs.SetRole.Id"), GetString("CommandArgs.SetRole.Role")]),
             new(["h", "help", "хэлп", "хелп", "помощь"], "", GetString("CommandDescription.Help"), Command.UsageLevels.Everyone, Command.UsageTimes.Always, HelpCommand, true),
-            new(["kcount", "gamestate", "gstate", "gs", "кубийц", "гс", "статигры"], "", GetString("CommandDescription.KCount"), Command.UsageLevels.Everyone, Command.UsageTimes.InGame, KCountCommand, true),
+            new(["kcount", "kc", "gamestate", "gstate", "gs", "кубийц", "гс", "статигры"], "", GetString("CommandDescription.KCount"), Command.UsageLevels.Everyone, Command.UsageTimes.InGame, KCountCommand, true),
             new(["addmod", "добмодера"], "{id}", GetString("CommandDescription.AddMod"), Command.UsageLevels.Host, Command.UsageTimes.Always, AddModCommand, true, [GetString("CommandArgs.AddMod.Id")]),
             new(["deletemod", "убрмодера", "удмодера"], "{id}", GetString("CommandDescription.DeleteMod"), Command.UsageLevels.Host, Command.UsageTimes.Always, DeleteModCommand, true, [GetString("CommandArgs.DeleteMod.Id")]),
             new(["combo", "комбо"], "{mode} {role} {addon} [all]", GetString("CommandDescription.Combo"), Command.UsageLevels.Host, Command.UsageTimes.Always, ComboCommand, true, [GetString("CommandArgs.Combo.Mode"), GetString("CommandArgs.Combo.Role"), GetString("CommandArgs.Combo.Addon"), GetString("CommandArgs.Combo.All")]),
@@ -139,7 +139,7 @@ internal static class ChatCommands
             new(["exe", "выкинуть"], "{id}", GetString("CommandDescription.Exe"), Command.UsageLevels.Host, Command.UsageTimes.Always, ExeCommand, true, [GetString("CommandArgs.Exe.Id")]),
             new(["kill", "убить"], "{id}", GetString("CommandDescription.Kill"), Command.UsageLevels.Host, Command.UsageTimes.Always, KillCommand, true, [GetString("CommandArgs.Kill.Id")]),
             new(["colour", "color", "цвет"], "{color}", GetString("CommandDescription.Colour"), Command.UsageLevels.Everyone, Command.UsageTimes.InLobby, ColorCommand, true, [GetString("CommandArgs.Colour.Color")]),
-            new(["xf", "испр"], "", GetString("CommandDescription.XF"), Command.UsageLevels.Everyone, Command.UsageTimes.Always, XFCommand, true),
+            new(["xf", "испр"], "", GetString("CommandDescription.XF"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, XFCommand, true),
             new(["id", "guesslist"], "", GetString("CommandDescription.ID"), Command.UsageLevels.Everyone, Command.UsageTimes.Always, IDCommand, true),
             new(["changerole", "измроль"], "{role}", GetString("CommandDescription.ChangeRole"), Command.UsageLevels.Host, Command.UsageTimes.InGame, ChangeRoleCommand, true),
             new(["end", "завершить"], "", GetString("CommandDescription.End"), Command.UsageLevels.Host, Command.UsageTimes.InGame, EndCommand, true),
@@ -149,8 +149,9 @@ internal static class ChatCommands
             new(["sd", "взвук"], "{sound}", GetString("CommandDescription.SD"), Command.UsageLevels.Modded, Command.UsageTimes.Always, SDCommand, true, [GetString("CommandArgs.SD.Sound")]),
             new(["gno", "гно"], "{number}", GetString("CommandDescription.GNO"), Command.UsageLevels.Everyone, Command.UsageTimes.AfterDeathOrLobby, GNOCommand, true, [GetString("CommandArgs.GNO.Number")]),
             new(["poll", "опрос"], "{question} {answerA} {answerB} [answerC] [answerD]", GetString("CommandDescription.Poll"), Command.UsageLevels.HostOrModerator, Command.UsageTimes.Always, PollCommand, true, [GetString("CommandArgs.Poll.Question"), GetString("CommandArgs.Poll.AnswerA"), GetString("CommandArgs.Poll.AnswerB"), GetString("CommandArgs.Poll.AnswerC"), GetString("CommandArgs.Poll.AnswerD")]),
-            new(["pv", "проголосовать"], "{vote}", GetString("CommandDescription.PV"), Command.UsageLevels.Everyone, Command.UsageTimes.Always, PVCommand, true, [GetString("CommandArgs.PV.Vote")]),
+            new(["pv", "проголосовать"], "{vote}", GetString("CommandDescription.PV"), Command.UsageLevels.Everyone, Command.UsageTimes.Always, PVCommand, false, [GetString("CommandArgs.PV.Vote")]),
             new(["hm", "мс", "мессенджер"], "{id}", GetString("CommandDescription.HM"), Command.UsageLevels.Everyone, Command.UsageTimes.AfterDeath, HMCommand, true, [GetString("CommandArgs.HM.Id")]),
+            new(["decree", "постановление"], "{number}", GetString("CommandDescription.Decree"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, DecreeCommand, true, [GetString("CommandArgs.Decree.Number")]),
 
             // Commands with action handled elsewhere
             new(["shoot", "guess", "bet", "st", "bt", "угадать", "бт"], "{id} {role}", GetString("CommandDescription.Guess"), Command.UsageLevels.Everyone, Command.UsageTimes.InMeeting, (_, _, _, _) => { }, true, [GetString("CommandArgs.Guess.Id"), GetString("CommandArgs.Guess.Role")]),
@@ -253,6 +254,25 @@ internal static class ChatCommands
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------
 
+    private static void DecreeCommand(ChatController __instance, PlayerControl player, string text, string[] args)
+    {
+        if (!player.Is(CustomRoles.President)) return;
+
+        if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId)
+            ChatManager.SendPreviousMessagesToAll();
+
+        LateTask.New(() =>
+        {
+            if (args.Length < 2)
+            {
+                Utils.SendMessage(President.GetHelpMessage(), player.PlayerId);
+                return;
+            }
+
+            President.UseDecree(player, args[1]);
+        }, 0.2f, log: false);
+    }
+
     private static void HMCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
         if (args.Length < 2 || !int.TryParse(args[1], out int id) || id is > 3 or < 1) return;
@@ -281,6 +301,7 @@ internal static class ChatCommands
         }
     }
 
+    // Credit: Drakos for the base code
     private static void PollCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
         PollVotes.Clear();
@@ -295,10 +316,9 @@ internal static class ChatCommands
         }
 
         var splitIndex = Array.IndexOf(args, args.First(x => x.Contains('?'))) + 1;
-        var title = string.Join(" ", args.Take(splitIndex).Skip(1));
         var answers = args.Skip(splitIndex).ToArray();
 
-        string msg = title + "\n";
+        string msg = string.Join(" ", args.Take(splitIndex).Skip(1)) + "\n";
         for (int i = 0; i < Math.Clamp(answers.Length, 2, 5); i++)
         {
             char choiceLetter = (char)(i + 65);
@@ -308,20 +328,29 @@ internal static class ChatCommands
         }
 
         msg += $"\n{GetString("Poll.Begin")}\n<size=55%><i>{GetString("Poll.TimeInfo")}</i></size>";
-        Utils.SendMessage(msg, title: GetString("Poll.Title"));
+        var title = GetString("Poll.Title");
+        Utils.SendMessage(msg, title: title);
 
         Main.Instance.StartCoroutine(StartPollCountdown());
         return;
 
-        static System.Collections.IEnumerator StartPollCountdown()
+        System.Collections.IEnumerator StartPollCountdown()
         {
             if (PollVotes.Count == 0) yield break;
             bool playervoted = (Main.AllPlayerControls.Length - 1) > PollVotes.Values.Sum();
 
+            var resendTimer = 0f;
             while (playervoted && PollTimer > 0f)
             {
                 playervoted = (Main.AllPlayerControls.Length - 1) > PollVotes.Values.Sum();
                 PollTimer -= Time.deltaTime;
+                resendTimer += Time.deltaTime;
+                if (resendTimer >= 15f)
+                {
+                    resendTimer = 0f;
+                    Utils.SendMessage(msg, title: title);
+                }
+
                 yield return null;
             }
 
@@ -535,6 +564,12 @@ internal static class ChatCommands
             return;
         }
 
+        if (!player.IsHost() && !Options.PlayerCanSetColor.GetBool())
+        {
+            Utils.SendMessage(GetString("DisableUseCommand"), player.PlayerId);
+            return;
+        }
+
         string subArgs = args.Length < 2 ? string.Empty : args[1];
         var color = Utils.MsgToColor(subArgs, true);
         if (color == byte.MaxValue)
@@ -687,15 +722,16 @@ internal static class ChatCommands
     {
         if (text.Length < 6 || !GameStates.IsMeeting) return;
         string toVote = text[6..].Replace(" ", string.Empty);
-        if (!byte.TryParse(toVote, out var voteId)) return;
+        if (!byte.TryParse(toVote, out var voteId) || MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == player.PlayerId)?.DidVote == true) return;
         if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId) ChatManager.SendPreviousMessagesToAll();
-        MeetingHud.Instance?.CastVote(player.PlayerId, voteId);
+        if (!player.IsHost()) MeetingHud.Instance?.CastVote(player.PlayerId, voteId);
+        else MeetingHud.Instance?.CmdCastVote(player.PlayerId, voteId);
     }
 
     private static void SayCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
         if (args.Length > 1)
-            Utils.SendMessage(args.Skip(1).Join(delimiter: " "), title: $"<color=#ff0000>{GetString("MessageFromTheHost")}</color>");
+            Utils.SendMessage(args.Skip(1).Join(delimiter: " "), title: $"<color=#ff0000>{GetString(player.IsHost() ? "MessageFromTheHost" : "SayTitle")}</color>");
     }
 
     private static void DeathCommand(ChatController __instance, PlayerControl player, string text, string[] args)
@@ -757,14 +793,16 @@ internal static class ChatCommands
                 Utils.ShowChildrenSettings(opt, ref settings, disableColor: false);
             settings.Append("</size>");
             if (role.PetActivatedAbility()) sb.Append($"<size=50%>{GetString("SupportsPetMessage")}</size>");
-            sb.Replace(role.ToString(), role.ToColoredString());
-            sb.Replace(role.ToString().ToLower(), role.ToColoredString());
+            var searchStr = GetString(role.ToString());
+            sb.Replace(searchStr, role.ToColoredString());
+            sb.Replace(searchStr.ToLower(), role.ToColoredString());
             sb.Append("<size=70%>");
             foreach (CustomRoles subRole in Main.PlayerStates[player.PlayerId].SubRoles)
             {
                 sb.Append($"\n\n{subRole.ToColoredString()} {Utils.GetRoleMode(subRole)} {GetString($"{subRole}InfoLong")}");
-                sb.Replace(subRole.ToString(), subRole.ToColoredString());
-                sb.Replace(subRole.ToString().ToLower(), subRole.ToColoredString());
+                var searchSubStr = GetString(subRole.ToString());
+                sb.Replace(searchSubStr, subRole.ToColoredString());
+                sb.Replace(searchSubStr.ToLower(), subRole.ToColoredString());
             }
 
             if (settings.Length > 0) Utils.SendMessage("\n", player.PlayerId, settings.ToString());

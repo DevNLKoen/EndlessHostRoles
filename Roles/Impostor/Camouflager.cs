@@ -9,7 +9,7 @@ namespace TOZ.Impostor
         public static OptionItem CamouflageCooldown;
         private static OptionItem CamouflageDuration;
         private static OptionItem CamoLimitOpt;
-        public static OptionItem CamoAbilityUseGainWithEachKill;
+        public static OptionItem AbilityUseGainWithEachKill;
         public static OptionItem DoesntSpawnOnFungle;
 
         public static bool IsActive;
@@ -26,7 +26,7 @@ namespace TOZ.Impostor
                 .SetValueFormat(OptionFormat.Seconds);
             CamoLimitOpt = new IntegerOptionItem(Id + 4, "AbilityUseLimit", new(0, 5, 1), 1, TabGroup.ImpostorRoles).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Camouflager])
                 .SetValueFormat(OptionFormat.Times);
-            CamoAbilityUseGainWithEachKill = new FloatOptionItem(Id + 5, "AbilityUseGainWithEachKill", new(0f, 5f, 0.1f), 0.3f, TabGroup.ImpostorRoles)
+            AbilityUseGainWithEachKill = new FloatOptionItem(Id + 5, "AbilityUseGainWithEachKill", new(0f, 5f, 0.1f), 0.3f, TabGroup.ImpostorRoles)
                 .SetParent(Options.CustomRoleSpawnChances[CustomRoles.Camouflager])
                 .SetValueFormat(OptionFormat.Times);
             DoesntSpawnOnFungle = new BooleanOptionItem(Id + 6, "DoesntSpawnOnFungle", false, TabGroup.ImpostorRoles)
@@ -72,7 +72,7 @@ namespace TOZ.Impostor
             IsActive = true;
             Camouflage.CheckCamouflage();
 
-            return true;
+            return !Options.UseUnshiftTrigger.GetBool();
         }
 
         public override void OnReportDeadBody()
@@ -88,9 +88,9 @@ namespace TOZ.Impostor
 
         public static void IsDead(PlayerControl target)
         {
-            if (!target.Data.IsDead || GameStates.IsMeeting) return;
+            if (!target.IsAlive() || GameStates.IsMeeting) return;
 
-            if (target.Is(CustomRoles.Camouflager) && target.Data.IsDead)
+            if (target.Is(CustomRoles.Camouflager))
             {
                 IsActive = false;
                 Camouflage.CheckCamouflage();

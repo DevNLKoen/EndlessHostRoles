@@ -19,6 +19,7 @@ namespace TOZ.Impostor
         public static OptionItem WarlockCanKillSelf;
         public static OptionItem KillCooldown;
         public static OptionItem CurseCooldown;
+        public static OptionItem ShapeshiftCooldown;
         public static OptionItem FreezeAfterCurseKill;
         public static OptionItem FreezeDurationAfterCurseKill;
 
@@ -43,6 +44,9 @@ namespace TOZ.Impostor
                 .SetParent(CustomRoleSpawnChances[CustomRoles.Warlock])
                 .SetValueFormat(OptionFormat.Seconds);
             CurseCooldown = new FloatOptionItem(4614, "CurseCooldown", new(0f, 180f, 1f), 30f, TabGroup.ImpostorRoles)
+                .SetParent(CustomRoleSpawnChances[CustomRoles.Warlock])
+                .SetValueFormat(OptionFormat.Seconds);
+            ShapeshiftCooldown = new FloatOptionItem(4612, "ShapeshiftCooldown", new(0f, 180f, 1f), 30f, TabGroup.ImpostorRoles)
                 .SetParent(CustomRoleSpawnChances[CustomRoles.Warlock])
                 .SetValueFormat(OptionFormat.Seconds);
             FreezeAfterCurseKill = new BooleanOptionItem(4615, "FreezeAfterCurseKill", true, TabGroup.ImpostorRoles)
@@ -71,11 +75,11 @@ namespace TOZ.Impostor
         {
             try
             {
-                if (UsePhantomBasis.GetBool()) AURoleOptions.PhantomCooldown = IsCursed ? 1f : DefaultKillCooldown;
+                if (UsePhantomBasis.GetBool()) AURoleOptions.PhantomCooldown = IsCursed ? 1f : ShapeshiftCooldown.GetFloat();
                 else
                 {
                     if (UsePets.GetBool()) return;
-                    AURoleOptions.ShapeshifterCooldown = IsCursed ? 1f : DefaultKillCooldown;
+                    AURoleOptions.ShapeshifterCooldown = IsCursed ? 1f : ShapeshiftCooldown.GetFloat();
                     AURoleOptions.ShapeshifterDuration = 1f;
                 }
             }
@@ -93,12 +97,9 @@ namespace TOZ.Impostor
         {
             bool curse = IsCurseAndKill.TryGetValue(id, out bool wcs) && wcs;
             bool shapeshifting = id.IsPlayerShifted();
-            if (!shapeshifting && !curse)
-                hud.KillButton?.OverrideText(Translator.GetString("WarlockCurseButtonText"));
-            else
-                hud.KillButton?.OverrideText(Translator.GetString("KillButtonText"));
-            if (!shapeshifting && curse)
-                hud.AbilityButton?.OverrideText(Translator.GetString("WarlockShapeshiftButtonText"));
+            if (!shapeshifting && !curse) hud.KillButton?.OverrideText(Translator.GetString("WarlockCurseButtonText"));
+            else hud.KillButton?.OverrideText(Translator.GetString("KillButtonText"));
+            if (!shapeshifting && curse) hud.AbilityButton?.OverrideText(Translator.GetString("WarlockShapeshiftButtonText"));
         }
 
         void ResetCooldowns(bool killCooldown = false, bool curseCooldown = false, bool shapeshiftCooldown = false, PlayerControl warlock = null)

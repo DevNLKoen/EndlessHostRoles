@@ -67,7 +67,7 @@ internal class ControllerManagerUpdatePatch
                 if (Main.PlayerStates[lp.PlayerId].SubRoles.Count == 0) return;
 
                 AddDes = [];
-                foreach (var subRole in Main.PlayerStates[lp.PlayerId].SubRoles.Where(x => x is not CustomRoles.Charmed))
+                foreach (var subRole in Main.PlayerStates[lp.PlayerId].SubRoles.Where(x => !x.IsConverted()))
                     AddDes.Add(GetString($"{subRole}") + Utils.GetRoleMode(subRole) + GetString($"{subRole}InfoLong"));
 
                 AddonIndex++;
@@ -89,7 +89,7 @@ internal class ControllerManagerUpdatePatch
                 var sb = new StringBuilder();
                 if (Options.CustomRoleSpawnChances.TryGetValue(role, out var soi))
                     Utils.ShowChildrenSettings(soi, ref sb, command: true, disableColor: false);
-                HudManager.Instance.ShowPopUp(sb.ToString());
+                HudManager.Instance.ShowPopUp(sb.ToString().Trim());
             }
             catch (Exception ex)
             {

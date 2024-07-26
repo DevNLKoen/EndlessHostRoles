@@ -16,7 +16,7 @@ internal static class CustomRolesHelper
 {
     public static bool CanCheck = false;
 
-    public static readonly List<CustomRoles> OnlySpawnsWithPetsRoleList =
+    private static readonly List<CustomRoles> OnlySpawnsWithPetsRoleList =
     [
         CustomRoles.Tunneler,
         CustomRoles.Tornado,
@@ -40,12 +40,12 @@ internal static class CustomRolesHelper
         CustomRoles.Dasher
     ];
 
-    public static readonly List<CustomRoles> ExperimentalRoleList =
-    [
-        CustomRoles.Shifter
-    ];
-
-    public static bool IsExperimental(this CustomRoles role) => ExperimentalRoleList.Contains(role);
+    // private static readonly List<CustomRoles> ExperimentalRoleList =
+    // [
+    //     CustomRoles.Shifter
+    // ];
+    //
+    // public static bool IsExperimental(this CustomRoles role) => ExperimentalRoleList.Contains(role);
 
     public static bool IsForOtherGameMode(this CustomRoles role) => HnSManager.AllHnSRoles.Contains(role) || role is
         CustomRoles.KB_Normal or
@@ -86,8 +86,8 @@ internal static class CustomRolesHelper
         if (role.IsVanilla()) return role;
         if (checkDesyncRole && role.GetDYRole() == RoleTypes.Impostor) return CustomRoles.Impostor;
         if (Options.UsePhantomBasis.GetBool() && role.SimpleAbilityTrigger()) return CustomRoles.Phantom;
-        if (Options.UseUnshiftTrigger.GetBool() && role.SimpleAbilityTrigger()) return CustomRoles.Shapeshifter;
         bool UsePets = Options.UsePets.GetBool();
+        if (Options.UseUnshiftTrigger.GetBool() && role.SimpleAbilityTrigger() && !UsePets) return CustomRoles.Shapeshifter;
         return role switch
         {
             CustomRoles.Sniper => UsePets ? CustomRoles.Impostor : CustomRoles.Shapeshifter,
@@ -196,6 +196,7 @@ internal static class CustomRolesHelper
             CustomRoles.GuessManagerRole => CustomRoles.Crewmate,
             CustomRoles.Altruist => CustomRoles.Crewmate,
             CustomRoles.Transmitter => CustomRoles.Crewmate,
+            CustomRoles.President => CustomRoles.Crewmate,
             CustomRoles.Oxyman => CustomRoles.Engineer,
             CustomRoles.Chef => CustomRoles.Crewmate,
             CustomRoles.Lyncher => CustomRoles.Crewmate,
@@ -346,8 +347,8 @@ internal static class CustomRolesHelper
     public static RoleTypes GetDYRole(this CustomRoles role, bool load = false)
     {
         if (!load && Options.UsePhantomBasis.GetBool() && Options.UsePhantomBasisForNKs.GetBool() && !role.IsImpostor() && role.SimpleAbilityTrigger()) return RoleTypes.Phantom;
-        if (!load && Options.UseUnshiftTrigger.GetBool() && Options.UseUnshiftTriggerForNKs.GetBool() && !role.IsImpostor() && role.SimpleAbilityTrigger()) return RoleTypes.Shapeshifter;
         bool UsePets = !load && Options.UsePets.GetBool();
+        if (!load && Options.UseUnshiftTrigger.GetBool() && Options.UseUnshiftTriggerForNKs.GetBool() && !role.IsImpostor() && role.SimpleAbilityTrigger() && (!UsePets || role == CustomRoles.Chemist)) return RoleTypes.Shapeshifter;
         return role switch
         {
             // SoloKombat
@@ -792,10 +793,12 @@ internal static class CustomRolesHelper
         CustomRoles.Godfather when Options.GodfatherCancelVote.GetBool() => true,
         CustomRoles.Socialite when Socialite.CancelVote.GetBool() => true,
 
+        CustomRoles.President => true,
+
         _ => false
     };
 
-    public static bool OnlySpawnsWithPets(this CustomRoles role) => OnlySpawnsWithPetsRoleList.Contains(role);
+    public static bool OnlySpawnsWithPets(this CustomRoles role) => !(Options.UseUnshiftTrigger.GetBool() && (!role.IsNeutral() || Options.UseUnshiftTriggerForNKs.GetBool()) && role.SimpleAbilityTrigger() && role != CustomRoles.Chemist) && OnlySpawnsWithPetsRoleList.Contains(role);
 
     public static bool NeedUpdateOnLights(this CustomRoles role) => (!role.UsesPetInsteadOfKill()) && (role.GetDYRole() != RoleTypes.GuardianAngel || role is
         CustomRoles.Convict or
@@ -884,6 +887,8 @@ internal static class CustomRolesHelper
 
     public static bool CheckAddonConflict(CustomRoles role, PlayerControl pc) => role.IsAdditionRole() && (!Main.NeverSpawnTogetherCombos.TryGetValue(OptionItem.CurrentPreset, out var neverList) || !neverList.TryGetValue(pc.GetCustomRole(), out var bannedAddonList) || !bannedAddonList.Contains(role)) && pc.GetCustomRole() is not CustomRoles.GuardianAngelTOZ and not CustomRoles.God && !pc.Is(CustomRoles.Madmate) && !pc.Is(CustomRoles.GM) && role is not CustomRoles.Lovers && !pc.Is(CustomRoles.Needy) && (!pc.HasSubRole() || pc.GetCustomSubRoles().Count < Options.NoLimitAddonsNumMax.GetInt()) && (!Options.AddonCanBeSettings.TryGetValue(role, out var o) || ((o.Imp.GetBool() || !pc.GetCustomRole().IsImpostor()) && (o.Neutral.GetBool() || !pc.GetCustomRole().IsNeutral()) && (o.Crew.GetBool() || !pc.IsCrewmate()))) && (!role.IsImpOnlyAddon() || pc.IsImpostor()) && role switch
     {
+        CustomRoles.Magnet when pc.Is(Team.Impostor) => false,
+        CustomRoles.Swift when pc.Is(CustomRoles.Magnet) => false,
         CustomRoles.Oblivious when pc.Is(CustomRoles.Amnesiac) && Amnesiac.RememberMode.GetValue() == 1 => false,
         CustomRoles.Rookie when !pc.CanUseKillButton() => false,
         CustomRoles.Energetic when !Options.UsePets.GetBool() => false,
@@ -963,7 +968,7 @@ internal static class CustomRolesHelper
         CustomRoles.Trapper when pc.Is(CustomRoles.GuardianAngelTOZ) => false,
         CustomRoles.Reach when !pc.CanUseKillButton() => false,
         CustomRoles.Magnet when !pc.CanUseKillButton() => false,
-        CustomRoles.Haste when !pc.CanUseKillButton() => false,
+        CustomRoles.Haste when !pc.CanUseKillButton() || !pc.CanUseImpostorVentButton() => false,
         CustomRoles.Diseased when pc.Is(CustomRoles.Antidote) => false,
         CustomRoles.Antidote when pc.Is(CustomRoles.Diseased) => false,
         CustomRoles.Flashman or CustomRoles.Giant when pc.GetCustomRole() is CustomRoles.Swooper  or CustomRoles.Chameleon or CustomRoles.Alchemist => false,
@@ -994,14 +999,14 @@ internal static class CustomRolesHelper
 
     public static Team GetTeam(this CustomRoles role)
     {
-        if (role.IsImpostorTeamV3()) return Team.Impostor;
+        if (role.IsImpostorTeamV2()) return Team.Impostor;
         if (role.IsNeutralTeamV2()) return Team.Neutral;
         return role.IsCrewmateTeamV2() ? Team.Crewmate : Team.None;
     }
 
     public static bool Is(this CustomRoles role, Team team) => team switch
     {
-        Team.Impostor => role.IsImpostorTeamV3(),
+        Team.Impostor => role.IsImpostorTeamV2(),
         Team.Neutral => role.IsNeutralTeamV2(),
         Team.Crewmate => role.IsCrewmateTeamV2(),
         Team.None => role.GetCountTypes() is CountTypes.OutOfGame or CountTypes.None || role == CustomRoles.GM,
@@ -1019,7 +1024,7 @@ internal static class CustomRolesHelper
     public static bool IsImpostorTeam(this CustomRoles role) => role.IsImpostor() || role == CustomRoles.Madmate;
     public static bool IsCrewmate(this CustomRoles role) => !role.IsImpostor() && !role.IsNeutral() && !role.IsMadmate();
 
-    private static bool IsImpostorTeamV2(this CustomRoles role) => (role.IsImpostorTeam() && role != CustomRoles.Trickster && !role.IsConverted()) || role == CustomRoles.Rascal;
+    public static bool IsImpostorTeamV2(this CustomRoles role) => (role.IsImpostorTeam() && role != CustomRoles.Trickster && !role.IsConverted()) || role is CustomRoles.Rascal or CustomRoles.Madmate || role.IsMadmate();
     public static bool IsNeutralTeamV2(this CustomRoles role) => role.IsConverted() || (role.IsNeutral() && role != CustomRoles.Madmate);
     public static bool IsCrewmateTeamV2(this CustomRoles role) => (!role.IsImpostorTeamV2() && !role.IsNeutralTeamV2()) || (role == CustomRoles.Trickster && !role.IsConverted());
 
@@ -1027,8 +1032,7 @@ internal static class CustomRolesHelper
         CustomRoles.Charmed or
         CustomRoles.Recruit or
         CustomRoles.Contagious or
-        CustomRoles.Undead or
-        CustomRoles.Lovers;
+        CustomRoles.Undead;
 
     public static bool IsRevealingRole(this CustomRoles role, PlayerControl target) =>
         ((role is CustomRoles.Mayor) && Mayor.MayorRevealWhenDoneTasks.GetBool() && target.AllTasksCompleted()) ||
@@ -1038,7 +1042,6 @@ internal static class CustomRolesHelper
         ((role is CustomRoles.Doctor) && Options.DoctorVisibleToEveryone.GetBool()) ||
         ((role is CustomRoles.Bait) && Options.BaitNotification.GetBool() && ParityCop.ParityCheckBaitCountType.GetBool());
 
-    public static bool IsImpostorTeamV3(this CustomRoles role) => role.IsImpostor() || role.IsMadmate() || role == CustomRoles.Madmate;
 
     public static bool IsVanilla(this CustomRoles role) => role is
         CustomRoles.Crewmate or
@@ -1131,7 +1134,7 @@ internal static class CustomRolesHelper
 
         _ => Enum.TryParse(role.ToString(), true, out CountTypes type)
             ? type
-            : role.Is(Team.Impostor)
+            : role.Is(Team.Impostor) || role == CustomRoles.Trickster
                 ? CountTypes.Impostor
                 : CountTypes.Crew
     };

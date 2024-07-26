@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using TOZ.AddOns;
@@ -8,6 +7,7 @@ using TOZ.Modules;
 using HarmonyLib;
 using UnityEngine;
 
+// ReSharper disable AccessToModifiedClosure
 // ReSharper disable InconsistentNaming
 
 namespace TOZ;
@@ -175,6 +175,7 @@ public static class Options
     public static OptionItem EnableKillerLeftCommand;
 
     public static OptionItem SeeEjectedRolesInMeeting;
+    public static OptionItem EveryoneSeesDeathReasons;
 
     public static OptionItem DisableShieldAnimations;
     public static OptionItem DisableShapeshiftAnimations;
@@ -686,6 +687,7 @@ public static class Options
     public static OptionItem NoLimitAddonsNumMax;
     public static OptionItem BewilderVision;
     public static OptionItem SunglassesVision;
+
     public static OptionItem MadmateSpawnMode;
     public static OptionItem MadmateCountMode;
     public static OptionItem SheriffCanBeMadmate;
@@ -693,10 +695,10 @@ public static class Options
     public static OptionItem NGuesserCanBeMadmate;
     public static OptionItem SnitchCanBeMadmate;
     public static OptionItem JudgeCanBeMadmate;
-
     public static OptionItem MarshallCanBeMadmate;
-
     public static OptionItem FarseerCanBeMadmate;
+    public static OptionItem PresidentCanBeMadmate;
+
     public static OptionItem MadSnitchTasks;
     public static OptionItem FlashmanSpeed;
     public static OptionItem GiantSpeed;
@@ -922,10 +924,10 @@ public static class Options
         int defaultPresetNumber = OptionSaver.GetDefaultPresetNumber();
         _ = new PresetOptionItem(defaultPresetNumber, TabGroup.SystemSettings)
             .SetColor(new Color32(255, 235, 4, byte.MaxValue))
-            .SetHeader(true);
+            .SetHidden(true);
 
         GameMode = new StringOptionItem(1, "GameMode", GameModes, 0, TabGroup.GameSettings)
-            .SetHeader(true);
+            .SetHidden(true);
 
         #region Settings
 
@@ -2047,6 +2049,9 @@ public static class Options
         SeeEjectedRolesInMeeting = new BooleanOptionItem(44439, "SeeEjectedRolesInMeeting", true, TabGroup.GameSettings)
             .SetColor(new Color32(147, 241, 240, byte.MaxValue));
 
+        EveryoneSeesDeathReasons = new BooleanOptionItem(44440, "EveryoneSeesDeathReasons", false, TabGroup.GameSettings)
+            .SetColor(new Color32(147, 241, 240, byte.MaxValue));
+
         LoadingPercentage = 94;
 
 
@@ -2303,8 +2308,6 @@ public static class Options
 
         private OverrideTasksData(int idStart, TabGroup tab, CustomRoles role)
         {
-            IdStart = idStart;
-            Role = role;
             Dictionary<string, string> replacementDic = new() { { "%role%", role.ToColoredString() } };
             DoOverride = new BooleanOptionItem(idStart++, "doOverride", false, tab)
                 .SetParent(CustomRoleSpawnChances[role])
@@ -2326,9 +2329,6 @@ public static class Options
             if (!AllData.ContainsKey(role)) AllData.Add(role, this);
             else Logger.Warn("OverrideTasksData created for duplicate CustomRoles", "OverrideTasksData");
         }
-
-        public CustomRoles Role { get; private set; }
-        public int IdStart { get; private set; }
 
         public static OverrideTasksData Create(int idStart, TabGroup tab, CustomRoles role) => new(idStart, tab, role);
     }

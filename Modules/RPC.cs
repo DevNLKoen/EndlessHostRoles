@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AmongUs.GameOptions;
 using TOZ.AddOns.Crewmate;
 using TOZ.AddOns.Impostor;
@@ -902,17 +901,22 @@ internal static class RPC
 
     public static async void RpcVersionCheck()
     {
-        while (PlayerControl.LocalPlayer == null) await Task.Delay(500);
-        MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionCheck);
-        writer.Write(Main.PluginVersion);
-        writer.Write($"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})");
-        writer.Write(Main.ForkId);
-        writer.EndMessage();
+        Main.Instance.StartCoroutine(VersionCheck());
 
-        Main.PlayerVersion[PlayerControl.LocalPlayer.PlayerId] = new(Main.PluginVersion, $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})", Main.ForkId);
+        System.Collections.IEnumerator VersionCheck()
+        {
+            while (PlayerControl.LocalPlayer == null) yield return null;
+            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionCheck);
+            writer.Write(Main.PluginVersion);
+            writer.Write($"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})");
+            writer.Write(Main.ForkId);
+            writer.EndMessage();
 
-        if (GameStates.IsModHost)
-            Main.HostClientId = Utils.GetPlayerById(0)?.GetClientId() ?? -1;
+            Main.PlayerVersion[PlayerControl.LocalPlayer.PlayerId] = new(Main.PluginVersion, $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})", Main.ForkId);
+
+            if (GameStates.IsModHost)
+                Main.HostClientId = Utils.GetPlayerById(0)?.GetClientId() ?? -1;
+        }
     }
 
     public static void SendDeathReason(byte playerId, PlayerState.DeathReason deathReason)
@@ -1125,7 +1129,8 @@ internal static class PlayerPhysicsRPCHandlerPatch
 {
     public static bool Prefix(PlayerPhysics __instance, byte callId, MessageReader reader)
     {
-        if (EAC.PlayerPhysicsRpcCheck(__instance, callId, reader)) return false;
+        bool host = __instance.IsHost();
+        if (!host && EAC.PlayerPhysicsRpcCheck(__instance, callId, reader)) return false;
 
         var player = __instance.myPlayer;
         if (!player)
@@ -1134,7 +1139,7 @@ internal static class PlayerPhysicsRPCHandlerPatch
             return false;
         }
 
-        Logger.Info($"{player.PlayerId}({(__instance.IsHost() ? "Host" : player.Data.PlayerName)}):{callId}({RPC.GetRpcName(callId)})", "PlayerPhysics_ReceiveRPC");
+        Logger.Info($"{player.PlayerId}({(host ? "Host" : player.Data.PlayerName)}):{callId}({RPC.GetRpcName(callId)})", "PlayerPhysics_ReceiveRPC");
         return true;
     }
 }

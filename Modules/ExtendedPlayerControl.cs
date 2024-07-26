@@ -310,7 +310,7 @@ static class ExtendedPlayerControl
         // Other Clients
         if (!killer.IsHost())
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)RpcCalls.MurderPlayer, SendOption.Reliable);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)RpcCalls.MurderPlayer, SendOption.Reliable, killer.GetClientId());
             writer.WriteNetObject(target);
             writer.Write((int)MurderResultFlags.FailedProtected);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -410,7 +410,7 @@ static class ExtendedPlayerControl
         {
             if (Math.Abs(time - (-1f)) < 0.5f) player.AddKCDAsAbilityCD();
             else player.AddAbilityCD((int)Math.Round(time));
-            return;
+            if (player.GetCustomRole() is not CustomRoles.Necromancer and not CustomRoles.Deathknight) return;
         }
 
         if (!player.CanUseKillButton()) return;
@@ -570,9 +570,9 @@ static class ExtendedPlayerControl
             _ => SystemTypes.Reactor
         };
 
-        LateTask.New(() => { pc.RpcDesyncRepairSystem(systemtypes, 128); }, 0f + delay, "Reactor Desync");
+        LateTask.New(() => pc.RpcDesyncRepairSystem(systemtypes, 128), 0f + delay, "Reactor Desync");
 
-        LateTask.New(() => { pc.RpcSpecificMurderPlayer(); }, 0.2f + delay, "Murder To Reset Cam");
+        LateTask.New(() => pc.RpcSpecificMurderPlayer(), 0.2f + delay, "Murder To Reset Cam");
 
         LateTask.New(() =>
         {
@@ -633,6 +633,18 @@ static class ExtendedPlayerControl
     public static bool IsHost(this InnerNetObject ino) => ino.OwnerId == AmongUsClient.Instance.HostId;
     public static bool IsHost(this byte id) => GetPlayerById(id)?.OwnerId == AmongUsClient.Instance.HostId;
 
+    public static void RpcShowScanAnimation(this PlayerControl target, PlayerControl seer, bool IsActive)
+    {
+        if (!AmongUsClient.Instance.AmHost) return;
+
+        byte cnt = ++PlayerControl.LocalPlayer.scannerCount;
+
+        MessageWriter messageWriter = AmongUsClient.Instance.StartRpcImmediately(target.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, seer.GetClientId());
+        messageWriter.Write(IsActive);
+        messageWriter.Write(cnt);
+        AmongUsClient.Instance.FinishRpcImmediately(messageWriter);
+    }
+
     public static bool HasKillButton(this PlayerControl pc)
     {
         CustomRoles role = pc.GetCustomRole();
@@ -646,10 +658,17 @@ static class ExtendedPlayerControl
         if (!pc.IsAlive()) return false;
         if (Mastermind.ManipulatedPlayers.ContainsKey(pc.PlayerId)) return true;
         if (Penguin.IsVictim(pc)) return false;
-        if (Options.CurrentGameMode is CustomGameMode.HotPotato or CustomGameMode.MoveAndStop) return false;
-        if (Options.CurrentGameMode == CustomGameMode.Speedrun && !SpeedrunManager.CanKill.Contains(pc.PlayerId)) return false;
+
+        switch (Options.CurrentGameMode)
+        {
+            case CustomGameMode.HotPotato or CustomGameMode.MoveAndStop:
+            case CustomGameMode.Speedrun when !SpeedrunManager.CanKill.Contains(pc.PlayerId):
+                return false;
+        }
+
         if (Pelican.IsEaten(pc.PlayerId)) return false;
         if (pc.Data.Role.Role == RoleTypes.GuardianAngel) return false;
+        if (pc.Is(CustomRoles.Bloodlust)) return true;
 
         return pc.GetCustomRole() switch
         {
@@ -865,7 +884,7 @@ static class ExtendedPlayerControl
         AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
-    public static (Vector2 LOCATION, string ROOM_NAME) GetPositionInfo(this PlayerControl pc)
+    public static (Vector2 Location, string RoomName) GetPositionInfo(this PlayerControl pc)
     {
         PlainShipRoom room = pc.GetPlainShipRoom();
         string roomName = room == null ? "Outside" : $"@{GetString($"{room.RoomId}")}";
@@ -908,13 +927,18 @@ static class ExtendedPlayerControl
 
         target.SetRealKiller(killer, NotOverRide: true);
 
-        if (killer.PlayerId == target.PlayerId && killer.shapeshifting)
+        switch (killer.PlayerId == target.PlayerId)
         {
-            LateTask.New(() => { killer.RpcMurderPlayer(target, true); }, 1.5f, "Shapeshifting Suicide Delay");
-            return;
+            case true when killer.shapeshifting:
+                LateTask.New(() => { killer.RpcMurderPlayer(target, true); }, 1.5f, "Shapeshifting Suicide Delay");
+                return;
+            case false when !killer.Is(CustomRoles.Pestilence) && Main.PlayerStates[target.PlayerId].Role is SchrodingersCat cat:
+                cat.OnCheckMurderAsTarget(killer, target);
+                return;
+            default:
+                killer.RpcMurderPlayer(target, true);
+                break;
         }
-
-        killer.RpcMurderPlayer(target, true);
     }
 
     public static bool RpcCheckAndMurder(this PlayerControl killer, PlayerControl target, bool check = false) => CheckMurderPatch.RpcCheckAndMurder(killer, target, check);
@@ -955,9 +979,12 @@ static class ExtendedPlayerControl
     public static bool HasGhostRole(this PlayerControl player) => GhostRolesManager.AssignedGhostRoles.ContainsKey(player.PlayerId) || Main.PlayerStates.TryGetValue(player.PlayerId, out var state) && state.SubRoles.Any(x => x.IsGhostRole());
 
     public static bool KnowDeathReason(this PlayerControl seer, PlayerControl target)
-        => ((seer.Is(CustomRoles.Doctor) || seer.Is(CustomRoles.Autopsy)
-                                         || (seer.Data.IsDead && Options.GhostCanSeeDeathReason.GetBool()))
-            && target.Data.IsDead) || (target.Is(CustomRoles.Gravestone) && target.Data.IsDead);
+        => (seer.Is(CustomRoles.Doctor)
+            || seer.Is(CustomRoles.Autopsy)
+            || Options.EveryoneSeesDeathReasons.GetBool()
+            || target.Is(CustomRoles.Gravestone)
+            || (seer.Data.IsDead && Options.GhostCanSeeDeathReason.GetBool()))
+           && target.Data.IsDead;
 
     public static string GetRoleInfo(this PlayerControl player, bool InfoLong = false)
     {
@@ -1032,7 +1059,7 @@ static class ExtendedPlayerControl
 
     public static bool Is(this PlayerControl target, Team team) => team switch
     {
-        Team.Impostor => target.GetCustomRole().IsImpostorTeamV3() && !target.Is(CustomRoles.Bloodlust),
+        Team.Impostor => target.GetCustomRole().IsImpostorTeamV2() && !target.Is(CustomRoles.Bloodlust),
         Team.Neutral => target.GetCustomRole().IsNeutralTeamV2() || target.Is(CustomRoles.Bloodlust),
         Team.Crewmate => target.GetCustomRole().IsCrewmateTeamV2(),
         Team.None => target.Is(CustomRoles.GM) || target.Is(CountTypes.None) || target.Is(CountTypes.OutOfGame),
@@ -1045,7 +1072,7 @@ static class ExtendedPlayerControl
         if (target.Is(CustomRoles.Bloodlust) || subRoles.Any(x => x.IsConverted())) return Team.Neutral;
         if (subRoles.Contains(CustomRoles.Madmate)) return Team.Impostor;
         var role = target.GetCustomRole();
-        if (role.IsImpostorTeamV3()) return Team.Impostor;
+        if (role.IsImpostorTeamV2()) return Team.Impostor;
         if (role.IsNeutralTeamV2()) return Team.Neutral;
         return role.IsCrewmateTeamV2() ? Team.Crewmate : Team.None;
     }
