@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using TOZ.AddOns;
@@ -177,6 +176,7 @@ public static class Options
     public static OptionItem EnableKillerLeftCommand;
 
     public static OptionItem SeeEjectedRolesInMeeting;
+    public static OptionItem EveryoneSeesDeathReasons;
 
     public static OptionItem DisableShieldAnimations;
     public static OptionItem DisableShapeshiftAnimations;
@@ -945,10 +945,10 @@ public static class Options
         int defaultPresetNumber = OptionSaver.GetDefaultPresetNumber();
         _ = new PresetOptionItem(defaultPresetNumber, TabGroup.SystemSettings)
             .SetColor(new Color32(255, 235, 4, byte.MaxValue))
-            .SetHeader(true);
+            .SetHidden(true);
 
         GameMode = new StringOptionItem(1, "GameMode", GameModes, 0, TabGroup.GameSettings)
-            .SetHeader(true);
+            .SetHidden(true);
 
         #region Settings
 
@@ -2071,6 +2071,9 @@ public static class Options
             .SetColor(new Color32(147, 241, 240, byte.MaxValue));
 
         SeeEjectedRolesInMeeting = new BooleanOptionItem(44439, "SeeEjectedRolesInMeeting", true, TabGroup.GameSettings)
+            .SetColor(new Color32(147, 241, 240, byte.MaxValue));
+
+        EveryoneSeesDeathReasons = new BooleanOptionItem(44440, "EveryoneSeesDeathReasons", false, TabGroup.GameSettings)
             .SetColor(new Color32(147, 241, 240, byte.MaxValue));
 
         LoadingPercentage = 94;
