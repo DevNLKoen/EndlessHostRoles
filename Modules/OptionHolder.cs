@@ -1312,6 +1312,8 @@ public static class Options
         SpeedrunManager.SetupCustomOption();
         // Hide And Seek
         HnSManager.SetupCustomOption();
+        // Debug
+        DebugModeManager.SetupCustomOption();
 
         yield return null;
 

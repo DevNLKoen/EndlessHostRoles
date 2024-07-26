@@ -40,7 +40,7 @@ public class Main : BasePlugin
 
     // == プログラム設定 / Program Config ==
     public const string ModName = "TOZ";
-    public const string ModColor = "#00ffff";
+    public const string ModColor = "#ff0000";
     public const bool AllowPublicRoom = true;
     public const string ForkId = "TOZ";
     public const string SupportedAUVersion = "2024.6.18";

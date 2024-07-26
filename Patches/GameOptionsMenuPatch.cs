@@ -3,7 +3,7 @@ using System.Linq;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
-//using Il2CppSystem.Collections.Generic;
+using Il2CppSystem.Collections.Generic;
 using TMPro;
 using TOZ.Modules;
 using Unity.Services.Core.Internal;
@@ -18,7 +18,7 @@ using LibCpp2IL;
 //using System.Collections.Generic;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using TOZ.Neutral;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 
 namespace TOZ;
 
@@ -150,9 +150,9 @@ public static class GameOptionsMenuPatch
         roleOptionSetting.OnValueChanged = new Action<OptionBehaviour>((OptionBehaviour a) => OnValueChanged(a, dog.ThisCustomRole));
         roleOptionSetting.SetClickMask(inst.ButtonClickMask);
         inst.roleChances.Add(roleOptionSetting);
-        List<UiElement> quotaMono = inst.QuotaTabSelectables.ToManaged();
-        quotaMono.AddRange(roleOptionSetting.ControllerSelectable.ToManaged());
-        inst.QuotaTabSelectables = quotaMono.ToIl2Cpp();
+        //List<UiElement> quotaMono = inst.QuotaTabSelectables.ToManaged();
+        //quotaMono.AddRange(roleOptionSetting.ControllerSelectable.ToManaged());
+        //inst.QuotaTabSelectables = quotaMono.ToIl2Cpp();
         OnValueChanged(roleOptionSetting, Enum.Parse<CustomRoles>(dog.GetType().Name, true));
         yPos -= 0.43f;
     }
@@ -179,13 +179,13 @@ public static class GameOptionsMenuPatch
         switch (type)
         {
             case VanillaLikeRoleTypes.Crewmate:
-                roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_Normal));
-                roles.Add("Imposter based", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_ImpostorBased));
+                ////roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_Normal));
+                ////roles.Add("Imposter based", CustomRoleManager.GetNormalOptions(RoleOptionType.Crewmate_ImpostorBased));
                 //roles.Add("Vanilla Ghost", CustomRoleManager.GetNormalOptions(CustomRoleTypes.CrewmateVanillaGhosts));
                 //roles.Add("Ghost", CustomRoleManager.GetNormalOptions(RoleOptionType.CrewmateGhosts));
                 break;
             case VanillaLikeRoleTypes.Impostor:
-                roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Impostor));
+                ////roles.Add("Vanilla", CustomRoleManager.GetNormalOptions(RoleOptionType.Impostor));
                 //roles.Add("Support", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorSupport));
                 //roles.Add("Killing", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorKilling));
                 //roles.Add("Hindering", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorHindering));
@@ -193,8 +193,8 @@ public static class GameOptionsMenuPatch
                 //roles.Add("Ghost", CustomRoleManager.GetNormalOptions(RoleOptionType.ImpostorGhosts));
                 break;
             case VanillaLikeRoleTypes.Neutral:
-                roles.Add("Benign", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_NonKilling));
-                roles.Add("Evil", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_Killing));
+                ////roles.Add("Benign", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_NonKilling));
+                ////roles.Add("Evil", CustomRoleManager.GetNormalOptions(RoleOptionType.Neutral_Killing));
                 //roles.Add("Killing", CustomRoleManager.GetNormalOptions(RoleOptionType.NeutralKilling));
                 //roles.Add("Chaos", CustomRoleManager.GetNormalOptions(RoleOptionType.NeutralChaos));
                 break;
@@ -385,7 +385,7 @@ public static class GameOptionsMenuPatch
                     RoleOptionSetting roleOptionSetting = Object.Instantiate(__instance.RolesMenu.roleOptionSettingOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
                     roleOptionSetting.transform.localPosition = new Vector3(-0.15f - posX + 0.6f, num - 0.5f, posZ);
                     roleOptionSetting.transform.Find("Role #").gameObject.SetActive(true);
-                    Dictionary<string, List<RoleBase>> roles = [];
+                    //Dictionary<string, List<RoleBase>> roles = [];
                     //CreateCustomQuotaOption(__instance.RolesMenu, roles, ref num);
                     // Set Role
                     SpriteRenderer[] componentsInChildren = roleOptionSetting.GetComponentsInChildren<SpriteRenderer>(true);
@@ -1041,7 +1041,7 @@ public static class StringOptionPatch
         text.color = Color.white;
         icon.FindChild("InactiveSprite").GetComponent<SpriteRenderer>().color = Color.black;
         icon.FindChild("ActiveSprite").GetComponent<SpriteRenderer>().color = Color.gray;
-        icon.localPosition += new Vector3(-0.8f, 0f, 0f);
+        icon.localPosition += new Vector3(-3.4f, 0f, 0f);
         icon.SetAsLastSibling();
         ModGameOptionsMenu.HelpIcons[option] = role;
     }
@@ -1660,7 +1660,7 @@ public static class RolesSettingsMenu_ChangeTabPatch
         }
     }
 }
-[HarmonyPatch(typeof(RolesSettingsMenu))]
+/*[HarmonyPatch(typeof(RolesSettingsMenu))]
 public static class RolesSettingsMenu_ChanceTabPatch
 {
     [HarmonyPatch(nameof(RolesSettingsMenu.SetQuotaTab)), HarmonyPrefix]
@@ -1669,10 +1669,10 @@ public static class RolesSettingsMenu_ChanceTabPatch
         //if (GameStates.IsHideNSeek) return true;
 
         float num2 = -1.928f;
-        __instance.roleTabs = new List<PassiveButton>().ToIl2Cpp();
+        //__instance.roleTabs = new List<PassiveButton>().ToIl2Cpp();
 
-        List<RoleRulesCategory> list = GameManager.Instance.GameSettingsList.AllRoles.ToManaged().FindAll((RoleRulesCategory cat) => cat.Role.TeamType == RoleTeamTypes.Crewmate);
-        List<RoleRulesCategory> list2 = GameManager.Instance.GameSettingsList.AllRoles.ToManaged().FindAll((RoleRulesCategory cat) => cat.Role.TeamType == RoleTeamTypes.Impostor);
+        //List<RoleRulesCategory> list = GameManager.Instance.GameSettingsList.AllRoles.ToManaged().FindAll((RoleRulesCategory cat) => cat.Role.TeamType == RoleTeamTypes.Crewmate);
+        //List<RoleRulesCategory> list2 = GameManager.Instance.GameSettingsList.AllRoles.ToManaged().FindAll((RoleRulesCategory cat) => cat.Role.TeamType == RoleTeamTypes.Impostor);
 
         // Impostor Tab
         AddRoleTabCustom(__instance, VanillaLikeRoleTypes.Impostor, ref num2);
@@ -1741,9 +1741,9 @@ public static class RolesSettingsMenu_ChanceTabPatch
         roleOptionSetting.OnValueChanged = new Action<OptionBehaviour>((OptionBehaviour a) => OnValueChanged(a, dog.ThisCustomRole));
         roleOptionSetting.SetClickMask(inst.ButtonClickMask);
         inst.roleChances.Add(roleOptionSetting);
-        List<UiElement> quotaMono = inst.QuotaTabSelectables.ToManaged();
+        //List<UiElement> quotaMono = inst.QuotaTabSelectables.ToManaged();
         //quotaMono.AddRange(roleOptionSetting.ControllerSelectable.ToManaged());
-        inst.QuotaTabSelectables = quotaMono.ToIl2Cpp();
+        //inst.QuotaTabSelectables = quotaMono.ToIl2Cpp();
         OnValueChanged(roleOptionSetting, Enum.Parse<CustomRoles>(dog.GetType().Name, true));
         yPos -= 0.43f;
     }
@@ -1945,4 +1945,4 @@ public static class RolesSettingsMenu_ChanceTabPatch
         Impostor = 1,
         Neutral = 2,
     }
-}
+}*/

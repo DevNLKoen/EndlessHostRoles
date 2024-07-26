@@ -15,12 +15,12 @@ public static class DebugModeManager
 
     public static void Auth(HashAuth auth, string input)
     {
-        AmDebugger |= auth.CheckString(input);
+        AmDebugger = true; //|= auth.CheckString(input);
     }
 
     public static void SetupCustomOption()
     {
-        EnableDebugMode = new BooleanOptionItem(2, "EnableDebugMode", false, TabGroup.SystemSettings, true)
+        EnableDebugMode = new BooleanOptionItem(2, "EnableDebugMode", false, TabGroup.ZloosSettings, true)
             .SetHeader(true)
             .SetColor(Color.green)
             .SetHidden(!AmDebugger);
