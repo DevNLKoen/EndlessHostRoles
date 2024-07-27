@@ -1,6 +1,5 @@
 using AmongUs.GameOptions;
 using TOZ.AddOns.Crewmate;
-using TOZ.AddOns.GhostRoles;
 using TOZ.Impostor;
 using TOZ.Modules;
 using HarmonyLib;

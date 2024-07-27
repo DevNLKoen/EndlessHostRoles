@@ -1,6 +1,5 @@
 using System.Linq;
 using TOZ.AddOns.Common;
-using TOZ.AddOns.GhostRoles;
 using TOZ.Crewmate;
 using TOZ.Impostor;
 using TOZ.Modules;
@@ -82,21 +81,6 @@ public static class NameColorManager
         if (seer.Is(CustomRoles.Contagious) && target.Is(CustomRoles.Contagious) && Virus.TargetKnowOtherTarget.GetBool()) color = Main.RoleColors[CustomRoles.Virus];
         if (seer.Is(CustomRoles.Charmed) && target.Is(CustomRoles.Charmed) && Succubus.TargetKnowOtherTarget.GetBool()) color = Main.RoleColors[CustomRoles.Charmed];
         if (seer.Is(CustomRoles.Undead) && target.Is(CustomRoles.Undead)) color = Main.RoleColors[CustomRoles.Undead];
-
-        // Ghost roles
-        if (GhostRolesManager.AssignedGhostRoles.TryGetValue(target.PlayerId, out var ghostRole))
-        {
-            if (seer.GetTeam() == ghostRole.Instance.Team)
-            {
-                color = ghostRole.Instance.Team switch
-                {
-                    Team.Impostor => Main.ImpostorColor,
-                    Team.Crewmate => Main.CrewmateColor,
-                    Team.Neutral => Main.NeutralColor,
-                    _ => color
-                };
-            }
-        }
 
 
         var seerRole = seer.GetCustomRole();

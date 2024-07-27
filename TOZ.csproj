@@ -15,15 +15,22 @@
 
     <ItemGroup>
         <EmbeddedResource Include=".\Resources\**" />
+        <EmbeddedResource Remove="Roles\AddOns\GhostRoles\**" />
         <EmbeddedResource Remove="SUI\**" />
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="CTA\**" />
+        <Compile Remove="Roles\AddOns\GhostRoles\**" />
         <EmbeddedResource Remove="CTA\**" />
         <None Remove="CTA\**" />
         <Compile Remove="SUI\**" />
+        <None Remove="Roles\AddOns\GhostRoles\**" />
         <None Remove="SUI\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Modules\GhostRolesManager.cs" />
     </ItemGroup>
 
     <ItemGroup>

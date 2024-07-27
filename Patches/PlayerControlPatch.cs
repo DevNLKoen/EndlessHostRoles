@@ -7,7 +7,6 @@ using AmongUs.GameOptions;
 using TOZ.AddOns.Common;
 using TOZ.AddOns.Crewmate;
 using TOZ.AddOns.Impostor;
-using TOZ.AddOns.GhostRoles;
 using TOZ.Crewmate;
 using TOZ.Impostor;
 using TOZ.Modules;
@@ -43,13 +42,6 @@ class CheckProtectPatch
                 Spiritcaller.HauntPlayer(target);
             }
 
-            __instance.RpcResetAbilityCooldown();
-            return true;
-        }
-
-        if (GhostRolesManager.AssignedGhostRoles.TryGetValue(__instance.PlayerId, out var ghostRole))
-        {
-            ghostRole.Instance.OnProtect(__instance, target);
             __instance.RpcResetAbilityCooldown();
             return true;
         }
@@ -416,12 +408,6 @@ class CheckMurderPatch
                     return false;
                 }
             }
-        }
-
-        if (GhostRolesManager.AssignedGhostRoles.Values.Any(x => x.Instance is GA ga && ga.ProtectionList.Contains(target.PlayerId)))
-        {
-            Notify("GAGuarded");
-            return false;
         }
 
         if (SoulHunter.IsSoulHunterTarget(killer.PlayerId) && target.Is(CustomRoles.SoulHunter))
@@ -1121,14 +1107,6 @@ class FixedUpdatePatch
                 ReportDeadBodyPatch.WaitReport[id].Clear();
                 Logger.Info($"{__instance.GetNameWithRole().RemoveHtmlTags()}: Now that it is possible to report, we will process the report.", "ReportDeadBody");
                 __instance.ReportDeadBody(info);
-            }
-        }
-
-        if (AmongUsClient.Instance.AmHost)
-        {
-            if (!Main.HasJustStarted && GameStates.IsInTask && GhostRolesManager.ShouldHaveGhostRole(__instance))
-            {
-                GhostRolesManager.AssignGhostRole(__instance);
             }
         }
 
@@ -2072,46 +2050,10 @@ class PlayerControlSetRolePatch
         if (roleType is RoleTypes.CrewmateGhost or RoleTypes.ImpostorGhost)
         {
             var targetIsKiller = target.Is(CustomRoleTypes.Impostor) || Main.ResetCamPlayerList.Contains(target.PlayerId);
-            var ghostRoles = new Dictionary<PlayerControl, RoleTypes>();
             foreach (PlayerControl seer in Main.AllPlayerControls)
             {
                 var self = seer.PlayerId == target.PlayerId;
                 var seerIsKiller = seer.Is(CustomRoleTypes.Impostor) || Main.ResetCamPlayerList.Contains(seer.PlayerId);
-                if (target.HasGhostRole())
-                {
-                    ghostRoles[seer] = RoleTypes.GuardianAngel;
-                }
-                else if ((self && targetIsKiller) || (!seerIsKiller && target.Is(CustomRoleTypes.Impostor)))
-                {
-                    ghostRoles[seer] = RoleTypes.ImpostorGhost;
-                }
-                else
-                {
-                    ghostRoles[seer] = RoleTypes.CrewmateGhost;
-                }
-            }
-
-            if (target.HasGhostRole())
-            {
-                roleType = RoleTypes.GuardianAngel;
-            }
-            else if (ghostRoles.All(kvp => kvp.Value == RoleTypes.CrewmateGhost))
-            {
-                roleType = RoleTypes.CrewmateGhost;
-            }
-            else if (ghostRoles.All(kvp => kvp.Value == RoleTypes.ImpostorGhost))
-            {
-                roleType = RoleTypes.ImpostorGhost;
-            }
-            else
-            {
-                foreach ((PlayerControl seer, RoleTypes role) in ghostRoles)
-                {
-                    Logger.Info($"Desync {targetName} => {role} for {seer.GetNameWithRole().RemoveHtmlTags()}", "PlayerControl.RpcSetRole");
-                    target.RpcSetRoleDesync(role, false, seer.GetClientId());
-                }
-
-                return false;
             }
         }
 

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using TOZ.AddOns.GhostRoles;
 using TOZ.Impostor;
 using TOZ.Modules;
 using TOZ.Neutral;
@@ -300,31 +299,14 @@ class GameEndChecker
         {
             if (winner == CustomWinner.Draw)
             {
-                SetGhostRole(ToGhostImpostor: true);
                 continue;
             }
 
             bool canWin = WinnerIds.Contains(pc.PlayerId) || WinnerRoles.Contains(pc.GetCustomRole()) || (winner == CustomWinner.Bloodlust && pc.Is(CustomRoles.Bloodlust));
             bool isCrewmateWin = reason.Equals(GameOverReason.HumansByVote) || reason.Equals(GameOverReason.HumansByTask);
-            SetGhostRole(ToGhostImpostor: canWin ^ isCrewmateWin); // XOR
 
             SetEverythingUpPatch.LastWinsReason = winner is CustomWinner.Crewmate or CustomWinner.Impostor ? GetString($"GameOverReason.{reason}") : string.Empty;
             continue;
-
-            void SetGhostRole(bool ToGhostImpostor)
-            {
-                if (!pc.Data.IsDead) ReviveRequiredPlayerIds.Add(pc.PlayerId);
-                if (ToGhostImpostor)
-                {
-                    Logger.Info($"{pc.GetNameWithRole().RemoveHtmlTags()}: changed to ImpostorGhost", "ResetRoleAndEndGame");
-                    pc.RpcSetRole(RoleTypes.ImpostorGhost);
-                }
-                else
-                {
-                    Logger.Info($"{pc.GetNameWithRole().RemoveHtmlTags()}: changed to CrewmateGhost", "ResetRoleAndEndGame");
-                    pc.RpcSetRole(RoleTypes.CrewmateGhost);
-                }
-            }
         }
 
         // Sync of CustomWinnerHolder info

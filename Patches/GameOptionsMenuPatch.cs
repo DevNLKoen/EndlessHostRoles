@@ -1226,7 +1226,7 @@ public class GameSettingMenuPatch
                 TabGroup.CrewmateRoles => new(0.2f, 0.4f, 0.5f),
                 TabGroup.NeutralRoles => new(0.5f, 0.4f, 0.2f),
                 TabGroup.Addons => new(0.5f, 0.2f, 0.4f),
-                TabGroup.OtherRoles => new(0.4f, 0.4f, 0.4f),
+                //TabGroup.OtherRoles => new(0.4f, 0.4f, 0.4f),
                 TabGroup.ZloosSettings => new(0.5f, 0.1f, 0.1f),
                 _ => new(0.3f, 0.3f, 0.3f)
             };

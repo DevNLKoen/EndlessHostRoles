@@ -203,7 +203,6 @@ class OnPlayerLeftPatch
                 if (Lawyer.Target.ContainsValue(data.Character.PlayerId)) Lawyer.ChangeRoleByTarget(data.Character);
                 if (Spiritualist.SpiritualistTarget == data.Character.PlayerId) Spiritualist.RemoveTarget();
                 Postman.CheckAndResetTargets(data.Character);
-                GhostRolesManager.AssignedGhostRoles.Remove(data.Character.PlayerId);
 
                 Utils.AfterPlayerDeathTasks(data.Character, GameStates.IsMeeting);
 

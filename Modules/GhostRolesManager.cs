@@ -46,7 +46,6 @@ namespace TOZ.Modules
 
             var pc = Utils.GetPlayerById(id);
 
-            IGhostRole instance = CreateGhostRoleInstance(role);
             if (set) pc.RpcSetRole(RoleTypes.GuardianAngel);
             instance.OnAssign(pc);
             Main.ResetCamPlayerList.Add(pc.PlayerId);

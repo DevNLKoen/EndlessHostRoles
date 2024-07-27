@@ -336,7 +336,6 @@ internal class ChangeRoleSettings
             NameNotifyManager.Reset();
             SabotageSystemTypeRepairDamagePatch.Initialize();
             DoorsReset.Initialize();
-            GhostRolesManager.Initialize();
             RoleBlockManager.Reset();
             ChatManager.ResetHistory();
             CustomNetObject.Reset();
@@ -696,7 +695,6 @@ internal class SelectRolesPatch
                         if (role is CustomRoles.Nimble or CustomRoles.Physicist or CustomRoles.Bloodlust or CustomRoles.Finder or CustomRoles.Noisy) continue;
                         state.SetSubRole(role);
                         if (overrideLovers && role == CustomRoles.Lovers) Main.LoversPlayers.Add(Utils.GetPlayerById(item.Key));
-                        if (role.IsGhostRole()) GhostRolesManager.SpecificAssignGhostRole(item.Key, role, true);
                     }
                 }
             }

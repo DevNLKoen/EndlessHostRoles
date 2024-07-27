@@ -612,7 +612,7 @@ internal static class CustomRoleSelector
         AddonRolesList = [];
         foreach (var role in Enum.GetValues<CustomRoles>())
         {
-            if (!role.IsAdditionRole() || role.IsGhostRole()) continue;
+            if (!role.IsAdditionRole()) continue;
             switch (role)
             {
                 case CustomRoles.Mare or CustomRoles.Glow or CustomRoles.Sleep when Main.CurrentMap == MapNames.Fungle:

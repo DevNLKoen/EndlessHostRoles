@@ -394,7 +394,6 @@ public enum CustomRoles
     Giant,
     Glow,
     Gravestone,
-    GA, // Guardian Angel - Ghost role
     Guesser,
     Haste,
     Knighted,

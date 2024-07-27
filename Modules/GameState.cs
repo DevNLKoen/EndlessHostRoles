@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 using TOZ.AddOns.Crewmate;
-using TOZ.AddOns.GhostRoles;
 using TOZ.Crewmate;
 using TOZ.Impostor;
 using TOZ.Modules;

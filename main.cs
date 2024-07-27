@@ -515,8 +515,6 @@ public class Main : BasePlugin
                 { CustomRoles.Convict, "#ff1919" },
                 { CustomRoles.Amnesiac, "#7FBFFF" },
                 { CustomRoles.Doomsayer, "#14f786" },
-                // Ghost roles
-                { CustomRoles.GA, "#8cffff" },
                 // GM
                 { CustomRoles.GM, "#ff5b70" },
                 // Add-ons

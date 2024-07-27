@@ -2,7 +2,6 @@
 using System.Linq;
 using AmongUs.GameOptions;
 using TOZ.AddOns.Crewmate;
-using TOZ.AddOns.GhostRoles;
 using TOZ.Crewmate;
 using TOZ.Impostor;
 using TOZ.Neutral;
@@ -302,12 +301,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
             var array = Main.PlayerStates[player.PlayerId].SubRoles;
             foreach (CustomRoles subRole in array)
             {
-                if (subRole.IsGhostRole() && subRole != CustomRoles.EvilSpirit)
-                {
-                    AURoleOptions.GuardianAngelCooldown = GhostRolesManager.AssignedGhostRoles.First(x => x.Value.Role == subRole).Value.Instance.Cooldown;
-                    continue;
-                }
-
                 switch (subRole)
                 {
                     case CustomRoles.Watcher:

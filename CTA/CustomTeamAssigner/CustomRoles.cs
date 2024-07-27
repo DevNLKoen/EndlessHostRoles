@@ -394,7 +394,6 @@ public enum CustomRoles
     Giant,
     Glow,
     Gravestone,
-    GA, // Guardian Angel - Ghost role
     Guesser,
     Haste,
     Knighted,
@@ -408,7 +407,6 @@ public enum CustomRoles
     Mare,
     Messenger,
     Mimic,
-    Minion, // Ghost role
     Mischievous,
     Necroview,
     Nimble,
@@ -417,7 +415,6 @@ public enum CustomRoles
     Onbound,
     Spurt,
     Sleep,
-    Specter, // Ghost role
     Physicist,
     Rascal,
     Reach,

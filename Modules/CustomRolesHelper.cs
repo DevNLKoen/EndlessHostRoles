@@ -82,7 +82,6 @@ internal static class CustomRolesHelper
 
     public static CustomRoles GetVNRole(this CustomRoles role, bool checkDesyncRole = false)
     {
-        if (role.IsGhostRole()) return CustomRoles.GuardianAngel;
         if (role.IsVanilla()) return role;
         if (checkDesyncRole && role.GetDYRole() == RoleTypes.Impostor) return CustomRoles.Impostor;
         if (Options.UsePhantomBasis.GetBool() && role.SimpleAbilityTrigger()) return CustomRoles.Phantom;
@@ -546,8 +545,6 @@ internal static class CustomRolesHelper
         CustomRoles.Pestilence;
 
     public static bool IsSnitchTarget(this CustomRoles role) => role.IsNK() || role.Is(Team.Impostor);
-
-    public static bool IsGhostRole(this CustomRoles role) => role == CustomRoles.EvilSpirit || GhostRolesManager.CreateGhostRoleInstance(role, check: true) != null;
 
     public static bool IsNE(this CustomRoles role) => role is
         CustomRoles.Jester or
@@ -1156,7 +1153,7 @@ internal static class CustomRolesHelper
         RoleOptionType.Crewmate_ImpostorBased => TabGroup.CrewmateRoles,
         RoleOptionType.Neutral_NonKilling => TabGroup.NeutralRoles,
         RoleOptionType.Neutral_Killing => TabGroup.NeutralRoles,
-        _ => TabGroup.OtherRoles
+        //_ => TabGroup.OtherRoles
     };
 
     public static SimpleRoleOptionType GetSimpleRoleOptionType(this RoleOptionType type) => type switch

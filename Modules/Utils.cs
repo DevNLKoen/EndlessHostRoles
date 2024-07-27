@@ -13,7 +13,6 @@ using AmongUs.Data;
 using AmongUs.GameOptions;
 using TOZ.AddOns.Common;
 using TOZ.AddOns.Crewmate;
-using TOZ.AddOns.GhostRoles;
 using TOZ.AddOns.Impostor;
 using TOZ.Crewmate;
 using TOZ.Impostor;
@@ -783,7 +782,6 @@ public static class Utils
                     hasTasks = false;
                     break;
                 default:
-                    if (subRole.IsGhostRole()) hasTasks = true;
                     break;
             }
         }
@@ -2474,8 +2472,6 @@ public static class Utils
                 TaskState taskState = pc.GetTaskState();
                 if (pc.IsCrewmate() && !taskState.IsTaskFinished && taskState.hasTasks)
                     pc.Notify(GetString("DoYourTasksPlease"), 10f);
-
-                GhostRolesManager.NotifyAboutGhostRole(pc);
             }
 
             Main.CheckShapeshift[pc.PlayerId] = false;
@@ -2623,11 +2619,6 @@ public static class Utils
             TOZ.Impostor.Sentry.OnAnyoneMurder(target);
 
             FixedUpdatePatch.LoversSuicide(target.PlayerId, onMeeting);
-            if (!target.HasGhostRole())
-            {
-                Main.AllPlayerSpeed[target.PlayerId] = Main.RealOptionsData.GetFloat(FloatOptionNames.PlayerSpeedMod);
-                target.MarkDirtySettings();
-            }
         }
         catch (Exception ex)
         {
