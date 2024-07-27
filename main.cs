@@ -412,7 +412,6 @@ public class Main : BasePlugin
                 { CustomRoles.NiceSwapper, "#922348" },
                 { CustomRoles.Ignitor, "#ffffa5" },
                 { CustomRoles.Guardian, "#2E8B57" },
-                { CustomRoles.Addict, "#008000" },
                 { CustomRoles.Alchemist, "#e6d798" },
                 { CustomRoles.Tracefinder, "#0066CC" },
                 { CustomRoles.Oracle, "#6666FF" },

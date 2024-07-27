@@ -124,7 +124,6 @@ public enum CustomRoles
 
     // Crewmates
 
-    Addict,
     Adrenaline,
     Adventurer,
     Aid,

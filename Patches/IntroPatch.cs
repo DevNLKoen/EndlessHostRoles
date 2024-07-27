@@ -412,8 +412,7 @@ class BeginCrewmatePatch
                     CustomRoles.Drainer
                     => PlayerControl.LocalPlayer.MyPhysics.ImpostorDiscoveredSound,
 
-                CustomRoles.Addict or
-                    CustomRoles.Ventguard
+                CustomRoles.Ventguard
                     => ShipStatus.Instance.VentEnterSound,
 
                 CustomRoles.ParityCop or

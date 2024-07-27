@@ -38,7 +38,7 @@
 
 | Crewmates         | Impostors       | Neutrals          | Add-ons        |
 |-------------------|-----------------|-------------------|----------------|
-| Addict            | Abyssbringer    | Agitator          | Antidote       |
+|                   | Abyssbringer    | Agitator          | Antidote       |
 | Adrenaline        | Anonymous       | Amnesiac          | Anti-TP        |
 | Adventurer        | Anti Adminer    | Arsonist          | Asthmatic      |
 | Aid               | Arrogance       | Bandit            | Autopsy        |

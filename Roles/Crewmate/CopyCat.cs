@@ -100,7 +100,6 @@ public class CopyCat : RoleBase
         CustomRoles.Ventguard or
         CustomRoles.DovesOfNeace or
         CustomRoles.Veteran or
-        CustomRoles.Addict or
         CustomRoles.Chameleon;
 
     public override bool OnCheckMurder(PlayerControl pc, PlayerControl tpc)
