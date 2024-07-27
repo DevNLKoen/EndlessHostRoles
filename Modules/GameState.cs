@@ -364,10 +364,6 @@ public class TaskState
             var addons = Main.PlayerStates[player.PlayerId].SubRoles;
 
             if (addons.Contains(CustomRoles.Stressed)) Stressed.OnTaskComplete(player);
-            if (GhostRolesManager.AssignedGhostRoles.TryGetValue(player.PlayerId, out var ghostRole))
-            {
-                if (ghostRole is { Role: CustomRoles.Specter, Instance: Specter specter } && (CompletedTasksCount + 1 >= AllTasksCount)) specter.OnFinishedTasks(player);
-            }
 
             Simon.RemoveTarget(player, Simon.Instruction.Task);
 

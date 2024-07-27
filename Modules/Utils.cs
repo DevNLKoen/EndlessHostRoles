@@ -2478,8 +2478,6 @@ public static class Utils
                 GhostRolesManager.NotifyAboutGhostRole(pc);
             }
 
-            if (pc.Is(CustomRoles.Specter)) pc.RpcResetAbilityCooldown();
-
             Main.CheckShapeshift[pc.PlayerId] = false;
         }
 

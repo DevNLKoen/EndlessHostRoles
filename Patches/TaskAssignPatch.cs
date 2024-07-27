@@ -126,22 +126,11 @@ class RpcSetTasksPatch
 
         var pc = __instance.Object;
         if (pc == null) return;
-        CustomRoles role = GhostRolesManager.AssignedGhostRoles.TryGetValue(pc.PlayerId, out var gr) && gr.Instance is Specter ? gr.Role : pc.GetCustomRole();
 
         // Default number of tasks
         bool hasCommonTasks = true;
         int NumLongTasks = Main.NormalOptions.NumLongTasks;
         int NumShortTasks = Main.NormalOptions.NumShortTasks;
-
-        if (Options.OverrideTasksData.AllData.TryGetValue(role, out var data) && data.DoOverride.GetBool())
-        {
-            hasCommonTasks = data.AssignCommonTasks.GetBool(); // Whether to assign common tasks (regular tasks)
-            // Even if assigned, it will not be reassigned and will be assigned the same common tasks as other crews.
-            NumLongTasks = data.NumLongTasks.GetInt(); // Number of long tasks to allocate
-            NumShortTasks = data.NumShortTasks.GetInt(); // Number of short tasks to allocate
-            // Longs and shorts are constantly reallocated.
-            if (role is CustomRoles.Specter) Main.PlayerStates[pc.PlayerId].TaskState.AllTasksCount = NumLongTasks + NumShortTasks;
-        }
 
         if (pc.Is(CustomRoles.Busy))
         {

@@ -220,13 +220,6 @@ class GameEndChecker
                     }
                 }
 
-                var winningSpecters = GhostRolesManager.AssignedGhostRoles.Where(x => x.Value.Instance is Specter { IsWon: true }).Select(x => x.Key).ToArray();
-                if (winningSpecters.Length > 0)
-                {
-                    AdditionalWinnerTeams.Add(AdditionalWinners.Specter);
-                    WinnerIds.UnionWith(winningSpecters);
-                }
-
                 if (CustomRoles.God.RoleExist())
                 {
                     ResetAndSetWinner(CustomWinner.God);

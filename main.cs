@@ -516,8 +516,6 @@ public class Main : BasePlugin
                 { CustomRoles.Amnesiac, "#7FBFFF" },
                 { CustomRoles.Doomsayer, "#14f786" },
                 // Ghost roles
-                { CustomRoles.Minion, "#ff1919" },
-                { CustomRoles.Specter, "#b446e3" },
                 { CustomRoles.GA, "#8cffff" },
                 // GM
                 { CustomRoles.GM, "#ff5b70" },
@@ -810,7 +808,6 @@ public enum CustomWinner
     Doppelganger = CustomRoles.Doppelganger,
     Imitator = CustomRoles.Imitator,
     Cherokious = CustomRoles.Cherokious,
-    Specter = CustomRoles.Specter,
 
     Bloodlust = CustomRoles.Bloodlust
 }
@@ -823,7 +820,6 @@ public enum AdditionalWinners
     Fox = CustomRoles.Fox,
 
     // -------------
-    Specter = CustomRoles.Specter,
     Lovers = CustomRoles.Lovers,
     Executioner = CustomRoles.Executioner,
     Opportunist = CustomRoles.Opportunist,

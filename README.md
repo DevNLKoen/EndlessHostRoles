@@ -82,10 +82,10 @@
 | Guardian          | Inhibitor       | Patroller         | Lucky          |
 | Ignitor           | Kamikaze        | Pelican           | Madmate        |
 | Insight           | Kidnapper       | Pestilence        | Magnet         |
-| Inspector         | Killing Machine | Specter           | Mare           |
+| Inspector         | Killing Machine |                   | Mare           |
 | Inquirer          | Lightning       | Pickpocket        | Messenger      |
 | Jailor            | Librarian       | Plaguebearer      | Mimic          |
-| Judge             | Lurker          | Infection         | Minion         |
+| Judge             | Lurker          | Infection         |                |
 | Lazy Guy          | Mafioso         | Poisoner          | Mischievous    |
 | Lighter           | Mastermind      | Postman           | Necroview      |
 | Lookout           | Nemesis         | Predator          | Nimble         |

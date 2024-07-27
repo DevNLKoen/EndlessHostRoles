@@ -95,15 +95,7 @@ namespace TOZ.Modules
                 var suitableRole = GetSuitableGhostRole(pc);
                 return suitableRole switch
                 {
-                    CustomRoles.Specter when IsPartnerPickedRole() => false,
                     _ => suitableRole.IsGhostRole() && !AssignedGhostRoles.Any(x => x.Key == pc.PlayerId || x.Value.Role == suitableRole)
-                };
-
-                bool IsPartnerPickedRole() => Main.PlayerStates[pc.PlayerId].Role switch
-                {
-                    Romantic when Romantic.HasPickedPartner => true,
-                    Totocalcio tc when tc.BetPlayer != byte.MaxValue => true,
-                    _ => false
                 };
             }
             catch (Exception e)

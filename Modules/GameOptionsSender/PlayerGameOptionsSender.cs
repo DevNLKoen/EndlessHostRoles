@@ -268,13 +268,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                 opt.SetFloat(FloatOptionNames.ImpostorLightMod, Sprayer.LoweredVision.GetFloat());
             }
 
-            if (Minion.BlindPlayers.Contains(player.PlayerId))
-            {
-                opt.SetVision(false);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, 0);
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0);
-            }
-
             if (Sentinel.IsPatrolling(player.PlayerId))
             {
                 opt.SetVision(false);
