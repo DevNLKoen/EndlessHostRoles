@@ -58,7 +58,7 @@
 | Copycat           | Consigliere     | Executioner       | Deadly Quota   |
 | Coroner           | Consort         | Follower          | Disco          |
 | Crusader          | Councillor      | The Glitch        | Diseased       |
-| Demolitionist     | Crewpostor      | God               | Dynamo         |
+|                   | Crewpostor      | God               | Dynamo         |
 | Deputy            | Cursed Wolf     | Hater             | Disregarded    |
 | Detective         | Deathpact       | Head Hunter       | Double Shot    |
 | Detour            | Devourer        | Hex Master        | Egoist         |
@@ -143,7 +143,6 @@
 | Ventguard         |                 |                   |                |
 | Veteran           |                 |                   |                |
 | Vigilante         |                 |                   |                |
-| Witness           |                 |                   |                |
 
 ## Main Features
 

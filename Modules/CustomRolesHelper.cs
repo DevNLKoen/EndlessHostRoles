@@ -170,7 +170,6 @@ internal static class CustomRolesHelper
             CustomRoles.Undertaker => UsePets ? CustomRoles.Impostor : CustomRoles.Shapeshifter,
             CustomRoles.Luckey => CustomRoles.Crewmate,
             CustomRoles.CyberStar => CustomRoles.Crewmate,
-            CustomRoles.Demolitionist => CustomRoles.Crewmate,
             CustomRoles.Ventguard => CustomRoles.Engineer,
             CustomRoles.Express => CustomRoles.Crewmate,
             CustomRoles.NiceEraser => CustomRoles.Crewmate,
@@ -380,7 +379,6 @@ internal static class CustomRolesHelper
             CustomRoles.DonutDelivery => UsePets && DonutDelivery.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.Gaulois => UsePets && Gaulois.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.Analyst => UsePets && Analyst.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
-            CustomRoles.Witness => UsePets && Options.WitnessUsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.Goose => RoleTypes.Impostor,
             CustomRoles.Pursuer => RoleTypes.Impostor,
             CustomRoles.Revolutionist => RoleTypes.Impostor,
@@ -725,7 +723,6 @@ internal static class CustomRolesHelper
         CustomRoles.DonutDelivery or
         CustomRoles.Gaulois or
         CustomRoles.Analyst or
-        CustomRoles.Witness or
         CustomRoles.Monarch or
         CustomRoles.Jailor or
         CustomRoles.Farseer or
@@ -758,7 +755,6 @@ internal static class CustomRolesHelper
         CustomRoles.Farseer when Farseer.UsePet.GetBool() => true,
         CustomRoles.Deputy when Deputy.UsePet.GetBool() => true,
         CustomRoles.Crusader when Crusader.UsePet.GetBool() => true,
-        CustomRoles.Witness when Options.WitnessUsePet.GetBool() => true,
 
         CustomRoles.Refugee => true,
         CustomRoles.Necromancer => true,
@@ -927,8 +923,6 @@ internal static class CustomRolesHelper
         CustomRoles.Bewilder when pc.Is(CustomRoles.Ignitor) => false,
         CustomRoles.Sunglasses when pc.Is(CustomRoles.Lighter) => false,
         CustomRoles.Sunglasses when pc.Is(CustomRoles.Ignitor) => false,
-        CustomRoles.Bait when pc.Is(CustomRoles.Demolitionist) => false,
-        CustomRoles.Trapper when pc.Is(CustomRoles.Demolitionist) => false,
         CustomRoles.Lovers when pc.Is(CustomRoles.Romantic) => false,
         CustomRoles.Mare when pc.Is(CustomRoles.LastImpostor) => false,
         CustomRoles.Swift when pc.Is(CustomRoles.Mare) => false,

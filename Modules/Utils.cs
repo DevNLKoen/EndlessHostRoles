@@ -282,9 +282,6 @@ public static class Utils
             case CustomRoles.CyberStar when !Main.CyberStarDead.Contains(target.PlayerId):
                 Main.CyberStarDead.Add(target.PlayerId);
                 break;
-            case CustomRoles.Demolitionist:
-                Demolitionist.OnDeath(killer, target);
-                break;
         }
     }
 
@@ -728,12 +725,10 @@ public static class Utils
             case CustomRoles.Virus:
             case CustomRoles.Farseer when !Options.UsePets.GetBool() || !Farseer.UsePet.GetBool():
             case CustomRoles.Aid when !Options.UsePets.GetBool() || !Aid.UsePet.GetBool():
-            case CustomRoles.Socialite when !Options.UsePets.GetBool() || !Socialite.UsePet.GetBool():
             case CustomRoles.Escort when !Options.UsePets.GetBool() || !Escort.UsePet.GetBool():
             case CustomRoles.DonutDelivery when !Options.UsePets.GetBool() || !DonutDelivery.UsePet.GetBool():
             case CustomRoles.Gaulois when !Options.UsePets.GetBool() || !Gaulois.UsePet.GetBool():
             case CustomRoles.Analyst when !Options.UsePets.GetBool() || !Analyst.UsePet.GetBool():
-            case CustomRoles.Witness when !Options.UsePets.GetBool() || !Options.WitnessUsePet.GetBool():
             case CustomRoles.Goose:
             case CustomRoles.Pursuer:
             case CustomRoles.Spiritcaller:

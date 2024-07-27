@@ -30,7 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Modules\GhostRolesManager.cs" />
+      <Compile Remove="Roles\Crewmate\Socialite.cs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -147,7 +147,6 @@ public enum CustomRoles
     LovingCrewmate,
     LovingImpostor,
     Crusader,
-    Demolitionist,
     Deputy,
     Detective,
     Detour,
@@ -214,7 +213,6 @@ public enum CustomRoles
     Sheriff,
     Shiftguard,
     Snitch,
-    Socialite,
     Soothsayer,
     Spiritualist,
     Speedrunner,
@@ -235,7 +233,6 @@ public enum CustomRoles
     Ventguard,
     Veteran,
     SwordsMan, // Vigilante
-    Witness,
 
     // Neutrals
 

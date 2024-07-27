@@ -1530,7 +1530,6 @@ internal static class ChatCommands
             "幸運兒" or "幸运" => GetString("Luckey"),
             "大明星" or "明星" or "ss" => GetString("SuperStar"),
             "網紅" or "cel" or "celeb" => GetString("CyberStar"),
-            "demo" => GetString("Demolitionist"),
             "俠客" => GetString("SwordsMan"),
             "正義賭怪" or "正义的赌怪" or "好赌" or "正义赌" or "ng" => GetString("NiceGuesser"),
             "邪惡賭怪" or "邪恶的赌怪" or "坏赌" or "恶赌" or "邪恶赌" or "赌怪" or "eg" => GetString("EvilGuesser"),

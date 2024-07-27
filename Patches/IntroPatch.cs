@@ -421,8 +421,7 @@ class BeginCrewmatePatch
                     CustomRoles.TimeManager
                     => MeetingHud.Instance.VoteLockinSound,
 
-                CustomRoles.Demolitionist or
-                    CustomRoles.TimeMaster or
+                CustomRoles.TimeMaster or
                     CustomRoles.Grenadier or
                     CustomRoles.Miner or
                     CustomRoles.Disperser

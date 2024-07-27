@@ -265,16 +265,11 @@ public static class Options
     public static OptionItem VeteranSkillMaxOfUseage;
     public static OptionItem BodyguardProtectRadius;
     public static OptionItem BodyguardKillsKiller;
-    public static OptionItem WitnessCD;
-    public static OptionItem WitnessTime;
-    public static OptionItem WitnessUsePet;
     public static OptionItem DQNumOfKillsNeeded;
     public static OptionItem ParanoiaNumOfUseButton;
     public static OptionItem ParanoiaVentCooldown;
     public static OptionItem ImpKnowCyberStarDead;
     public static OptionItem NeutralKnowCyberStarDead;
-    public static OptionItem DemolitionistVentTime;
-    public static OptionItem DemolitionistKillerDiesOnMeetingCall;
     public static OptionItem ExpressSpeed;
     public static OptionItem ExpressSpeedDur;
     public static OptionItem EveryOneKnowSuperStar;

@@ -368,12 +368,6 @@ class CheckMurderPatch
             return false;
         }
 
-        if (!Socialite.OnAnyoneCheckMurder(killer, target))
-        {
-            Notify("SocialiteTarget");
-            return false;
-        }
-
         if (Penguin.IsVictim(killer))
         {
             Notify("PenguinVictimKill");
@@ -598,9 +592,6 @@ class MurderPlayerPatch
 
         if (target.Is(CustomRoles.Stained))
             Stained.OnDeath(target, killer);
-
-        Witness.AllKillers.Remove(killer.PlayerId);
-        Witness.AllKillers.Add(killer.PlayerId, TimeStamp);
 
         killer.AddKillTimerToDict();
 
@@ -1009,7 +1000,6 @@ class ReportDeadBodyPatch
 
 
         Main.LastVotedPlayerInfo = null;
-        Witness.AllKillers.Clear();
         Arsonist.ArsonistTimer.Clear();
         Farseer.FarseerTimer.Clear();
         Puppeteer.PuppeteerList.Clear();
@@ -1315,7 +1305,6 @@ class FixedUpdatePatch
                 AddExtraAbilityUsesOnFinishedTasks(player);
             }
 
-            if (Witness.AllKillers.TryGetValue(playerId, out var ktime) && ktime + Options.WitnessTime.GetInt() < now) Witness.AllKillers.Remove(playerId);
             if (inTask && alive && Options.LadderDeath.GetBool()) FallFromLadder.FixedUpdate(player);
             if (localPlayer && GameStates.IsInGame) LoversSuicide();
 
