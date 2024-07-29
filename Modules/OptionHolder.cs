@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -534,6 +535,7 @@ public static class Options
     public static OptionItem FungleReactorTimeLimit;
     public static OptionItem FungleMushroomMixupDuration;
     private static OptionItem LightsOutSpecialSettings;
+    public static OptionItem BlockDisturbancesToSwitches;
     public static OptionItem DisableAirshipViewingDeckLightsPanel;
     public static OptionItem DisableAirshipGapRoomLightsPanel;
     public static OptionItem DisableAirshipCargoLightsPanel;
@@ -650,6 +652,7 @@ public static class Options
     public static OptionItem RoleAssigningAlgorithm;
     public static OptionItem EndWhenPlayerBug;
     public static OptionItem RemovePetsAtDeadPlayers;
+    public static OptionItem KickNotJoinedPlayersRegularly;
 
     public static OptionItem UsePets;
     public static OptionItem PetToAssignToEveryone;
@@ -671,6 +674,7 @@ public static class Options
     public static OptionItem KickLowLevelPlayer;
     public static OptionItem ApplyBanList;
     public static OptionItem ApplyModeratorList;
+    public static OptionItem ApplyVIPList;
     public static OptionItem AutoWarnStopWords;
 
     public static OptionItem DIYGameSettings;
@@ -1195,7 +1199,8 @@ public static class Options
         KickPlayerFriendCodeNotExist = new BooleanOptionItem(19302, "KickPlayerFriendCodeNotExist", false, TabGroup.SystemSettings, true);
         ApplyDenyNameList = new BooleanOptionItem(19303, "ApplyDenyNameList", true, TabGroup.SystemSettings, true);
         ApplyBanList = new BooleanOptionItem(19304, "ApplyBanList", true, TabGroup.SystemSettings, true);
-        ApplyModeratorList = new BooleanOptionItem(19305, "ApplyModeratorList", false, TabGroup.SystemSettings);
+        ApplyModeratorList = new BooleanOptionItem(19305, "ApplyModeratorList", true, TabGroup.SystemSettings);
+        ApplyVIPList = new BooleanOptionItem(19306, "ApplyVIPList", true, TabGroup.SystemSettings);
 
         LoadingPercentage = 61;
 
@@ -1243,6 +1248,9 @@ public static class Options
 
         RemovePetsAtDeadPlayers = new BooleanOptionItem(60294, "RemovePetsAtDeadPlayers", false, TabGroup.SystemSettings)
             .SetColor(Color.magenta);
+
+        KickNotJoinedPlayersRegularly = new BooleanOptionItem(60295, "KickNotJoinedPlayersRegularly", true, TabGroup.SystemSettings)
+            .SetColor(Color.yellow);
 
         CheatResponses = new StringOptionItem(19319, "CheatResponses", CheatResponsesName, 2, TabGroup.SystemSettings)
             .SetHeader(true);
@@ -1532,9 +1540,11 @@ public static class Options
 
         LoadingPercentage = 72;
 
-        // LightsOutSpecialSettings
         LightsOutSpecialSettings = new BooleanOptionItem(22500, "LightsOutSpecialSettings", false, TabGroup.GameSettings)
             .SetColor(new Color32(243, 96, 96, byte.MaxValue))
+            .SetGameMode(CustomGameMode.Standard);
+        BlockDisturbancesToSwitches = new BooleanOptionItem(60551, "BlockDisturbancesToSwitches", false, TabGroup.GameSettings)
+            .SetParent(LightsOutSpecialSettings)
             .SetGameMode(CustomGameMode.Standard);
         DisableAirshipViewingDeckLightsPanel = new BooleanOptionItem(22510, "DisableAirshipViewingDeckLightsPanel", false, TabGroup.GameSettings)
             .SetParent(LightsOutSpecialSettings)

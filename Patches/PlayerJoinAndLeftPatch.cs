@@ -261,16 +261,6 @@ class OnPlayerLeftPatch
                 case DisconnectReasons.Hacking:
                     Logger.SendInGame(string.Format(GetString("PlayerLeftByAU-Anticheat"), data?.PlayerName));
                     break;
-                case DisconnectReasons.Error:
-                    Logger.SendInGame(string.Format(GetString("PlayerLeftByError"), data?.PlayerName));
-                    LateTask.New(() =>
-                    {
-                        CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Error);
-                        GameManager.Instance.enabled = false;
-                        GameManager.Instance?.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
-                    }, 3f, "Disconnect Error Auto-end");
-
-                    break;
             }
 
             Logger.Info($"{data?.PlayerName} - (ClientID: {data?.Id} / FriendCode: {data?.FriendCode}) - Disconnected: {reason}，Ping: ({AmongUsClient.Instance.Ping})", "Session");
@@ -280,7 +270,7 @@ class OnPlayerLeftPatch
                 Main.SayStartTimes.Remove(__instance.ClientId);
                 Main.SayBanwordsTimes.Remove(__instance.ClientId);
                 Main.PlayerVersion.Remove(data?.Character?.PlayerId ?? byte.MaxValue);
-                Main.MessagesToSend.RemoveAll(x => x.RECEIVER_ID == data?.Character.PlayerId);
+                Logger.Info($"{Main.MessagesToSend.RemoveAll(x => x.RECEIVER_ID != byte.MaxValue && x.RECEIVER_ID == data?.Character.PlayerId)} sending messages were canceled", "OnPlayerLeftPatchPostfix");
 
                 if (data != null && data.Character != null)
                 {
@@ -299,8 +289,6 @@ class OnPlayerLeftPatch
             }
 
             Utils.CountAlivePlayers(true);
-
-            if (data != null && data.Character != null) data.Character.Data.Disconnected = true;
         }
         catch (NullReferenceException)
         {
@@ -312,6 +300,7 @@ class OnPlayerLeftPatch
         finally
         {
             Utils.NotifyRoles(NoCache: true);
+            ChatUpdatePatch.DoBlockChat = false;
         }
     }
 }
@@ -371,7 +360,7 @@ class InnerNetClientSpawnPatch
                             AmongUsClient.Instance.FinishRpcImmediately(writer);
                         }
                     }
-                }, 3f, "Send RPC or Sync Lobby Timer");
+                }, 3f, "Sync Lobby Timer RPC");
             }
         }
 
@@ -496,7 +485,7 @@ static class InnerNetClientFixedUpdatePatch
 
     public static void Postfix()
     {
-        if (GameStates.IsLocalGame || Main.AllPlayerControls.Length < 7) return;
+        if (GameStates.IsLocalGame || !Options.KickNotJoinedPlayersRegularly.GetBool() || Main.AllPlayerControls.Length < 7) return;
 
         Timer += Time.fixedDeltaTime;
         if (Timer < 25f) return;

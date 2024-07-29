@@ -70,7 +70,6 @@ public static class DevManager
             new(code: "heavyclod#2286", color: "#FFFF00", tag: "小叨.exe已停止运行", isUp: true, isDev: false, deBug: false, colorCmd: false, upName: "小叨院长"),
             new(code: "storeroan#0331", color: "#FF0066", tag: "Night_瓜", isUp: true, isDev: false, deBug: false, colorCmd: false, upName: "Night_瓜"),
             new(code: "teamelder#5856", color: "#1379bf", tag: "屑Slok（没信誉的鸽子）", isUp: true, isDev: false, colorCmd: false, deBug: false, upName: "Slok7565"),
-            new(code: "everyspam#5105", color: "#fc3a51", tag: "YouTuber", isUp: true, isDev: false, colorCmd: false, deBug: false, upName: "Henry Malfy"),
 
             new(code: "radarright#2509", color: "null", tag: "null", isUp: false, isDev: false, deBug: true, colorCmd: false, upName: null),
 
@@ -104,6 +103,8 @@ public static class DevManager
             new(code: "clovesorry#6973", color: "#191970", tag: "Master", isUp: true, isDev: false, deBug: false, colorCmd: false, upName: "MAT"),
             new(code: "ivorywish#3580", color: "#ff0000", tag: "YouTuber", isUp: true, isDev: false, deBug: false, colorCmd: false, upName: "Erik Carr"),
             new(code: "cleardress#6310", color: "#ffffff", tag: "<#00BFFF>一</color><#48D1CC>个</color><#7CFC00>热狗</color><#32CD32>uwu</color>", isUp: true, isDev: false, deBug: false, colorCmd: false, upName: "ABoringCat"),
+            new(code: "rainypearl#9545", color: "#A020F0", tag: "YouTuber", isUp: true, isDev: false, deBug: false, colorCmd: false, upName: "bielModzs"),
+            new(code: "kiltedbill#4145", color: "null", tag: "null", isUp: true, isDev: false, deBug: false, colorCmd: false, upName: "tsaki84"),
 
             // Sponsor
             new(code: "recentduct#6068", color: "#FF00FF", tag: "高冷男模法师", isUp: false, isDev: false, colorCmd: false, deBug: true, upName: null),

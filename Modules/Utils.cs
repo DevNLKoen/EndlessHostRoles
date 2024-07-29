@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using TOZ.AddOns.Common;
@@ -76,6 +75,7 @@ public static class Utils
                 GameManager.Instance.LogicFlow.CheckEndCriteria();
                 RPC.ForceEndGame(CustomWinner.Error);
             }, 5.5f, "Anti-Black End Game");
+            LateTask.New(() => ChatUpdatePatch.DoBlockChat = false, 6f, log: false);
         }
         else
         {
@@ -1617,14 +1617,17 @@ public static class Utils
             Logger.Info(" Message sent", "SendMessage");
         }
 
-        Main.MessagesToSend.Add((text.RemoveHtmlTagsTemplate(), sendTo, title));
+        text = text.RemoveHtmlTagsTemplate();
+
+        if (sendTo == byte.MaxValue) Main.MessagesToSend.Add((text, sendTo, title));
+        else ChatUpdatePatch.SendMessage(Main.AllAlivePlayerControls.MinBy(x => x.PlayerId) ?? Main.AllPlayerControls.MinBy(x => x.PlayerId) ?? PlayerControl.LocalPlayer, text, sendTo, title);
     }
 
     public static void ApplySuffix(PlayerControl player)
     {
         if (!AmongUsClient.Instance.AmHost || player == null) return;
         if (Main.HostRealName == string.Empty) Main.HostRealName = player.name;
-        if (!player.AmOwner && !player.FriendCode.GetDevUser().HasTag() && !ChatCommands.IsPlayerModerator(player.FriendCode)) return;
+        if (!player.AmOwner && !player.FriendCode.GetDevUser().HasTag() && !ChatCommands.IsPlayerModerator(player.FriendCode) && !ChatCommands.IsPlayerVIP(player.FriendCode)) return;
         string name = Main.AllPlayerNames.TryGetValue(player.PlayerId, out var n) ? n : string.Empty;
         if (Main.NickName != string.Empty && player.AmOwner) name = Main.NickName;
         if (name == string.Empty) return;
@@ -1644,11 +1647,11 @@ public static class Utils
                 string modeText = GetString($"Mode{Options.CurrentGameMode}");
                 name = Options.CurrentGameMode switch
                 {
-                    CustomGameMode.SoloKombat => $"<color=#f55252><size=1.7>{modeText}</size></color>\r\n" + name,
-                    CustomGameMode.FFA => $"<color=#00ffff><size=1.7>{modeText}</size></color>\r\n" + name,
-                    CustomGameMode.MoveAndStop => $"<color=#00ffa5><size=1.7>{modeText}</size></color>\r\n" + name,
-                    CustomGameMode.HotPotato => $"<color=#e8cd46><size=1.7>{modeText}</size></color>\r\n" + name,
-                    CustomGameMode.HideAndSeek => $"<color=#345eeb><size=1.7>{modeText}</size></color>\r\n" + name,
+                    CustomGameMode.SoloKombat => $"<color=#f55252><size=1.7>{modeText}</size></color>\r\n{name}",
+                    CustomGameMode.FFA => $"<color=#00ffff><size=1.7>{modeText}</size></color>\r\n{name}",
+                    CustomGameMode.MoveAndStop => $"<color=#00ffa5><size=1.7>{modeText}</size></color>\r\n{name}",
+                    CustomGameMode.HotPotato => $"<color=#e8cd46><size=1.7>{modeText}</size></color>\r\n{name}",
+                    CustomGameMode.HideAndSeek => $"<color=#345eeb><size=1.7>{modeText}</size></color>\r\n{name}",
                     CustomGameMode.Speedrun => ColorString(GetRoleColor(CustomRoles.Speedrunner), $"<size=1.7>{modeText}</size>\r\n") + name,
                     _ => name
                 };
@@ -1656,28 +1659,38 @@ public static class Utils
 
             DevUser devUser = player.FriendCode.GetDevUser();
             bool isMod = ChatCommands.IsPlayerModerator(player.FriendCode);
+            bool isVIP = ChatCommands.IsPlayerVIP(player.FriendCode);
             bool hasTag = devUser.HasTag();
-            if (hasTag || isMod)
+            if (hasTag || isMod || isVIP)
             {
                 string tag = hasTag ? devUser.GetTag() : string.Empty;
                 if (tag == "null") tag = string.Empty;
                 if (player.AmOwner || player.IsModClient())
-                    name = (hasTag ? tag : string.Empty) + (isMod ? ("<size=1.4>" + GetString("ModeratorTag") + "\r\n</size>") : string.Empty) + name;
-                else name = (hasTag ? tag.Replace("\r\n", " - ") : string.Empty) + (isMod ? ("<size=1.4>" + GetString("ModeratorTag") + " - </size>") : string.Empty) + name;
+                {
+                    var modTagModded = $"<size=1.4>{GetString("ModeratorTag")}\r\n</size>";
+                    var vipTagModded = $"<size=1.4>{GetString("VIPTag")}\r\n</size>";
+                    name = $"{(hasTag ? tag : string.Empty)}{(isMod ? modTagModded : string.Empty)}{(isVIP ? vipTagModded : string.Empty)}{name}";
+                }
+                else
+                {
+                    var modTagVanilla = $"<size=1.4>{GetString("ModeratorTag")} - </size>";
+                    var vipTagVanilla = $"<size=1.4>{GetString("VIPTag")} - </size>";
+                    name = $"{(hasTag ? tag.Replace("\r\n", " - ") : string.Empty)}{(isMod ? modTagVanilla : string.Empty)}{(isVIP ? vipTagVanilla : string.Empty)}{name}";
+                }
             }
 
             if (player.AmOwner)
             {
                 name = Options.GetSuffixMode() switch
                 {
-                    SuffixModes.TOZ => name + $"\r\n<color={Main.ModColor}>TOZ v{Main.PluginDisplayVersion}</color>",
-                    SuffixModes.Streaming => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.Streaming")}</color></size>",
-                    SuffixModes.Recording => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.Recording")}</color></size>",
-                    SuffixModes.RoomHost => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.RoomHost")}</color></size>",
-                    SuffixModes.OriginalName => name + $"\r\n<size=1.7><color={Main.ModColor}>{DataManager.player.Customization.Name}</color></size>",
-                    SuffixModes.DoNotKillMe => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixModeText.DoNotKillMe")}</color></size>",
-                    SuffixModes.NoAndroidPlz => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixModeText.NoAndroidPlz")}</color></size>",
-                    SuffixModes.AutoHost => name + $"\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixModeText.AutoHost")}</color></size>",
+                    SuffixModes.TOZ => $"{name}\r\n<color={Main.ModColor}>EHR v{Main.PluginDisplayVersion}</color>",
+                    SuffixModes.Streaming => $"{name}\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.Streaming")}</color></size>",
+                    SuffixModes.Recording => $"{name}\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.Recording")}</color></size>",
+                    SuffixModes.RoomHost => $"{name}\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixMode.RoomHost")}</color></size>",
+                    SuffixModes.OriginalName => $"{name}\r\n<size=1.7><color={Main.ModColor}>{DataManager.player.Customization.Name}</color></size>",
+                    SuffixModes.DoNotKillMe => $"{name}\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixModeText.DoNotKillMe")}</color></size>",
+                    SuffixModes.NoAndroidPlz => $"{name}\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixModeText.NoAndroidPlz")}</color></size>",
+                    SuffixModes.AutoHost => $"{name}\r\n<size=1.7><color={Main.ModColor}>{GetString("SuffixModeText.AutoHost")}</color></size>",
                     _ => name
                 };
             }
@@ -1768,29 +1781,28 @@ public static class Utils
 
         if (!SetUpRoleTextPatch.IsInIntro && ((SpecifySeer != null && SpecifySeer.IsModClient()) || !AmongUsClient.Instance.AmHost || Main.AllPlayerControls == null || (GameStates.IsMeeting && !isForMeeting) || GameStates.IsLobby)) return;
 
-        DoNotifyRoles(isForMeeting, SpecifySeer, SpecifyTarget, NoCache, ForceLoop, CamouflageIsForMeeting, GuesserIsForMeeting, MushroomMixup);
+        if (SetUpRoleTextPatch.IsInIntro || isForMeeting || CamouflageIsForMeeting || GuesserIsForMeeting || MushroomMixup) _ = DoNotifyRoles(isForMeeting, SpecifySeer, SpecifyTarget, NoCache, ForceLoop, CamouflageIsForMeeting, GuesserIsForMeeting, MushroomMixup);
+        else Main.Instance.StartCoroutine(DoNotifyRoles(false, SpecifySeer, SpecifyTarget, NoCache, ForceLoop));
     }
 
-    public static Task DoNotifyRoles(bool isForMeeting = false, PlayerControl SpecifySeer = null, PlayerControl SpecifyTarget = null, bool NoCache = false, bool ForceLoop = false, bool CamouflageIsForMeeting = false, bool GuesserIsForMeeting = false, bool MushroomMixup = false)
+    public static System.Collections.IEnumerator DoNotifyRoles(bool isForMeeting = false, PlayerControl SpecifySeer = null, PlayerControl SpecifyTarget = null, bool NoCache = false, bool ForceLoop = false, bool CamouflageIsForMeeting = false, bool GuesserIsForMeeting = false, bool MushroomMixup = false)
     {
-        //var caller = new System.Diagnostics.StackFrame(1, false);
-        //var callerMethod = caller.GetMethod();
-        //string callerMethodName = callerMethod.Name;
-        //string callerClassName = callerMethod.DeclaringType.FullName;
-        //Logger.Info("NotifyRoles was called from " + callerClassName + "." + callerMethodName, "NotifyRoles");
-
         PlayerControl[] seerList = SpecifySeer != null ? [SpecifySeer] : Main.AllPlayerControls.ToArray();
         PlayerControl[] targetList = SpecifyTarget != null ? [SpecifyTarget] : Main.AllPlayerControls.ToArray();
 
-        Logger.Info($" Seers: {string.Join(", ", seerList.Select(x => x.GetRealName()))} ---- Targets: {string.Join(", ", targetList.Select(x => x.GetRealName()))}", "NR");
+        StringBuilder seerLogInfo = new();
+        StringBuilder targetLogInfo = new();
 
         // seer: Players who can see changes made here
         // target: Players subject to changes that seer can see
+        int i = 0;
         foreach (PlayerControl seer in seerList)
         {
             try
             {
                 if (seer == null || seer.Data.Disconnected || seer.IsModClient()) continue;
+
+                seerLogInfo.Append($"{seer.GetRealName()}, ");
 
                 // During intro scene, set team name for non-modded clients and skip the rest.
                 string SelfName;
@@ -1806,6 +1818,12 @@ public static class Utils
                     SelfName = $"{selfTeamName}\r\n<size=150%>{seerRole.ToColoredString()}</size>{roleNameUp}";
 
                     seer.RpcSetNamePrivate(SelfName, seer);
+                    continue;
+                }
+
+                if (seer.Is(CustomRoles.Car))
+                {
+                    seer.RpcSetNamePrivate(Car.Name, force: NoCache);
                     continue;
                 }
 
@@ -1997,11 +2015,18 @@ public static class Utils
                     foreach (PlayerControl target in targetList)
                     {
                         if (target.PlayerId == seer.PlayerId) continue;
-                        Logger.Info($"NotifyRoles-Loop2-{target.GetNameWithRole().RemoveHtmlTags()}:START", "NotifyRoles");
+
+                        targetLogInfo.Append($"{target.GetRealName()}, ");
+
+                        if (target.Is(CustomRoles.Car))
+                        {
+                            target.RpcSetNamePrivate(Car.Name, seer, force: NoCache);
+                            continue;
+                        }
 
                         if ((IsActive(SystemTypes.MushroomMixupSabotage) || MushroomMixup) && target.IsAlive() && !seer.Is(CustomRoleTypes.Impostor) && Main.ResetCamPlayerList.Contains(seer.PlayerId))
                         {
-                            seer.RpcSetNamePrivate("<size=0%>", force: NoCache);
+                            target.RpcSetNamePrivate("<size=0%>", force: NoCache);
                         }
                         else
                         {
@@ -2235,9 +2260,12 @@ public static class Utils
             {
                 Logger.Error($"Error for {seer.GetNameWithRole()}: {ex}", "NR");
             }
+
+            i++;
+            if (i % 3 == 0) yield return null;
         }
 
-        return Task.CompletedTask;
+        Logger.Info($" Seers: {seerLogInfo.ToString().TrimEnd(',', ' ')} ---- Targets: {targetLogInfo.ToString().TrimEnd(',', ' ')}", "NR");
     }
 
     public static void MarkEveryoneDirtySettings()
@@ -2410,6 +2438,9 @@ public static class Utils
             CD = (int)Math.Round(CD * 0.75f);
 
         Main.AbilityCD[playerId] = (TimeStamp, CD);
+
+        if (Options.UseUnshiftTrigger.GetBool() && role.SimpleAbilityTrigger() && (!role.IsNeutral() || Options.UseUnshiftTriggerForNKs.GetBool()))
+            GetPlayerById(playerId)?.RpcResetAbilityCooldown();
     }
 
     public static void AfterMeetingTasks()
