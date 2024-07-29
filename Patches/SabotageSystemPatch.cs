@@ -3,11 +3,12 @@ using TOZ.Modules;
 using TOZ.Neutral;
 using HarmonyLib;
 using Hazel;
+using UnityEngine;
 
 namespace TOZ;
 
-//Based on:
-//https://github.com/Koke1024/Town-Of-Moss/blob/main/TownOfMoss/Patches/MeltDownBoost.cs
+// Based on:
+// https://github.com/Koke1024/Town-Of-Moss/blob/main/TownOfMoss/Patches/MeltDownBoost.cs
 
 [HarmonyPatch(typeof(ReactorSystemType), nameof(ReactorSystemType.Deteriorate))]
 public static class ReactorSystemTypePatch
@@ -52,6 +53,25 @@ public static class ReactorSystemTypePatch
                 return;
         }
     }
+
+    public static void Postfix()
+    {
+        if (GameStates.IsMeeting)
+        {
+            if (Main.CurrentMap == MapNames.Polus)
+            {
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Laboratory, 67);
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Laboratory, 66);
+            }
+            else
+            {
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Reactor, 16);
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Reactor, 17);
+            }
+
+            Logger.Fatal("Sabotage in meeting - fix was attempted", "SabotageSystemPatch");
+        }
+    }
 }
 
 [HarmonyPatch(typeof(HeliSabotageSystem), nameof(HeliSabotageSystem.Deteriorate))]
@@ -80,6 +100,17 @@ public static class HeliSabotageSystemPatch
         SetDurationForReactorSabotage = false;
 
         __instance.Countdown = Options.AirshipReactorTimeLimit.GetFloat();
+    }
+
+    public static void Postfix()
+    {
+        if (GameStates.IsMeeting)
+        {
+            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.HeliSabotage, 16);
+            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.HeliSabotage, 17);
+
+            Logger.Fatal("Sabotage in meeting - fix was attempted", "SabotageSystemPatch");
+        }
     }
 }
 
@@ -118,6 +149,17 @@ public static class LifeSuppSystemTypePatch
                 return;
             default:
                 return;
+        }
+    }
+
+    public static void Postfix()
+    {
+        if (GameStates.IsMeeting)
+        {
+            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.LifeSupp, 67);
+            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.LifeSupp, 66);
+
+            Logger.Fatal("Sabotage in meeting - fix was attempted", "SabotageSystemPatch");
         }
     }
 }
@@ -190,6 +232,66 @@ public static class MushroomMixupSabotageSystemPatch
                 }
             }
         }
+    }
+}
+
+// Thanks: https://github.com/tukasa0001/TownOfHost/tree/main/Patches/ISystemType/SwitchSystemPatch.cs
+[HarmonyPatch(typeof(SwitchSystem), nameof(SwitchSystem.UpdateSystem))]
+static class SwitchSystemUpdatePatch
+{
+    private static bool Prefix(SwitchSystem __instance, [HarmonyArgument(0)] PlayerControl player, [HarmonyArgument(1)] MessageReader msgReader)
+    {
+        byte amount;
+        {
+            var newReader = MessageReader.Get(msgReader);
+            amount = newReader.ReadByte();
+            newReader.Recycle();
+        }
+
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            return true;
+        }
+
+        // No matter if the blackout sabotage is sounded (beware of misdirection as it flies under the host's name)
+        if (amount.HasBit(SwitchSystem.DamageSystem))
+        {
+            return true;
+        }
+
+        // Cancel if player can't fix a specific outage on Airship
+        if (Main.CurrentMap == MapNames.Airship)
+        {
+            var pos = player.Pos();
+            if (Options.DisableAirshipViewingDeckLightsPanel.GetBool() && Vector2.Distance(pos, new(-12.93f, -11.28f)) <= 2f) return false;
+            if (Options.DisableAirshipGapRoomLightsPanel.GetBool() && Vector2.Distance(pos, new(13.92f, 6.43f)) <= 2f) return false;
+            if (Options.DisableAirshipCargoLightsPanel.GetBool() && Vector2.Distance(pos, new(30.56f, 2.12f)) <= 2f) return false;
+        }
+
+        if (player.Is(CustomRoles.Fool))
+        {
+            return false;
+        }
+
+        if (Options.BlockDisturbancesToSwitches.GetBool())
+        {
+            // Shift 1 to the left by amount
+            // Each digit corresponds to each switch
+            // Far left switch - (amount: 0) 00001
+            // Far right switch - (amount: 4) 10000
+            // ref: SwitchSystem.RepairDamage, SwitchMinigame.FixedUpdate
+            var switchedKnob = (byte)(0b_00001 << amount);
+
+            // ExpectedSwitches: Up and down state of switches when all are on
+            // ActualSwitches: Actual up/down state of switch
+            // if Expected and Actual are the same for the operated knob, the knob is already fixed
+            if ((__instance.ActualSwitches & switchedKnob) == (__instance.ExpectedSwitches & switchedKnob))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

@@ -66,7 +66,7 @@ class GameEndChecker
             {
                 case CustomWinner.Crewmate:
                     WinnerIds.UnionWith(Main.AllPlayerControls
-                        .Where(pc => pc.Is(CustomRoleTypes.Crewmate) && !pc.IsMadmate() && !pc.GetCustomSubRoles().Any(x => x.IsConverted()) && !pc.Is(CustomRoles.EvilSpirit))
+                        .Where(pc => (pc.Is(CustomRoleTypes.Crewmate)) && !pc.IsMadmate() && !pc.GetCustomSubRoles().Any(x => x.IsConverted()) && !pc.Is(CustomRoles.EvilSpirit))
                         .Select(pc => pc.PlayerId));
                     break;
                 case CustomWinner.Impostor:

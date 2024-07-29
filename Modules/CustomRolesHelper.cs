@@ -85,8 +85,8 @@ internal static class CustomRolesHelper
         if (role.IsVanilla()) return role;
         if (checkDesyncRole && role.GetDYRole() == RoleTypes.Impostor) return CustomRoles.Impostor;
         if (Options.UsePhantomBasis.GetBool() && role.SimpleAbilityTrigger()) return CustomRoles.Phantom;
+        if (Options.UseUnshiftTrigger.GetBool() && role.SimpleAbilityTrigger()) return CustomRoles.Shapeshifter;
         bool UsePets = Options.UsePets.GetBool();
-        if (Options.UseUnshiftTrigger.GetBool() && role.SimpleAbilityTrigger() && !UsePets) return CustomRoles.Shapeshifter;
         return role switch
         {
             CustomRoles.Sniper => UsePets ? CustomRoles.Impostor : CustomRoles.Shapeshifter,
@@ -217,7 +217,6 @@ internal static class CustomRolesHelper
             CustomRoles.Tether => UsePets ? CustomRoles.Crewmate : CustomRoles.Engineer,
             CustomRoles.Doormaster => UsePets ? CustomRoles.Crewmate : CustomRoles.Engineer,
             CustomRoles.Aid => UsePets && Aid.UsePet.GetBool() ? CustomRoles.Crewmate : CustomRoles.Impostor,
-            CustomRoles.Socialite => UsePets && Socialite.UsePet.GetBool() ? CustomRoles.Crewmate : CustomRoles.Impostor,
             CustomRoles.Escort => UsePets && Escort.UsePet.GetBool() ? CustomRoles.Crewmate : CustomRoles.Impostor,
             CustomRoles.DonutDelivery => UsePets && DonutDelivery.UsePet.GetBool() ? CustomRoles.Crewmate : CustomRoles.Impostor,
             CustomRoles.Gaulois => UsePets && Gaulois.UsePet.GetBool() ? CustomRoles.Crewmate : CustomRoles.Impostor,
@@ -341,8 +340,8 @@ internal static class CustomRolesHelper
     public static RoleTypes GetDYRole(this CustomRoles role, bool load = false)
     {
         if (!load && Options.UsePhantomBasis.GetBool() && Options.UsePhantomBasisForNKs.GetBool() && !role.IsImpostor() && role.SimpleAbilityTrigger()) return RoleTypes.Phantom;
+        if (!load && Options.UseUnshiftTrigger.GetBool() && Options.UseUnshiftTriggerForNKs.GetBool() && !role.IsImpostor() && role.SimpleAbilityTrigger()) return RoleTypes.Shapeshifter;
         bool UsePets = !load && Options.UsePets.GetBool();
-        if (!load && Options.UseUnshiftTrigger.GetBool() && Options.UseUnshiftTriggerForNKs.GetBool() && !role.IsImpostor() && role.SimpleAbilityTrigger() && (!UsePets || role == CustomRoles.Chemist)) return RoleTypes.Shapeshifter;
         return role switch
         {
             // SoloKombat
@@ -373,7 +372,6 @@ internal static class CustomRolesHelper
             CustomRoles.Innocent => RoleTypes.Impostor,
             CustomRoles.Pelican => RoleTypes.Impostor,
             CustomRoles.Aid => UsePets && Aid.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
-            CustomRoles.Socialite => UsePets && Socialite.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.Escort => UsePets && Escort.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.DonutDelivery => UsePets && DonutDelivery.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
             CustomRoles.Gaulois => UsePets && Gaulois.UsePet.GetBool() ? RoleTypes.GuardianAngel : RoleTypes.Impostor,
@@ -717,7 +715,6 @@ internal static class CustomRolesHelper
         CustomRoles.CopyCat or
         CustomRoles.Crusader or
         CustomRoles.Aid or
-        CustomRoles.Socialite or
         CustomRoles.Escort or
         CustomRoles.DonutDelivery or
         CustomRoles.Gaulois or
@@ -741,7 +738,6 @@ internal static class CustomRolesHelper
     {
         CustomRoles.Gaulois when Gaulois.UsePet.GetBool() => true,
         CustomRoles.Aid when Aid.UsePet.GetBool() => true,
-        CustomRoles.Socialite when Socialite.UsePet.GetBool() => true,
         CustomRoles.Escort when Escort.UsePet.GetBool() => true,
         CustomRoles.DonutDelivery when DonutDelivery.UsePet.GetBool() => true,
         CustomRoles.Analyst when Analyst.UsePet.GetBool() => true,
@@ -778,7 +774,6 @@ internal static class CustomRolesHelper
         CustomRoles.Scout when Scout.CancelVote.GetBool() => true,
         CustomRoles.Markseeker when Markseeker.CancelVote.GetBool() => true,
         CustomRoles.Godfather when Options.GodfatherCancelVote.GetBool() => true,
-        CustomRoles.Socialite when Socialite.CancelVote.GetBool() => true,
         _ => false
     };
 

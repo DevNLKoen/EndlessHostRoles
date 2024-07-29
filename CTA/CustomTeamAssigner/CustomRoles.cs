@@ -124,7 +124,6 @@ public enum CustomRoles
 
     // Crewmates
 
-    Addict,
     Adrenaline,
     Adventurer,
     Aid,
@@ -136,6 +135,7 @@ public enum CustomRoles
     Benefactor,
     Bodyguard,
     CameraMan,
+    Car,
     CyberStar, // Celebrity
     Chameleon,
     Chef,
@@ -147,7 +147,6 @@ public enum CustomRoles
     LovingCrewmate,
     LovingImpostor,
     Crusader,
-    Demolitionist,
     Deputy,
     Detective,
     Detour,
@@ -214,7 +213,6 @@ public enum CustomRoles
     Sheriff,
     Shiftguard,
     Snitch,
-    Socialite,
     Soothsayer,
     Spiritualist,
     Speedrunner,
@@ -235,7 +233,6 @@ public enum CustomRoles
     Ventguard,
     Veteran,
     SwordsMan, // Vigilante
-    Witness,
 
     // Neutrals
 
