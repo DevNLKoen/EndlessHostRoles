@@ -3,7 +3,7 @@ using System.Linq;
 using HarmonyLib;
 using UnityEngine;
 
-namespace EHR.Patches;
+namespace TOZ.Patches;
 
 // Thanks: https://github.com/SubmergedAmongUs/Submerged/blob/4a5a6b47cbed526670ae4b7eae76acd7c42e35de/Submerged/UI/Patches/MapSelectButtonPatches.cs#L49
 static class CreateOptionsPickerPatch
@@ -46,8 +46,8 @@ static class CreateOptionsPickerPatch
 
                     Main.NormalOptions.MapId = 0;
 
-                    __instance.MapImage.sprite = Utils.LoadSprite("EHR.Resources.Images.DleksBanner.png", 100f);
-                    __instance.MapName.sprite = Utils.LoadSprite("EHR.Resources.Images.DleksBanner-Wordart.png", 100f);
+                    __instance.MapImage.sprite = Utils.LoadSprite("TOZ.Resources.Images.DleksBanner.png", 100f);
+                    __instance.MapName.sprite = Utils.LoadSprite("TOZ.Resources.Images.DleksBanner-Wordart.png", 100f);
                 }));
 
                 for (int i = dleksPos; i < AllMapButton.Length; i++)
@@ -68,8 +68,8 @@ static class CreateOptionsPickerPatch
                         __instance.selectedButton = DleksButton;
                         __instance.selectedMapId = 3;
 
-                        __instance.MapImage.sprite = Utils.LoadSprite("EHR.Resources.Images.DleksBanner.png", 100f);
-                        __instance.MapName.sprite = Utils.LoadSprite("EHR.Resources.Images.DleksBanner-Wordart.png", 100f);
+                        __instance.MapImage.sprite = Utils.LoadSprite("TOZ.Resources.Images.DleksBanner.png", 100f);
+                        __instance.MapName.sprite = Utils.LoadSprite("TOZ.Resources.Images.DleksBanner-Wordart.png", 100f);
                     }
                     else
                     {

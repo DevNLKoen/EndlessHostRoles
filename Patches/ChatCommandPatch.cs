@@ -184,7 +184,7 @@ internal static class ChatCommands
     {
         if (friendCode == "" || friendCode == string.Empty || !Options.ApplyVIPList.GetBool()) return false;
 
-        const string friendCodesFilePath = "./EHR_DATA/VIPs.txt";
+        const string friendCodesFilePath = "./TOZ_DATA/VIPs.txt";
         if (!File.Exists(friendCodesFilePath))
         {
             File.WriteAllText(friendCodesFilePath, string.Empty);
@@ -285,8 +285,8 @@ internal static class ChatCommands
         if (VIPPc == null) return;
         var fc = VIPPc.FriendCode;
         if (!IsPlayerVIP(fc)) Utils.SendMessage(GetString("PlayerNotVIP"), player.PlayerId);
-        var lines = File.ReadAllLines("./EHR_DATA/VIPs.txt").Where(line => !line.Contains(fc)).ToArray();
-        File.WriteAllLines("./EHR_DATA/VIPs.txt", lines);
+        var lines = File.ReadAllLines("./TOZ_DATA/VIPs.txt").Where(line => !line.Contains(fc)).ToArray();
+        File.WriteAllLines("./TOZ_DATA/VIPs.txt", lines);
         Utils.SendMessage(GetString("PlayerRemovedFromVIPList"), player.PlayerId);
     }
 
@@ -297,7 +297,7 @@ internal static class ChatCommands
         if (newVIPPc == null) return;
         var fc = newVIPPc.FriendCode;
         if (IsPlayerVIP(fc)) Utils.SendMessage(GetString("PlayerAlreadyVIP"), player.PlayerId);
-        File.AppendAllText("./EHR_DATA/VIPs.txt", $"\n{fc}");
+        File.AppendAllText("./TOZ_DATA/VIPs.txt", $"\n{fc}");
         Utils.SendMessage(GetString("PlayerAddedToVIPList"), player.PlayerId);
     }
 

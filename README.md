@@ -357,7 +357,7 @@
 > - Reference: Disable the 5s timeout on custom servers
 >
 
-### Endless Host Roles (EHR), with Endless Possibilities, brought to you by the Endless Network.
+### Endless Host Roles (TOZ), with Endless Possibilities, brought to you by the Endless Network.
 
 ##### Developers:
 
