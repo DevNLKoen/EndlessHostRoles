@@ -15,7 +15,7 @@ namespace TOZ.Impostor
         private static Dictionary<byte, byte> DuelPair = [];
         private static OptionItem SSCD;
 
-        public override bool IsEnable => playerIdList.Count > 0 || Randomizer.Exists;
+        public override bool IsEnable => playerIdList.Count > 0;
 
         public static void SetupCustomOption()
         {

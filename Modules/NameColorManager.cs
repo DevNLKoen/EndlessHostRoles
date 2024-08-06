@@ -52,9 +52,6 @@ public static class NameColorManager
                 return true;
             case CustomGameMode.HideAndSeek:
                 return HnSManager.KnowTargetRoleColor(seer, target, ref color);
-            case CustomGameMode.Speedrun when SpeedrunManager.CanKill.Contains(target.PlayerId):
-                color = Main.ImpostorColor;
-                return true;
         }
 
         // Global (low priority)
@@ -65,7 +62,7 @@ public static class NameColorManager
         if (seer.Is(CustomRoles.Madmate) && target.Is(CustomRoleTypes.Impostor) && Options.MadmateKnowWhosImp.GetBool()) color = Main.ImpostorColor;
         if (seer.Is(CustomRoleTypes.Impostor) && target.Is(CustomRoles.Madmate) && Options.ImpKnowWhosMadmate.GetBool()) color = Main.RoleColors[CustomRoles.Madmate];
         if (seer.Is(CustomRoles.Madmate) && target.Is(CustomRoles.Madmate) && Options.MadmateKnowWhosMadmate.GetBool()) color = Main.RoleColors[CustomRoles.Madmate];
-        if (Blackmailer.On && Main.PlayerStates[seer.PlayerId].Role is Blackmailer { IsEnable: true } bm && bm.BlackmailedPlayerId == target.PlayerId) color = Main.RoleColors[CustomRoles.Electric];
+        if (Blackmailer.On && Main.PlayerStates[seer.PlayerId].Role is Blackmailer { IsEnable: true } bm && bm.BlackmailedPlayerId == target.PlayerId) color = Main.RoleColors[CustomRoles.Sheriff];
         if (Commander.On && seer.Is(Team.Impostor))
         {
             if (Commander.PlayerList.Any(x => x.MarkedPlayer == target.PlayerId)) color = Main.RoleColors[CustomRoles.Sprayer];
@@ -111,7 +108,6 @@ public static class NameColorManager
             CustomRoles.Necromancer or CustomRoles.Deathknight when target.Is(CustomRoles.Undead) => Main.RoleColors[CustomRoles.Undead],
             CustomRoles.Necromancer or CustomRoles.Deathknight when Necromancer.PartiallyRecruitedIds.Contains(target.PlayerId) => Main.RoleColors[CustomRoles.Deathknight],
             CustomRoles.Virus when target.Is(CustomRoles.Contagious) => Main.RoleColors[CustomRoles.Contagious],
-            CustomRoles.Monarch when target.Is(CustomRoles.Knighted) => Main.RoleColors[CustomRoles.Knighted],
             CustomRoles.Spiritcaller when target.Is(CustomRoles.EvilSpirit) => Main.RoleColors[CustomRoles.EvilSpirit],
             CustomRoles.Jackal when target.Is(CustomRoles.Recruit) => Main.RoleColors[CustomRoles.Jackal],
             CustomRoles.Refugee when target.Is(CustomRoleTypes.Impostor) => Main.RoleColors[CustomRoles.ImpostorTOZ],
@@ -119,8 +115,6 @@ public static class NameColorManager
             CustomRoles.BountyHunter when (Main.PlayerStates[seer.PlayerId].Role as BountyHunter)?.GetTarget(seer) == target.PlayerId => "000000",
             CustomRoles.Pyromaniac when ((Pyromaniac)Main.PlayerStates[seer.PlayerId].Role).DousedList.Contains(target.PlayerId) => "#BA4A00",
             CustomRoles.Glitch when target.IsRoleBlocked() => Main.RoleColors[seerRole],
-            CustomRoles.Aid when Aid.ShieldedPlayers.ContainsKey(target.PlayerId) => Main.RoleColors[CustomRoles.Aid],
-            CustomRoles.Spy when Spy.SpyRedNameList.ContainsKey(target.PlayerId) => "#BA4A00",
             CustomRoles.Mastermind when Mastermind.ManipulateDelays.ContainsKey(target.PlayerId) => "#00ffa5",
             CustomRoles.Mastermind when Mastermind.ManipulatedPlayers.ContainsKey(target.PlayerId) => Main.RoleColors[CustomRoles.Arsonist],
             CustomRoles.Hitman when (Main.PlayerStates[seer.PlayerId].Role as Hitman)?.TargetId == target.PlayerId => "000000",
@@ -129,7 +123,7 @@ public static class NameColorManager
             CustomRoles.Bubble when Bubble.EncasedPlayers.ContainsKey(target.PlayerId) => Main.RoleColors[CustomRoles.Bubble],
             CustomRoles.Hookshot when (Main.PlayerStates[seer.PlayerId].Role as Hookshot)?.MarkedPlayerId == target.PlayerId => Main.RoleColors[CustomRoles.Hookshot],
             CustomRoles.SoulHunter when SoulHunter.IsSoulHunterTarget(target.PlayerId) => Main.RoleColors[CustomRoles.SoulHunter],
-            CustomRoles.Kamikaze when ((Kamikaze)Main.PlayerStates[seer.PlayerId].Role).MarkedPlayers.Contains(target.PlayerId) => Main.RoleColors[CustomRoles.Electric],
+            CustomRoles.Kamikaze when ((Kamikaze)Main.PlayerStates[seer.PlayerId].Role).MarkedPlayers.Contains(target.PlayerId) => Main.RoleColors[CustomRoles.Sheriff],
             CustomRoles.Augmenter when ((Augmenter)Main.PlayerStates[seer.PlayerId].Role).Target == target.PlayerId => "000000",
             _ => color
         };
@@ -140,7 +134,6 @@ public static class NameColorManager
             CustomRoles.Jackal when seer.Is(CustomRoles.Recruit) => Main.RoleColors[CustomRoles.Jackal],
             CustomRoles.Virus when seer.Is(CustomRoles.Contagious) => Main.RoleColors[CustomRoles.Virus],
             CustomRoles.Refugee when seer.Is(CustomRoleTypes.Impostor) => Main.RoleColors[CustomRoles.Refugee],
-            CustomRoles.Speedrunner when !seer.Is(Team.Crewmate) && target.GetTaskState().CompletedTasksCount >= Speedrunner.SpeedrunnerNotifyAtXTasksLeft.GetInt() && Speedrunner.SpeedrunnerNotifyKillers.GetBool() => Main.RoleColors[CustomRoles.Speedrunner],
             CustomRoles.SoulHunter when SoulHunter.IsSoulHunterTarget(seer.PlayerId) => Main.RoleColors[CustomRoles.SoulHunter],
             CustomRoles.Necromancer or CustomRoles.Deathknight when seer.Is(CustomRoles.Undead) => Main.RoleColors[targetRole],
             CustomRoles.Succubus when seer.Is(CustomRoles.Charmed) => Main.RoleColors[CustomRoles.Succubus],
@@ -197,7 +190,6 @@ public static class NameColorManager
                || (target.Is(CustomRoles.Doctor) && !target.HasEvilAddon() && Options.DoctorVisibleToEveryone.GetBool())
                || (target.Is(CustomRoles.Gravestone) && Main.PlayerStates[target.Data.PlayerId].IsDead)
                || (target.Is(CustomRoles.Mayor) && Mayor.MayorRevealWhenDoneTasks.GetBool() && target.GetTaskState().IsTaskFinished)
-               || (seer.Is(CustomRoleTypes.Crewmate) && target.Is(CustomRoles.Marshall) && target.GetTaskState().IsTaskFinished)
                || Main.PlayerStates.Values.Any(x => x.Role.KnowRole(seer, target));
     }
 

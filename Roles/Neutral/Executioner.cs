@@ -32,8 +32,6 @@ public class Executioner : RoleBase
         //CustomRoles.Opportunist,
         CustomRoles.Convict,
         CustomRoles.CyberStar,
-        CustomRoles.Bodyguard,
-        CustomRoles.Dictator,
         CustomRoles.Doctor
     ];
 

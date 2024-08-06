@@ -67,16 +67,6 @@ class SetUpRoleTextPatch
                     __instance.RoleBlurbText.text = GetString("PotatoInfo");
                     break;
                 }
-                case CustomGameMode.Speedrun:
-                {
-                    var color = Utils.GetRoleColor(CustomRoles.Speedrunner);
-                    __instance.YouAreText.transform.gameObject.SetActive(false);
-                    __instance.RoleText.text = GetString("Runner");
-                    __instance.RoleText.color = color;
-                    __instance.RoleBlurbText.color = color;
-                    __instance.RoleBlurbText.text = GetString("RunnerInfo");
-                    break;
-                }
                 default:
                 {
                     CustomRoles role = lp.GetCustomRole();
@@ -325,48 +315,23 @@ class BeginCrewmatePatch
                     CustomRoles.Veteran
                     => ShipStatus.Instance.ShortTasks.FirstOrDefault(task => task.TaskType == TaskTypes.PutAwayPistols)?.MinigamePrefab.OpenSound,
 
-                CustomRoles.Cleaner or
-                    CustomRoles.Cleanser
+                CustomRoles.Cleaner
                     => ShipStatus.Instance.ShortTasks.FirstOrDefault(task => task.TaskType == TaskTypes.PolishRuby)?.MinigamePrefab.OpenSound,
 
-                CustomRoles.Dictator or
-                    CustomRoles.Lawyer or
-                    CustomRoles.Judge or
+                CustomRoles.Lawyer or
                     CustomRoles.Mayor
                     => ShipStatus.Instance.ShortTasks.FirstOrDefault(task => task.TaskType == TaskTypes.FixShower)?.MinigamePrefab.OpenSound,
 
-                CustomRoles.Monitor or
-                    CustomRoles.AntiAdminer
+                CustomRoles.AntiAdminer
                     => ShipStatus.Instance.LongTasks.FirstOrDefault(task => task.TaskType == TaskTypes.ResetBreakers)?.MinigamePrefab.OpenSound,
 
-                CustomRoles.EvilTracker or
-                    CustomRoles.Tracefinder or
-                    CustomRoles.Scout or
-                    CustomRoles.Bloodhound or
-                    CustomRoles.Mortician or
-                    CustomRoles.Lighter
+                CustomRoles.EvilTracker 
                     => ShipStatus.Instance.ShortTasks.FirstOrDefault(task => task.TaskType == TaskTypes.DivertPower)?.MinigamePrefab.OpenSound,
 
-                CustomRoles.Oracle or
-                    CustomRoles.Divinator or
-                    CustomRoles.Mediumshiper or
-                    CustomRoles.DovesOfNeace or
-                    CustomRoles.Spiritualist or
-                    CustomRoles.Spiritcaller or
-                    CustomRoles.Beacon or
-                    CustomRoles.Farseer
+                CustomRoles.Spiritcaller
                     => GetIntroSound(RoleTypes.GuardianAngel),
 
-                CustomRoles.Alchemist
-                    => ShipStatus.Instance.LongTasks.FirstOrDefault(task => task.TaskType == TaskTypes.DevelopPhotos)?.MinigamePrefab.OpenSound,
-
-                CustomRoles.Deputy or
-                    CustomRoles.Jailor
-                    => ShipStatus.Instance.LongTasks.FirstOrDefault(task => task.TaskType == TaskTypes.UnlockSafe)?.MinigamePrefab.OpenSound,
-
-                CustomRoles.Workaholic or
-                    CustomRoles.Speedrunner or
-                    CustomRoles.Snitch
+                CustomRoles.Workaholic
                     => DestroyableSingleton<HudManager>.Instance.TaskCompleteSound,
 
                 CustomRoles.TaskManager
@@ -377,21 +342,15 @@ class BeginCrewmatePatch
                     CustomRoles.Revolutionist
                     => GetIntroSound(RoleTypes.Crewmate),
 
-                CustomRoles.Nightmare
-                    => GetIntroSound(RoleTypes.Impostor),
-
                 CustomRoles.SabotageMaster or
                     CustomRoles.Engineer or
                     CustomRoles.EngineerTOZ or
                     CustomRoles.Inhibitor or
                     CustomRoles.Saboteur or
-                    CustomRoles.SecurityGuard or
                     CustomRoles.Provocateur
                     => ShipStatus.Instance.SabotageSound,
 
                 CustomRoles.Mastermind or
-                    CustomRoles.Shiftguard or
-                    CustomRoles.Randomizer or
                     CustomRoles.Gambler
                     => GetIntroSound(RoleTypes.Shapeshifter),
 
@@ -402,26 +361,11 @@ class BeginCrewmatePatch
                 CustomRoles.GM
                     => DestroyableSingleton<HudManager>.Instance.TaskCompleteSound,
 
-                CustomRoles.SwordsMan or
-                    CustomRoles.Minimalism or
-                    CustomRoles.NiceGuesser
-                    => PlayerControl.LocalPlayer.KillSfx,
-
                 CustomRoles.Swooper or
-                    CustomRoles.Chameleon or
-                    CustomRoles.Drainer
+                    CustomRoles.Chameleon
                     => PlayerControl.LocalPlayer.MyPhysics.ImpostorDiscoveredSound,
 
-                CustomRoles.Ventguard
-                    => ShipStatus.Instance.VentEnterSound,
-
-                CustomRoles.ParityCop or
-                    CustomRoles.NiceEraser or
-                    CustomRoles.TimeManager
-                    => MeetingHud.Instance.VoteLockinSound,
-
-                CustomRoles.TimeMaster or
-                    CustomRoles.Grenadier or
+                CustomRoles.Grenadier or
                     CustomRoles.Miner or
                     CustomRoles.Disperser
                     => ShipStatus.Instance.VentMoveSounds.FirstOrDefault(),
@@ -528,15 +472,6 @@ class BeginCrewmatePatch
                 PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
                 __instance.ImpostorText.gameObject.SetActive(true);
                 __instance.ImpostorText.text = GetString("PotatoInfo");
-                break;
-            }
-            case CustomGameMode.Speedrun:
-            {
-                __instance.TeamTitle.text = GetString("Runner");
-                __instance.TeamTitle.color = __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Speedrunner);
-                PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Crewmate);
-                __instance.ImpostorText.gameObject.SetActive(true);
-                __instance.ImpostorText.text = GetString("RunnerInfo");
                 break;
             }
             case CustomGameMode.HideAndSeek:

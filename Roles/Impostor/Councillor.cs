@@ -100,12 +100,6 @@ public class Councillor : RoleBase
                         return true;
                     }
 
-                    if (Jailor.playerIdList.Any(x => Main.PlayerStates[x].Role is Jailor { IsEnable: true } jl && jl.JailorTarget == targetId))
-                    {
-                        if (!isUI) Utils.SendMessage(GetString("CanNotTrialJailed"), pc.PlayerId, title: Utils.ColorString(Utils.GetRoleColor(CustomRoles.Jailor), GetString("JailorTitle")));
-                        else pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Jailor), GetString("JailorTitle")) + "\n" + GetString("CanNotTrialJailed"));
-                        return true;
-                    }
 
                     bool NoSuicide = false;
 
@@ -116,9 +110,6 @@ public class Councillor : RoleBase
                     }
                     else if (target.IsMadmate() && CanMurderMadmate.GetBool()) CouncillorSuicide = false;
                     else if (target.Is(CustomRoles.SuperStar)) NoSuicide = true;
-                    else if (target.Is(CustomRoles.Snitch) && target.AllTasksCompleted()) NoSuicide = true;
-                    else if (target.Is(CustomRoles.Guardian) && target.AllTasksCompleted()) NoSuicide = true;
-                    else if (target.Is(CustomRoles.Merchant) && Merchant.IsBribedKiller(pc, target)) NoSuicide = true;
                     else if (target.IsImpostor() && CanMurderImpostor.GetBool()) CouncillorSuicide = false;
                     else if (target.IsCrewmate()) CouncillorSuicide = false;
                     else if (target.GetCustomRole().IsNeutral() && !target.Is(CustomRoles.Pestilence)) CouncillorSuicide = false;

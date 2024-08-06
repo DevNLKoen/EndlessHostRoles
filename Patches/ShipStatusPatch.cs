@@ -99,10 +99,6 @@ class RepairSystemPatch
                 SabotageMaster.RepairSystem(player.PlayerId, __instance, systemType, amount);
                 Utils.NotifyRoles(SpecifySeer: player, SpecifyTarget: player);
                 break;
-            case CustomRoles.Alchemist when Main.PlayerStates[player.PlayerId].Role is Alchemist { IsEnable: true, FixNextSabo: true }:
-                Alchemist.RepairSystem(player, systemType, amount);
-                Utils.NotifyRoles(SpecifySeer: player, SpecifyTarget: player);
-                break;
         }
 
         switch (systemType)
@@ -123,7 +119,6 @@ class RepairSystemPatch
                 break;
             case SystemTypes.Sabotage when AmongUsClient.Instance.NetworkMode != NetworkModes.FreePlay:
                 if (Options.CurrentGameMode != CustomGameMode.Standard) return false;
-                if (SecurityGuard.BlockSabo.Count > 0) return false;
                 if (player.IsRoleBlocked())
                 {
                     player.Notify(BlockedAction.Sabotage.GetBlockNotify());
@@ -179,20 +174,6 @@ class RepairSystemPatch
                             SabotageMaster.SwitchSystemRepair(player.PlayerId, SwitchSystem, amount);
                             Utils.NotifyRoles(SpecifySeer: player, SpecifyTarget: player);
                             break;
-                        case Alchemist { FixNextSabo: true } am:
-                            Logger.Info($"{player.GetNameWithRole().RemoveHtmlTags()} instant-fix-lights", "SwitchSystem");
-                            SwitchSystem.ActualSwitches = 0;
-                            SwitchSystem.ExpectedSwitches = 0;
-                            am.FixNextSabo = false;
-                            Utils.NotifyRoles(SpecifySeer: player, SpecifyTarget: player);
-                            break;
-                        case Adventurer av:
-                            Logger.Info($"{player.GetNameWithRole().RemoveHtmlTags()} instant-fix-lights", "SwitchSystem");
-                            SwitchSystem.ActualSwitches = 0;
-                            SwitchSystem.ExpectedSwitches = 0;
-                            av.OnLightsFix();
-                            Utils.NotifyRoles(SpecifySeer: player, SpecifyTarget: player);
-                            break;
                     }
 
                     if (player.Is(CustomRoles.Damocles) && Damocles.countRepairSabotage) Damocles.OnRepairSabotage(player.PlayerId);
@@ -239,9 +220,8 @@ class CloseDoorsPatch
 {
     public static bool Prefix( /*ShipStatus __instance, */ [HarmonyArgument(0)] SystemTypes room)
     {
-        bool allow = !Options.DisableSabotage.GetBool() && Options.CurrentGameMode is not CustomGameMode.SoloKombat and not CustomGameMode.FFA and not CustomGameMode.MoveAndStop and not CustomGameMode.HotPotato and not CustomGameMode.Speedrun;
+        bool allow = !Options.DisableSabotage.GetBool() && Options.CurrentGameMode is not CustomGameMode.SoloKombat and not CustomGameMode.FFA and not CustomGameMode.MoveAndStop and not CustomGameMode.HotPotato;
 
-        if (SecurityGuard.BlockSabo.Count > 0) allow = false;
         if (Options.DisableCloseDoor.GetBool()) allow = false;
 
         Logger.Info($"({room}) => {(allow ? "Allowed" : "Blocked")}", "DoorClose");

@@ -137,16 +137,8 @@ class RpcSetTasksPatch
             NumShortTasks += Options.BusyShortTasks.GetInt();
         }
 
-        // Mad Snitch mission coverage
-        if (pc.Is(CustomRoles.Snitch) && pc.Is(CustomRoles.Madmate))
-        {
-            hasCommonTasks = false;
-            NumLongTasks = 0;
-            NumShortTasks = Options.MadSnitchTasks.GetInt();
-        }
-
         // GM and Lazy have no tasks
-        if (pc.Is(CustomRoles.GM) || pc.Is(CustomRoles.Needy) || Options.CurrentGameMode is CustomGameMode.SoloKombat or CustomGameMode.FFA || pc.Is(CustomRoles.Lazy))
+        if (pc.Is(CustomRoles.GM) || Options.CurrentGameMode is CustomGameMode.SoloKombat or CustomGameMode.FFA || pc.Is(CustomRoles.Lazy))
         {
             hasCommonTasks = false;
             NumShortTasks = 0;

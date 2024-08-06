@@ -166,7 +166,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                     }
 
                     break;
-                case CustomGameMode.Speedrun:
                 case CustomGameMode.HotPotato:
                 case CustomGameMode.MoveAndStop:
                     opt.SetVision(true);
@@ -248,17 +247,10 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
 
             switch (role)
             {
-                case CustomRoles.Alchemist when ((Alchemist)Main.PlayerStates[player.PlayerId].Role).VisionPotionActive:
-                    opt.SetVisionV2();
-                    if (Utils.IsActive(SystemTypes.Electrical)) opt.SetFloat(FloatOptionNames.CrewLightMod, Alchemist.VisionOnLightsOut.GetFloat() * 5);
-                    else opt.SetFloat(FloatOptionNames.CrewLightMod, Alchemist.Vision.GetFloat());
-                    break;
                 case CustomRoles.Mayor when Mayor.MayorSeesVoteColorsWhenDoneTasks.GetBool() && player.GetTaskState().IsTaskFinished:
                     opt.SetBool(BoolOptionNames.AnonymousVotes, false);
                     break;
             }
-
-            Chef.ApplyGameOptionsForOthers(opt, player.PlayerId);
 
             if (Sprayer.LowerVisionList.Contains(player.PlayerId))
             {
@@ -267,36 +259,10 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                 opt.SetFloat(FloatOptionNames.ImpostorLightMod, Sprayer.LoweredVision.GetFloat());
             }
 
-            if (Sentinel.IsPatrolling(player.PlayerId))
-            {
-                opt.SetVision(false);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, Sentinel.LoweredVision.GetFloat());
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, Sentinel.LoweredVision.GetFloat());
-            }
-
-            if (Beacon.IsAffectedPlayer(player.PlayerId))
-            {
-                opt.SetFloat(FloatOptionNames.CrewLightMod, Beacon.IncreasedVision);
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, Beacon.IncreasedVision);
-            }
-
             Dazzler.SetDazzled(player, opt);
             Deathpact.SetDeathpactVision(player, opt);
 
             Spiritcaller.ReduceVision(opt, player);
-
-            if (Randomizer.HasSuperVision(player))
-            {
-                opt.SetVision(true);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, 1.5f);
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, 1.5f);
-            }
-            else if (Randomizer.IsBlind(player))
-            {
-                opt.SetVision(false);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, 0);
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0);
-            }
 
             var array = Main.PlayerStates[player.PlayerId].SubRoles;
             foreach (CustomRoles subRole in array)
@@ -377,13 +343,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                 opt.SetVision(false);
                 opt.SetFloat(FloatOptionNames.CrewLightMod, 0);
                 opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0);
-            }
-
-            if (player.IsCrewmate() && Main.PlayerStates.Values.Any(s => s.Role is Adventurer { IsEnable: true } av && av.ActiveWeapons.Contains(Adventurer.Weapon.Lantern)))
-            {
-                opt.SetVision(true);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, 1.5f);
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, 1.5f);
             }
 
             if (Chemist.Instances.Any(x => x.IsBlinding && player.PlayerId != x.ChemistPC.PlayerId))

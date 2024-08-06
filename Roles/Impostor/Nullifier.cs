@@ -53,31 +53,10 @@ namespace TOZ.Impostor
                 {
                     switch (target.GetCustomRole())
                     {
-                        case CustomRoles.Cleanser:
-                            if (Main.PlayerStates[target.PlayerId].Role is not Cleanser { IsEnable: true } cs) return;
-                            cs.CleanserUses++;
-                            cs.SendRPC(target.PlayerId);
-                            break;
-                        case CustomRoles.NiceHacker:
-                            if (target.IsModClient())
-                            {
-                                NiceHacker.UseLimitSeconds[target.PlayerId] -= NiceHacker.ModdedClientAbilityUseSecondsMultiplier.GetInt();
-                                NiceHacker.SendRPC(target.PlayerId, NiceHacker.UseLimitSeconds[target.PlayerId]);
-                            }
-                            else
-                            {
-                                NiceHacker.UseLimit[target.PlayerId]--;
-                            }
-
-                            break;
                         case CustomRoles.SabotageMaster:
                             if (Main.PlayerStates[target.PlayerId].Role is not SabotageMaster { IsEnable: true } sm) return;
                             sm.UsedSkillCount++;
                             sm.SendRPC();
-                            break;
-                        case CustomRoles.SwordsMan:
-                            SwordsMan.Killed.Add(target.PlayerId);
-                            SwordsMan.SendRPC(target.PlayerId);
                             break;
                         default:
                             target.RpcRemoveAbilityUse();

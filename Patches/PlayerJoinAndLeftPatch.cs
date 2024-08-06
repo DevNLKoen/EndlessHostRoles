@@ -194,14 +194,10 @@ class OnPlayerLeftPatch
                     case CustomRoles.Pelican:
                         Pelican.OnPelicanDied(data.Character.PlayerId);
                         break;
-                    case CustomRoles.Markseeker:
-                        Markseeker.OnDeath(data.Character);
-                        break;
                 }
 
                 if (Executioner.Target.ContainsValue(data.Character.PlayerId)) Executioner.ChangeRoleByTarget(data.Character);
                 if (Lawyer.Target.ContainsValue(data.Character.PlayerId)) Lawyer.ChangeRoleByTarget(data.Character);
-                if (Spiritualist.SpiritualistTarget == data.Character.PlayerId) Spiritualist.RemoveTarget();
                 Postman.CheckAndResetTargets(data.Character);
 
                 Utils.AfterPlayerDeathTasks(data.Character, GameStates.IsMeeting);

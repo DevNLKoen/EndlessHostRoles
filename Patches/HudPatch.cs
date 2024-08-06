@@ -186,27 +186,11 @@ class HudManagerPatch
 
                     switch (role)
                     {
-                        case CustomRoles.Farseer:
-                        case CustomRoles.Escort:
-                        case CustomRoles.Gaulois:
-                        case CustomRoles.Sheriff:
-                        case CustomRoles.Crusader:
-                        case CustomRoles.Monarch:
-                            usedButton?.OverrideText(GetString($"{role}KillButtonText"));
-                            break;
-                        case CustomRoles.Analyst:
-                            usedButton?.OverrideText(GetString("AnalyzerKillButtonText"));
-                            break;
-                        case CustomRoles.Aid:
-                        case CustomRoles.DonutDelivery:
                         case CustomRoles.Medic:
                             usedButton?.OverrideText(GetString("MedicalerButtonText"));
                             break;
                         case CustomRoles.KB_Normal:
                             __instance.KillButton?.OverrideText(GetString("GamerButtonText"));
-                            break;
-                        case CustomRoles.Deputy:
-                            usedButton?.OverrideText(GetString("DeputyHandcuffText"));
                             break;
                     }
 
@@ -415,13 +399,6 @@ class SetHudActivePatch
         {
             case CustomGameMode.MoveAndStop:
             case CustomGameMode.HotPotato:
-            case CustomGameMode.Speedrun:
-                __instance.ReportButton?.ToggleVisible(false);
-                __instance.KillButton?.ToggleVisible(false);
-                __instance.SabotageButton?.ToggleVisible(false);
-                __instance.ImpostorVentButton?.ToggleVisible(false);
-                __instance.AbilityButton?.ToggleVisible(false);
-                return;
             case CustomGameMode.FFA:
                 __instance.ReportButton?.ToggleVisible(false);
                 __instance.SabotageButton?.ToggleVisible(false);
@@ -439,19 +416,10 @@ class SetHudActivePatch
         {
             case CustomRoles.Sheriff:
             case CustomRoles.Arsonist:
-            case CustomRoles.SwordsMan:
-            case CustomRoles.Deputy:
-            case CustomRoles.Monarch:
             case CustomRoles.Pelican:
             case CustomRoles.FFF:
             case CustomRoles.Medic:
-            case CustomRoles.Gamer:
             case CustomRoles.DarkHide:
-            case CustomRoles.Farseer:
-            case CustomRoles.Crusader:
-                __instance.SabotageButton?.ToggleVisible(false);
-                __instance.ImpostorVentButton?.ToggleVisible(false);
-                break;
 
             case CustomRoles.KB_Normal:
                 __instance.SabotageButton?.ToggleVisible(false);
@@ -499,12 +467,7 @@ class MapBehaviourShowPatch
 
         var player = PlayerControl.LocalPlayer;
 
-        if (player.GetCustomRole() == CustomRoles.NiceHacker && NiceHacker.playerIdList.ContainsKey(player.PlayerId))
-        {
-            Logger.Info("Modded Client uses Map", "NiceHacker");
-            NiceHacker.MapHandle(player, __instance, opts);
-        }
-        else if (opts.Mode is MapOptions.Modes.Normal or MapOptions.Modes.Sabotage)
+        if (opts.Mode is MapOptions.Modes.Normal or MapOptions.Modes.Sabotage)
         {
             if (player.Is(CustomRoleTypes.Impostor) || player.CanUseSabotage() || player.Is(CustomRoles.Glitch) || player.Is(CustomRoles.WeaponMaster) || player.Is(CustomRoles.Magician) || player.Is(CustomRoles.Parasite) || player.Is(CustomRoles.Refugee) || (player.Is(CustomRoles.Jackal) && Jackal.CanSabotage.GetBool()) || (player.Is(CustomRoles.Traitor) && Traitor.CanSabotage.GetBool()))
                 opts.Mode = MapOptions.Modes.Sabotage;
@@ -734,29 +697,6 @@ class TaskPanelBehaviourPatch
                 case CustomGameMode.HideAndSeek:
 
                     AllText += $"\r\n\r\n{HnSManager.GetTaskBarText()}";
-
-                    break;
-
-                case CustomGameMode.Speedrun:
-
-                    var lines2 = taskText.Split("\r\n</color>\n")[0].Split("\r\n\n")[0].Split("\r\n");
-                    StringBuilder sb2 = new();
-                    foreach (string eachLine in lines2)
-                    {
-                        var line = eachLine.Trim();
-                        if ((line.StartsWith("<color=#FF1919FF>") || line.StartsWith("<color=#FF0000FF>")) && sb2.Length < 1 && !line.Contains('(')) continue;
-                        sb2.Append(line + "\r\n");
-                    }
-
-                    if (sb2.Length > 1)
-                    {
-                        var text = sb2.ToString().TrimEnd('\n').TrimEnd('\r');
-                        if (!Utils.HasTasks(player.Data, false) && sb2.ToString().Count(s => s == '\n') >= 2)
-                            text = $"{Utils.ColorString(Utils.GetRoleColor(player.GetCustomRole()).ShadeColor(0.2f), GetString("FakeTask"))}\r\n{text}";
-                        AllText += $"<size=70%>\r\n{text}\r\n</size>";
-                    }
-
-                    AllText += $"\r\n{SpeedrunManager.GetTaskBarText()}";
 
                     break;
             }

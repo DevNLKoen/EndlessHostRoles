@@ -177,7 +177,6 @@ internal class ChangeRoleSettings
             Main.MadmateNum = 0;
 
             Mayor.MayorUsedButtonCount = [];
-            Paranoia.ParaUsedButtonCount = [];
             Mario.MarioVentCount = [];
             Cleaner.CleanerBodies = [];
             Virus.InfectedBodies = [];
@@ -185,33 +184,24 @@ internal class ChangeRoleSettings
             Virus.VirusNotify = [];
             Veteran.VeteranInProtect = [];
             Grenadier.GrenadierBlinding = [];
-            SecurityGuard.BlockSabo = [];
-            Ventguard.BlockedVents = [];
             Grenadier.MadGrenadierBlinding = [];
             OverKiller.OverDeadPlayerList = [];
             Warlock.WarlockTimer = [];
             Arsonist.IsDoused = [];
             Revolutionist.IsDraw = [];
-            Farseer.IsRevealed = [];
             Arsonist.ArsonistTimer = [];
             Revolutionist.RevolutionistTimer = [];
             Revolutionist.RevolutionistStart = [];
             Revolutionist.RevolutionistLastTime = [];
             Revolutionist.RevolutionistCountdown = [];
-            TimeMaster.TimeMasterBackTrack = [];
-            TimeMaster.TimeMasterNum = [];
-            Farseer.FarseerTimer = [];
             Warlock.CursedPlayers = [];
             Mafia.MafiaRevenged = [];
             Warlock.IsCurseAndKill = [];
             Warlock.IsCursed = false;
             Detective.DetectiveNotify = [];
             Provocateur.Provoked = [];
-            Crusader.ForCrusade = [];
             Godfather.GodfatherTarget = byte.MaxValue;
             Crewpostor.TasksDone = [];
-            Express.SpeedNormal = [];
-            Express.SpeedUp = [];
             Messenger.Sent = [];
 
             ReportDeadBodyPatch.CanReport = [];
@@ -239,12 +229,6 @@ internal class ChangeRoleSettings
             Arsonist.CurrentDousingTarget = byte.MaxValue;
             Revolutionist.CurrentDrawTarget = byte.MaxValue;
             Main.PlayerColors = [];
-
-            if (Options.CurrentGameMode == CustomGameMode.Speedrun && !Options.UsePets.GetBool())
-            {
-                Options.UsePets.SetValue(1);
-                PlayerControl.LocalPlayer.ShowPopUp(GetString("PetsForceEnabled"));
-            }
 
             RPC.SyncAllPlayerNames();
             RPC.SyncAllClientRealNames();
@@ -323,7 +307,6 @@ internal class ChangeRoleSettings
                 MoveAndStopManager.Init();
                 HotPotatoManager.Init();
                 HnSManager.Init();
-                SpeedrunManager.Init();
             }
             catch (Exception e)
             {
@@ -451,7 +434,7 @@ internal class SelectRolesPatch
 
             // Register Desync Impostor Roles
             foreach (var kv in RoleResult.Where(x => x.Value.IsDesyncRole() || IsBloodlustPlayer(x.Key.PlayerId)))
-                AssignDesyncRole(kv.Value, kv.Key, senders, rolesMap, BaseRole: IsBloodlustPlayer(kv.Key.PlayerId) || (Options.CurrentGameMode == CustomGameMode.Speedrun && SpeedrunManager.CanKill.Contains(kv.Key.PlayerId)) ? RoleTypes.Impostor : kv.Value.GetDYRole());
+                AssignDesyncRole(kv.Value, kv.Key, senders, rolesMap, BaseRole: IsBloodlustPlayer(kv.Key.PlayerId) ? RoleTypes.Impostor : kv.Value.GetDYRole());
 
 
             MakeDesyncSender(senders, rolesMap);
@@ -845,9 +828,6 @@ internal class SelectRolesPatch
                 case CustomGameMode.HotPotato:
                     GameEndChecker.SetPredicateToHotPotato();
                     break;
-                case CustomGameMode.Speedrun:
-                    GameEndChecker.SetPredicateToSpeedrun();
-                    break;
                 case CustomGameMode.HideAndSeek:
                     GameEndChecker.SetPredicateToHideAndSeek();
                     break;
@@ -979,7 +959,7 @@ internal class SelectRolesPatch
             return;
         }
 
-        var allPlayers = Main.AllPlayerControls.Where(pc => !pc.Is(CustomRoles.GM) && (!pc.HasSubRole() || pc.GetCustomSubRoles().Count < Options.NoLimitAddonsNumMax.GetInt()) && !pc.Is(CustomRoles.Dictator) && !pc.Is(CustomRoles.God) && !pc.Is(CustomRoles.FFF) && !pc.Is(CustomRoles.Bomber) && !pc.Is(CustomRoles.Nuker) && !pc.Is(CustomRoles.Provocateur) && (!pc.IsCrewmate() || Lovers.CrewCanBeInLove.GetBool()) && (!pc.GetCustomRole().IsNeutral() || Lovers.NeutralCanBeInLove.GetBool()) && (!pc.IsImpostor() || Lovers.ImpCanBeInLove.GetBool())).ToList();
+        var allPlayers = Main.AllPlayerControls.Where(pc => !pc.Is(CustomRoles.GM) && (!pc.HasSubRole() || pc.GetCustomSubRoles().Count < Options.NoLimitAddonsNumMax.GetInt()) && !pc.Is(CustomRoles.God) && !pc.Is(CustomRoles.FFF) && !pc.Is(CustomRoles.Bomber) && !pc.Is(CustomRoles.Nuker) && !pc.Is(CustomRoles.Provocateur) && (!pc.IsCrewmate() || Lovers.CrewCanBeInLove.GetBool()) && (!pc.GetCustomRole().IsNeutral() || Lovers.NeutralCanBeInLove.GetBool()) && (!pc.IsImpostor() || Lovers.ImpCanBeInLove.GetBool())).ToList();
         const CustomRoles role = CustomRoles.Lovers;
         var count = Math.Clamp(RawCount, 0, allPlayers.Count);
         if (RawCount == -1) count = Math.Clamp(role.GetCount(), 0, allPlayers.Count);

@@ -78,7 +78,6 @@ public enum CustomRPC
     StealthDarken,
     PenguinSync,
     SyncPlagueDoctor,
-    SetAlchemistPotion,
     SetRicochetTarget,
     SetTetherTarget,
     SetHitmanTarget,
@@ -124,7 +123,6 @@ public enum CustomRPC
     SetDoomsayerProgress,
     SetTrackerTarget,
     RpcPassBomb,
-    SetAlchemistTimer,
     SyncPostman,
     SyncChangeling,
     SyncTiger,
@@ -389,13 +387,6 @@ internal class RPCHandlerPatch
                 if (Main.PlayerStates[reader.ReadByte()].Role is not Tiger tiger) break;
                 tiger.EnrageTimer = reader.ReadSingle();
                 break;
-            case CustomRPC.SyncSentry:
-            {
-                byte id = reader.ReadByte();
-                if (Main.PlayerStates[id].Role is not TOZ.Impostor.Sentry sentry) break;
-                sentry.MonitoredRoom = Utils.GetPlayerById(id).GetPlainShipRoom();
-                break;
-            }
             case CustomRPC.SyncOverheat:
                 ((Overheat)Main.PlayerStates[reader.ReadByte()].Role).Temperature = reader.ReadPackedInt32();
                 break;
@@ -442,12 +433,6 @@ internal class RPCHandlerPatch
                 bool drawed = reader.ReadBoolean();
                 Revolutionist.IsDraw[(RevolutionistId, DrawId)] = drawed;
                 break;
-            case CustomRPC.SetRevealedPlayer:
-                byte FarseerId = reader.ReadByte();
-                byte RevealId = reader.ReadByte();
-                bool revealed = reader.ReadBoolean();
-                Farseer.IsRevealed[(FarseerId, RevealId)] = revealed;
-                break;
             case CustomRPC.SetNameColorData:
                 NameColorManager.ReceiveRPC(reader);
                 break;
@@ -466,24 +451,6 @@ internal class RPCHandlerPatch
                 (Main.PlayerStates[id].Role as Sniper)?.ReceiveRPC(reader);
             }
                 break;
-            case CustomRPC.SyncSpy:
-                Spy.ReceiveRPC(reader);
-                break;
-            case CustomRPC.SetAlchemistPotion:
-                Alchemist.ReceiveRPCData(reader);
-                break;
-            case CustomRPC.SetRicochetTarget:
-                Ricochet.ReceiveRPCSyncTarget(reader);
-                break;
-            case CustomRPC.SyncRabbit:
-                Rabbit.ReceiveRPC(reader);
-                break;
-            case CustomRPC.SyncYinYanger:
-                YinYanger.ReceiveRPC(reader);
-                break;
-            case CustomRPC.SetTetherTarget:
-                Tether.ReceiveRPCSyncTarget(reader);
-                break;
             case CustomRPC.SetHitmanTarget:
             {
                 byte hitmanId = reader.ReadByte();
@@ -497,14 +464,8 @@ internal class RPCHandlerPatch
             case CustomRPC.SyncGlitchTimers:
                 Glitch.ReceiveRPCSyncTimers(reader);
                 break;
-            case CustomRPC.DruidAddTrigger:
-                Druid.ReceiveRPCAddTrigger(reader);
-                break;
             case CustomRPC.SetSabotageMasterLimit:
                 SabotageMaster.ReceiveRPC(reader);
-                break;
-            case CustomRPC.SetNiceHackerLimit:
-                NiceHacker.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetLoversPlayers:
             {
@@ -595,17 +556,11 @@ internal class RPCHandlerPatch
             case CustomRPC.SyncLobbyTimer:
                 GameStartManagerPatch.Timer = reader.ReadPackedInt32();
                 break;
-            case CustomRPC.SetGamerHealth:
-                Gamer.ReceiveRPC(reader);
-                break;
             case CustomRPC.SetPelicanEtenNum:
                 Pelican.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetDoomsayerProgress:
                 Doomsayer.ReceiveRPC(reader);
-                break;
-            case CustomRPC.SwordsManKill:
-                SwordsMan.ReceiveRPC(reader);
                 break;
             case CustomRPC.PlayCustomSound:
                 CustomSoundsManager.ReceiveRPC(reader);
@@ -647,9 +602,6 @@ internal class RPCHandlerPatch
             case CustomRPC.SetMedicalerProtectList:
                 Medic.ReceiveRPCForProtectList(reader);
                 break;
-            case CustomRPC.SyncPsychicRedList:
-                Psychic.ReceiveRPC(reader);
-                break;
             case CustomRPC.SetKillTimer:
                 float time = reader.ReadSingle();
                 PlayerControl.LocalPlayer.SetKillTimer(time);
@@ -690,9 +642,6 @@ internal class RPCHandlerPatch
             case CustomRPC.SyncNameNotify:
                 NameNotifyManager.ReceiveRPC(reader);
                 break;
-            case CustomRPC.Judge:
-                Judge.ReceiveRPC(reader, __instance);
-                break;
             case CustomRPC.MeetingKill:
                 Councillor.ReceiveRPC(reader, __instance);
                 break;
@@ -707,9 +656,6 @@ internal class RPCHandlerPatch
                 byte id = reader.ReadByte();
                 (Main.PlayerStates[id].Role as Swooper)?.ReceiveRPC(reader);
             }
-                break;
-            case CustomRPC.SetAlchemistTimer:
-                Alchemist.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetBKTimer:
                 Wildling.ReceiveRPC(reader);
@@ -736,14 +682,8 @@ internal class RPCHandlerPatch
             case CustomRPC.SyncHookshot:
                 Hookshot.ReceiveRPC(reader);
                 break;
-            case CustomRPC.AddTornado:
-                Tornado.ReceiveRPCAddTornado(reader);
-                break;
             case CustomRPC.SetDoppelgangerStealLimit:
                 Doppelganger.ReceiveRPC(reader);
-                break;
-            case CustomRPC.SyncBenefactorMarkedTask:
-                Benefactor.ReceiveRPC(reader);
                 break;
             case CustomRPC.SyncStressedTimer:
                 Stressed.ReceiveRPC(reader);
@@ -752,17 +692,8 @@ internal class RPCHandlerPatch
                 Utils.FlashColor(new(1f, 0f, 0f, 0.3f));
                 if (Constants.ShouldPlaySfx()) RPC.PlaySound(PlayerControl.LocalPlayer.PlayerId, Sounds.KillSound);
                 break;
-            case CustomRPC.SetCleanserCleanLimit:
-                Cleanser.ReceiveRPC(reader);
-                break;
             case CustomRPC.StealthDarken:
                 Stealth.ReceiveRPC(reader);
-                break;
-            case CustomRPC.SetJailorExeLimit:
-                Jailor.ReceiveRPC(reader, setTarget: false);
-                break;
-            case CustomRPC.SetJailorTarget:
-                Jailor.ReceiveRPC(reader, setTarget: true);
                 break;
             case CustomRPC.SetWWTimer:
             {
@@ -772,9 +703,6 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SetNiceSwapperVotes:
                 NiceSwapper.ReceiveRPC(reader, __instance);
-                break;
-            case CustomRPC.SetTrackerTarget:
-                Scout.ReceiveRPC(reader);
                 break;
         }
     }

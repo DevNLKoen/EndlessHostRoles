@@ -312,7 +312,7 @@ public static class ElectricTaskInitializePatch
         {
             foreach (PlayerControl pc in Main.AllAlivePlayerControls)
             {
-                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Mare) || pc.Is(CustomRoles.Torch) || pc.Is(CustomRoles.Sleep) || Beacon.IsAffectedPlayer(pc.PlayerId))
+                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Mare) || pc.Is(CustomRoles.Torch) || pc.Is(CustomRoles.Sleep))
                 {
                     Utils.NotifyRoles(SpecifyTarget: pc, ForceLoop: true);
                 }
@@ -340,7 +340,7 @@ public static class ElectricTaskCompletePatch
         {
             foreach (PlayerControl pc in Main.AllAlivePlayerControls)
             {
-                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Mare) || pc.Is(CustomRoles.Torch) || pc.Is(CustomRoles.Sleep) || Beacon.IsAffectedPlayer(pc.PlayerId))
+                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Mare) || pc.Is(CustomRoles.Torch) || pc.Is(CustomRoles.Sleep))
                 {
                     Utils.NotifyRoles(SpecifyTarget: pc, ForceLoop: true);
                 }
@@ -368,7 +368,6 @@ public static class SabotageSystemTypeRepairDamagePatch
     public static bool Prefix([HarmonyArgument(0)] PlayerControl player)
     {
         if (Options.DisableSabotage.GetBool() || Options.CurrentGameMode != CustomGameMode.Standard) return false;
-        if (SecurityGuard.BlockSabo.Count > 0) return false;
         if (player.IsRoleBlocked())
         {
             player.Notify(BlockedAction.Sabotage.GetBlockNotify());

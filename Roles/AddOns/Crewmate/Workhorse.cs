@@ -60,7 +60,7 @@ public class Workhorse : IAddon
     private static bool IsAssignTarget(PlayerControl pc)
     {
         if (!pc.IsAlive() || IsThisRole(pc.PlayerId)) return false;
-        if (pc.Is(CustomRoles.Needy) || pc.Is(CustomRoles.Lazy) || pc.Is(CustomRoles.Bloodlust)) return false;
+        if (pc.Is(CustomRoles.Lazy) || pc.Is(CustomRoles.Bloodlust)) return false;
         if (pc.GetCustomRole().GetDYRole() == RoleTypes.Impostor || pc.GetCustomRole().GetVNRole() is CustomRoles.Impostor or CustomRoles.Shapeshifter) return false;
 
         var taskState = pc.GetTaskState();
@@ -75,7 +75,6 @@ public class Workhorse : IAddon
     {
         if (!CustomRoles.Workhorse.IsEnable() || PlayerIdList.Count >= CustomRoles.Workhorse.GetCount()) return false;
         if (CurrentGameMode != CustomGameMode.Standard) return false;
-        if (pc.Is(CustomRoles.Snitch) && !OptionSnitchCanBeWorkhorse.GetBool()) return false;
         if (!IsAssignTarget(pc)) return false;
         if (IRandom.Instance.Next(100) >= SpawnChance.GetInt()) return false;
 

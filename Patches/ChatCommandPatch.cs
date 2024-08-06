@@ -120,7 +120,6 @@ internal static class ChatCommands
             new(["addmod", "добмодера"], "{id}", GetString("CommandDescription.AddMod"), Command.UsageLevels.Host, Command.UsageTimes.Always, AddModCommand, true, [GetString("CommandArgs.AddMod.Id")]),
             new(["deletemod", "убрмодера", "удмодера"], "{id}", GetString("CommandDescription.DeleteMod"), Command.UsageLevels.Host, Command.UsageTimes.Always, DeleteModCommand, true, [GetString("CommandArgs.DeleteMod.Id")]),
             new(["combo", "комбо"], "{mode} {role} {addon} [all]", GetString("CommandDescription.Combo"), Command.UsageLevels.Host, Command.UsageTimes.Always, ComboCommand, true, [GetString("CommandArgs.Combo.Mode"), GetString("CommandArgs.Combo.Role"), GetString("CommandArgs.Combo.Addon"), GetString("CommandArgs.Combo.All")]),
-            new(["eff", "effect", "эффект"], "{effect}", GetString("CommandDescription.Effect"), Command.UsageLevels.Host, Command.UsageTimes.InGame, EffectCommand, true, [GetString("CommandArgs.Effect.Effect")]),
             new(["afkexempt", "освафк", "афкосв"], "{id}", GetString("CommandDescription.AFKExempt"), Command.UsageLevels.Host, Command.UsageTimes.Always, AFKExemptCommand, true, [GetString("CommandArgs.AFKExempt.Id")]),
             new(["m", "myrole", "м", "мояроль"], "", GetString("CommandDescription.MyRole"), Command.UsageLevels.Everyone, Command.UsageTimes.InGame, MyRoleCommand, true),
             new(["tpout", "тпаут"], "", GetString("CommandDescription.TPOut"), Command.UsageLevels.Everyone, Command.UsageTimes.InLobby, TPOutCommand, true),
@@ -216,11 +215,8 @@ internal static class ChatCommands
         ChatManager.SendMessage(PlayerControl.LocalPlayer, text);
 
         if (GuessManager.GuesserMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
-        if (Judge.TrialMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
         if (NiceSwapper.SwapMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
-        if (ParityCop.ParityCheckMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
         if (Councillor.MurderMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
-        if (Mediumshiper.MsMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
         if (Mafia.MafiaMsgCheck(PlayerControl.LocalPlayer, text)) goto Canceled;
 
         Main.IsChatCommand = false;
@@ -706,10 +702,9 @@ internal static class ChatCommands
 
     private static void CheckCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
-        if (!player.IsAlive() || !player.Is(CustomRoles.Inquirer)) return;
+        if (!player.IsAlive()) return;
         if (args.Length < 3 || !GuessManager.MsgToPlayerAndRole(text[6..], out byte checkId, out CustomRoles checkRole, out _)) return;
         bool hasRole = Utils.GetPlayerById(checkId).Is(checkRole);
-        if (IRandom.Instance.Next(100) < Inquirer.FailChance.GetInt()) hasRole = !hasRole;
         if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId) ChatManager.SendPreviousMessagesToAll();
         LateTask.New(() => Utils.SendMessage(GetString(hasRole ? "Inquirer.MessageTrue" : "Inquirer.MessageFalse"), player.PlayerId), 0.2f, log: false);
     }
@@ -736,14 +731,12 @@ internal static class ChatCommands
     private static void AnswerCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
         if (args.Length < 2) return;
-        Mathematician.Reply(player, args[1]);
     }
 
     private static void AskCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
-        if (args.Length < 3 || !player.Is(CustomRoles.Mathematician)) return;
+        if (args.Length < 3) return;
         if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId) ChatManager.SendPreviousMessagesToAll();
-        Mathematician.Ask(player, args[1], args[2]);
     }
 
     private static void VoteCommand(ChatController __instance, PlayerControl player, string text, string[] args)
@@ -850,15 +843,6 @@ internal static class ChatCommands
         if (args.Length < 2 || !byte.TryParse(args[1], out var afkId)) return;
         AFKDetector.ExemptedPlayers.Add(afkId);
         Utils.SendMessage("\n", player.PlayerId, string.Format(GetString("PlayerExemptedFromAFK"), afkId.ColoredPlayerName()));
-    }
-
-    private static void EffectCommand(ChatController __instance, PlayerControl player, string text, string[] args)
-    {
-        if (args.Length < 2 || !GameStates.IsInTask || !Randomizer.Exists) return;
-        if (Enum.TryParse(args[1], ignoreCase: true, out Randomizer.Effect effect))
-        {
-            effect.Apply(player);
-        }
     }
 
     private static void ComboCommand(ChatController __instance, PlayerControl player, string text, string[] args)
@@ -1802,18 +1786,10 @@ internal static class ChatCommands
         string[] args = text.Split(' ');
 
         if (GuessManager.GuesserMsg(player, text) ||
-            Judge.TrialMsg(player, text) ||
             NiceSwapper.SwapMsg(player, text) ||
-            ParityCop.ParityCheckMsg(player, text) ||
             Councillor.MurderMsg(player, text))
         {
             canceled = true;
-            LastSentCommand[player.PlayerId] = now;
-            return;
-        }
-
-        if (Mediumshiper.MsMsg(player, text) || Mafia.MafiaMsgCheck(player, text))
-        {
             LastSentCommand[player.PlayerId] = now;
             return;
         }

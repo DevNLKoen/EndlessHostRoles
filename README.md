@@ -39,29 +39,29 @@
 | Crewmates         | Impostors       | Neutrals          | Add-ons        |
 |-------------------|-----------------|-------------------|----------------|
 |                   | Abyssbringer    | Agitator          | Antidote       |
-| Adrenaline        | Anonymous       | Amnesiac          | Anti-TP        |
-| Adventurer        | Anti Adminer    | Arsonist          | Asthmatic      |
-| Aid               | Arrogance       | Bandit            | Autopsy        |
-| Alchemist         | Augmenter       | Bargainer         | Avenger        |
-| Altruist          | Bard            | Blood Knight      | Bait           |
-| Analyst           | Blackmailer     | Bubble            | Busy           |
-| Autocrat          | Bomber          | Chemist           | Beartrap       |
-| Beacon            | Bounty Hunter   | Cherokious        | Bewilder       |
-| Benefactor        | Butcher         | Collector         | Bloodlust      |
-| Bodyguard         | Camouflager     | Deathknight       |                |
-| Camera Man        | Capitalist      | Demon             | Charmed        |
+|                   | Anonymous       | Amnesiac          | Anti-TP        |
+|                   | Anti Adminer    | Arsonist          | Asthmatic      |
+|                   | Arrogance       | Bandit            | Autopsy        |
+|                   | Augmenter       | Bargainer         | Avenger        |
+|                   | Bard            | Blood Knight      | Bait           |
+|                   | Blackmailer     | Bubble            | Busy           |
+|                   | Bomber          | Chemist           | Beartrap       |
+|                   | Bounty Hunter   | Cherokious        | Bewilder       |
+|                   | Butcher         | Collector         | Bloodlust      |
+|                   | Camouflager     | Deathknight       |                |
+|                   | Capitalist      | Demon             | Charmed        |
 | Celebrity         | Cantankerous    | Doppelganger      | Circumvent     |
 | Chameleon         | Changeling      | Doomsayer         | Cleansed       |
 | Clairvoyant       | Chronomancer    | Eclipse           | Clumsy         |
 | Cleanser          | Cleaner         | Enderman          | Contagious     |
 | Convener          | Commander       | Evolver           | Damocles       |
-| Copycat           | Consigliere     | Executioner       | Deadly Quota   |
+|                   | Consigliere     | Executioner       | Deadly Quota   |
 | Coroner           | Consort         | Follower          | Disco          |
 | Crusader          | Councillor      | The Glitch        | Diseased       |
 |                   | Crewpostor      | God               | Dynamo         |
 | Deputy            | Cursed Wolf     | Hater             | Disregarded    |
 | Detective         | Deathpact       | Head Hunter       | Double Shot    |
-| Detour            | Devourer        | Hex Master        | Egoist         |
+|                   | Devourer        | Hex Master        | Egoist         |
 | Dictator          | Disperser       | Hookshot          | Energetic      |
 | Doctor            | Duellist        | Imitator          | Evil Spirit    |
 | Donut Delivery    | Dazzler         | Impartial         | Finder         |
@@ -76,7 +76,7 @@
 | Investigator      | Gangster        | Maverick          |                |
 | Fortune Teller    | Generator       | Medusa            | Knighted       |
 | Gaulois           | Godfather       | Mycologist        | Last Impostor  |
-| Goose             | Greedy          | Necromancer       | Lazy           |
+|                   | Greedy          | Necromancer       | Lazy           |
 | Grenadier         | Hangman         | Nonplus           | Lovers         |
 | Guess Manager     | Hitman          | Opportunist       | Loyal          |
 | Guardian          | Inhibitor       | Patroller         | Lucky          |
@@ -271,17 +271,17 @@
 >
 
 
-### :star: [TOZ](https://github.com/Gurge44/EndlessHostRoles) :
+### :star: [EHR](https://github.com/Gurge44/EndlessHostRoles) :
 
 >
-> - Our repo is based forked on TOZ
+> - Our repo is based forked on EHR
 >
 
 ### :star: [TOHY](https://github.com/Yumenopai/TownOfHost_Y) :
 
 >
 > - Many role ideas
-> - Provided roles: AntiAdminer, CursedWolf, Workaholic, Greedier, DarkHide, Ignitor, Rabbit
+> - Provided roles: AntiAdminer, CursedWolf, Workaholic, Greedier, DarkHide, Ignitor
 > - Reference: Modify game announcement
 > - New settings UI for v2024.6.18
 >
@@ -318,7 +318,7 @@
 ### :star: [TOH+](https://github.com/SkullCreeper/TownOfHostPlus) :
 
 >
-> - Provided roles: Marshall, Poisoner, Necroview, Sidekick
+> - Provided roles: Poisoner, Necroview, Sidekick
 >
 
 ### :star: [PL](https://github.com/ImaMapleTree/Lotus) :

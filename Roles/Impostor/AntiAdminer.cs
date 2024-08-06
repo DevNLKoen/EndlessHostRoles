@@ -4,7 +4,6 @@ using System.Linq;
 using AmongUs.GameOptions;
 using TOZ.Neutral;
 using UnityEngine;
-using Monitor = TOZ.Crewmate.Monitor;
 
 namespace TOZ.Impostor;
 
@@ -29,8 +28,6 @@ internal class AntiAdminer : RoleBase
 
     private int Count;
     private long ExtraAbilityStartTimeStamp;
-
-    private bool IsMonitor;
 
     public override bool IsEnable => playerIdList.Count > 0;
 
@@ -61,7 +58,6 @@ internal class AntiAdminer : RoleBase
     public override void Add(byte playerId)
     {
         playerIdList.Add(playerId);
-        IsMonitor = Main.PlayerStates[playerId].MainRole == CustomRoles.Monitor;
         ExtraAbilityStartTimeStamp = 0;
         AntiAdminerId = playerId;
     }
@@ -69,7 +65,7 @@ internal class AntiAdminer : RoleBase
     public override bool OnShapeshift(PlayerControl shapeshifter, PlayerControl target, bool shapeshifting)
     {
         if (!shapeshifting) return true;
-        if (IsMonitor || !EnableExtraAbility.GetBool() || ExtraAbilityStartTimeStamp > 0 || (CanOnlyUseWhileAnyWatch.GetBool() && !IsAdminWatch && !IsVitalWatch && !IsDoorLogWatch && !IsCameraWatch)) return false;
+        if (!EnableExtraAbility.GetBool() || ExtraAbilityStartTimeStamp > 0 || (CanOnlyUseWhileAnyWatch.GetBool() && !IsAdminWatch && !IsVitalWatch && !IsDoorLogWatch && !IsCameraWatch)) return false;
 
         ExtraAbilityStartTimeStamp = Utils.TimeStamp;
         shapeshifter.RpcResetAbilityCooldown();
@@ -85,19 +81,13 @@ internal class AntiAdminer : RoleBase
 
     public override void ApplyGameOptions(IGameOptions opt, byte playerId)
     {
-        if (!IsMonitor)
+        if (EnableExtraAbility.GetBool())
         {
-            if (EnableExtraAbility.GetBool())
-            {
-                AURoleOptions.ShapeshifterCooldown = Math.Clamp(Options.DefaultKillCooldown - Delay.GetFloat() - 2f, Delay.GetFloat() + 1f, Options.DefaultKillCooldown);
-                AURoleOptions.ShapeshifterDuration = 1f;
-            }
-
-            return;
+            AURoleOptions.ShapeshifterCooldown = Math.Clamp(Options.DefaultKillCooldown - Delay.GetFloat() - 2f, Delay.GetFloat() + 1f, Options.DefaultKillCooldown);
+            AURoleOptions.ShapeshifterDuration = 1f;
         }
 
-        AURoleOptions.EngineerCooldown = 0f;
-        AURoleOptions.EngineerInVentMaxTime = 0f;
+        return;
     }
 
     public override void OnFixedUpdate(PlayerControl player)
@@ -106,7 +96,7 @@ internal class AntiAdminer : RoleBase
 
         bool notify = false;
 
-        if (!IsMonitor && ExtraAbilityStartTimeStamp > 0 && EnableExtraAbility.GetBool())
+        if (ExtraAbilityStartTimeStamp > 0 && EnableExtraAbility.GetBool())
         {
             if (ExtraAbilityStartTimeStamp + Delay.GetInt() < Utils.TimeStamp)
             {
@@ -287,11 +277,6 @@ internal class AntiAdminer : RoleBase
         IsVitalWatch = Vital;
         isChange |= IsDoorLogWatch != DoorLog;
         IsDoorLogWatch = DoorLog;
-        if (IsMonitor ? Monitor.CanCheckCamera.GetBool() : CanCheckCamera.GetBool())
-        {
-            isChange |= IsCameraWatch != Camera;
-            IsCameraWatch = Camera;
-        }
 
         if (notify || isChange)
         {
@@ -318,7 +303,7 @@ internal class AntiAdminer : RoleBase
         AntiAdminer aa = null;
         foreach (byte id in playerIdList)
         {
-            if (Main.PlayerStates[id].Role is not AntiAdminer { IsEnable: true, IsMonitor: false } x || x.ExtraAbilityStartTimeStamp == 0) continue;
+            if (Main.PlayerStates[id].Role is not AntiAdminer { IsEnable: true} x || x.ExtraAbilityStartTimeStamp == 0) continue;
             if (aa != null && x.ExtraAbilityStartTimeStamp >= aa.ExtraAbilityStartTimeStamp) continue;
             aa = x;
         }

@@ -27,7 +27,7 @@ namespace TOZ.Impostor
 
         private PlayerControl Mastermind_ => GetPlayerById(MastermindId);
 
-        public override bool IsEnable => MastermindId != byte.MaxValue || Randomizer.Exists;
+        public override bool IsEnable => MastermindId != byte.MaxValue;
 
         public static void SetupCustomOption()
         {

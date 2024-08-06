@@ -310,12 +310,6 @@ public class TaskState
         {
             bool alive = player.IsAlive();
 
-            if (alive && Options.CurrentGameMode == CustomGameMode.Speedrun)
-            {
-                if (CompletedTasksCount + 1 >= AllTasksCount) SpeedrunManager.OnTaskFinish(player);
-                SpeedrunManager.ResetTimer(player);
-            }
-
             if (player.Is(CustomRoles.Unlucky) && alive)
             {
                 var Ue = IRandom.Instance;
@@ -339,11 +333,6 @@ public class TaskState
                         if (Main.PlayerStates[player.PlayerId].Role is not SabotageMaster sm) break;
                         sm.UsedSkillCount -= SabotageMaster.SMAbilityUseGainWithEachTaskCompleted.GetFloat();
                         sm.SendRPC();
-                        break;
-                    case CustomRoles.NiceHacker:
-                        if (!player.IsModClient() && NiceHacker.UseLimit.ContainsKey(player.PlayerId)) NiceHacker.UseLimit[player.PlayerId] += NiceHacker.NiceHackerAbilityUseGainWithEachTaskCompleted.GetFloat();
-                        else if (NiceHacker.UseLimitSeconds.ContainsKey(player.PlayerId)) NiceHacker.UseLimitSeconds[player.PlayerId] += NiceHacker.NiceHackerAbilityUseGainWithEachTaskCompleted.GetInt() * NiceHacker.ModdedClientAbilityUseSecondsMultiplier.GetInt();
-                        if (NiceHacker.UseLimitSeconds.ContainsKey(player.PlayerId)) NiceHacker.SendRPC(player.PlayerId, NiceHacker.UseLimitSeconds[player.PlayerId]);
                         break;
                 }
 

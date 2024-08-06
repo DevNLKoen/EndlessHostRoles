@@ -21,7 +21,7 @@ public class BallLightning : RoleBase
     private static List<byte> GhostPlayer = [];
     private static Dictionary<byte, PlayerControl> RealKiller = [];
 
-    public override bool IsEnable => playerIdList.Count > 0 || Randomizer.Exists;
+    public override bool IsEnable => playerIdList.Count > 0;
 
     public static void SetupCustomOption()
     {

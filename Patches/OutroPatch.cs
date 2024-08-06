@@ -61,7 +61,7 @@ class EndGamePatch
             if (date == DateTime.MinValue) continue;
             var killerId = value.GetRealKiller();
             var gmIsFM = Options.CurrentGameMode is CustomGameMode.FFA or CustomGameMode.MoveAndStop;
-            var gmIsFMHH = gmIsFM || Options.CurrentGameMode is CustomGameMode.HotPotato or CustomGameMode.HideAndSeek or CustomGameMode.Speedrun;
+            var gmIsFMHH = gmIsFM || Options.CurrentGameMode is CustomGameMode.HotPotato or CustomGameMode.HideAndSeek;
             sb.Append($"\n{date:T} {Main.AllPlayerNames[key]} ({(gmIsFMHH ? string.Empty : Utils.GetDisplayRoleName(key, true))}{(gmIsFM ? string.Empty : Utils.GetSubRolesText(key, summary: true))}) [{Utils.GetVitalText(key)}]");
             if (killerId != byte.MaxValue && killerId != key)
                 sb.Append($"\n\t⇐ {Main.AllPlayerNames[killerId]} ({(gmIsFMHH ? string.Empty : Utils.GetDisplayRoleName(killerId, true))}{(gmIsFM ? string.Empty : Utils.GetSubRolesText(killerId, summary: true))})");
@@ -94,7 +94,6 @@ class EndGamePatch
 
         Arsonist.IsDoused = [];
         Revolutionist.IsDraw = [];
-        Farseer.IsRevealed = [];
 
         Main.VisibleTasksCount = false;
 
@@ -251,14 +250,6 @@ class SetEverythingUpPatch
                 WinnerText.color = Main.PlayerColors[winnerId];
                 goto EndOfText;
             }
-            case CustomGameMode.Speedrun:
-            {
-                var winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Speedrunner);
-                WinnerText.text = Main.AllPlayerNames[winnerId] + " wins!";
-                WinnerText.color = Main.PlayerColors[winnerId];
-                goto EndOfText;
-            }
         }
 
         if (CustomWinnerHolder.WinnerTeam == CustomWinner.CustomTeam)
@@ -410,13 +401,6 @@ class SetEverythingUpPatch
             case CustomGameMode.HotPotato:
             {
                 var list = cloneRoles.OrderByDescending(HotPotatoManager.GetSurvivalTime);
-                foreach (var id in list.Where(EndGamePatch.SummaryText.ContainsKey))
-                    sb.Append("\n\u3000 ").Append(EndGamePatch.SummaryText[id]);
-                break;
-            }
-            case CustomGameMode.Speedrun:
-            {
-                var list = cloneRoles.OrderByDescending(id => Main.PlayerStates[id].TaskState.CompletedTasksCount);
                 foreach (var id in list.Where(EndGamePatch.SummaryText.ContainsKey))
                     sb.Append("\n\u3000 ").Append(EndGamePatch.SummaryText[id]);
                 break;

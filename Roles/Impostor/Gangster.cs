@@ -94,13 +94,7 @@ public class Gangster : RoleBase
             (pc.Is(CustomRoles.Sheriff) && !SheriffCanBeMadmate.GetBool()) ||
             (pc.Is(CustomRoles.Mayor) && !MayorCanBeMadmate.GetBool()) ||
             (pc.Is(CustomRoles.NiceGuesser) && !NGuesserCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.Judge) && !JudgeCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.Marshall) && !MarshallCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.Farseer) && !FarseerCanBeMadmate.GetBool()) ||
             pc.Is(CustomRoles.NiceSwapper) ||
-            pc.Is(CustomRoles.Speedrunner) ||
-            pc.Is(CustomRoles.Snitch) ||
-            pc.Is(CustomRoles.Needy) ||
             pc.Is(CustomRoles.Lazy) ||
             pc.Is(CustomRoles.Loyal) ||
             pc.Is(CustomRoles.CyberStar) ||

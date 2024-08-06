@@ -99,7 +99,6 @@ namespace TOZ.Impostor
 
         public override bool OnCheckMurder(PlayerControl killer, PlayerControl target)
         {
-            if (target.Is(CustomRoles.Needy) && PuppeteerManipulationBypassesLazyGuy.GetBool()) return false;
             if (target.Is(CustomRoles.Lazy) && PuppeteerManipulationBypassesLazy.GetBool()) return false;
             if (Medic.ProtectList.Contains(target.PlayerId)) return false;
 

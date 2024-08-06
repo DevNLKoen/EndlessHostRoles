@@ -30,7 +30,7 @@ namespace TOZ.Impostor
 
         public List<PlayerControl> PlayersInDeathpact = [];
 
-        public override bool IsEnable => playerIdList.Count > 0 || Randomizer.Exists;
+        public override bool IsEnable => playerIdList.Count > 0;
 
         public static void SetupCustomOption()
         {
@@ -145,7 +145,7 @@ namespace TOZ.Impostor
 
         public override void OnFixedUpdate(PlayerControl player)
         {
-            if (!IsEnable || !GameStates.IsInTask || player.GetCustomRole() is not CustomRoles.Deathpact and not CustomRoles.Randomizer) return;
+            if (!IsEnable || !GameStates.IsInTask || player.GetCustomRole() is not CustomRoles.Deathpact) return;
             if (!ActiveDeathpacts.Contains(player.PlayerId)) return;
             if (CheckCancelDeathpact(player)) return;
             if (DeathpactTime < TimeStamp && DeathpactTime != 0)

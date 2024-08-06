@@ -8,7 +8,6 @@ using TOZ.Modules;
 using HarmonyLib;
 using UnityEngine;
 using TOZ.Roles.Core;
-using System.IO;
 
 // ReSharper disable AccessToModifiedClosure
 // ReSharper disable InconsistentNaming
@@ -24,7 +23,6 @@ public enum CustomGameMode
     MoveAndStop = 0x04,
     HotPotato = 0x05,
     HideAndSeek = 0x06,
-    Speedrun = 0x07,
     All = int.MaxValue
 }
 
@@ -768,12 +766,15 @@ public static class Options
     public static CustomGameMode CurrentGameMode
         => GameMode.GetInt() switch
         {
+            0 => CustomGameMode.Standard,
             1 => CustomGameMode.SoloKombat,
             2 => CustomGameMode.FFA,
             3 => CustomGameMode.MoveAndStop,
             4 => CustomGameMode.HotPotato,
             5 => CustomGameMode.HideAndSeek,
-            6 => CustomGameMode.Speedrun,
+            7 => CustomGameMode.All,
+            8 => CustomGameMode.Standard,
+            9 => CustomGameMode.FFA,
             _ => CustomGameMode.Standard
         };
 
@@ -803,7 +804,7 @@ public static class Options
                 var sb = new System.Text.StringBuilder();
                 var grouped = Enum.GetValues<CustomRoles>().GroupBy(x =>
                 {
-                    if (x is CustomRoles.GM or CustomRoles.Philantropist or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor or CustomRoles.Convict || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("TOZ")) return 4;
+                    if (x is CustomRoles.GM or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor or CustomRoles.Convict || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("TOZ")) return 4;
                     if (x.IsAdditionRole()) return 3;
                     if (x.IsImpostor() || x.IsMadmate()) return 0;
                     if (x.IsNeutral()) return 1;
@@ -947,8 +948,8 @@ public static class Options
             .SetColor(new Color32(255, 235, 4, byte.MaxValue))
             .SetHidden(true);
 
-        GameMode = new StringOptionItem(1, "GameMode", GameModes, 0, TabGroup.GameSettings)
-            .SetHidden(true);
+        GameMode = new StringOptionItem(1, "GameMode", GameModes, 0, TabGroup.GameSettings);
+           // .SetHidden(true);
 
         #region Settings
 
@@ -1312,8 +1313,6 @@ public static class Options
         MoveAndStopManager.SetupCustomOption();
         // Hot Potato
         HotPotatoManager.SetupCustomOption();
-        // Speedrun
-        SpeedrunManager.SetupCustomOption();
         // Hide And Seek
         HnSManager.SetupCustomOption();
         // Debug

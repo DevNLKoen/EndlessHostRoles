@@ -683,12 +683,7 @@ class GameEndChecker
         public override bool CheckForEndGame(out GameOverReason reason)
         {
             reason = GameOverReason.ImpostorByKill;
-            return WinnerIds.Count <= 0 && CheckGameEndByLivingPlayers(out reason);
-        }
-
-        private static bool CheckGameEndByLivingPlayers(out GameOverReason reason)
-        {
-            return SpeedrunManager.CheckForGameEnd(out reason);
+            return WinnerIds.Count <= 0;
         }
     }
 

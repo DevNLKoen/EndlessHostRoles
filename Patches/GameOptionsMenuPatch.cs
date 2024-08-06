@@ -32,6 +32,7 @@ public static class ModGameOptionsMenu
     public static Dictionary<OptionBehaviour, int> OptionList = new();
     public static Dictionary<int, OptionBehaviour> BehaviourList = new();
     public static Dictionary<int, CategoryHeaderMasked> CategoryHeaderList = new();
+    public static Dictionary<int, CategoryHeaderEditRole> categoryHeaderEditRole = new();
     public static Dictionary<int, RoleOptionSetting> RoleOptionList = new();
     public static readonly System.Collections.Generic.Dictionary<OptionBehaviour, CustomRoles> HelpIcons = [];
 }
@@ -142,13 +143,13 @@ public static class GameOptionsMenuPatch
             roleOptionSetting.labelSprite.color = Palette.CrewmateRoleBlue;
         }
 
-        PassiveButton minusButton = roleOptionSetting.transform.Find("Chance %").Find("MinusButton (1)").GetComponent<PassiveButton>();
-        PassiveButton plusButton = roleOptionSetting.transform.Find("Chance %").Find("PlusButton (1)").GetComponent<PassiveButton>();
+        //PassiveButton minusButton = roleOptionSetting.transform.Find("Chance %").Find("MinusButton (1)").GetComponent<PassiveButton>();
+        //PassiveButton plusButton = roleOptionSetting.transform.Find("Chance %").Find("PlusButton (1)").GetComponent<PassiveButton>();
 
-        plusButton.OnClick.RemoveAllListeners();
-        minusButton.OnClick.RemoveAllListeners();
-        plusButton.OnClick.AddListener(new Action(() => IncreaseChance(roleOptionSetting, dog.ThisCustomRole)));
-        minusButton.OnClick.AddListener(new Action(() => DecreaseChance(roleOptionSetting, dog.ThisCustomRole)));
+        //plusButton.OnClick.RemoveAllListeners();
+        //minusButton.OnClick.RemoveAllListeners();
+        //plusButton.OnClick.AddListener(new Action(() => IncreaseChance(roleOptionSetting, dog.ThisCustomRole)));
+        //minusButton.OnClick.AddListener(new Action(() => DecreaseChance(roleOptionSetting, dog.ThisCustomRole)));
 
         roleOptionSetting.OnValueChanged = new Action<OptionBehaviour>((OptionBehaviour a) => OnValueChanged(a, dog.ThisCustomRole));
         roleOptionSetting.SetClickMask(inst.ButtonClickMask);
@@ -333,7 +334,7 @@ public static class GameOptionsMenuPatch
                 }
                 else if (option is RoleTitleOptionItem)
                 {
-                    /*CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(__instance.RolesMenu.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
+                    CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(__instance.RolesMenu.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
 
                     // Set Header
                     categoryHeaderEditRole.SetHeader(StringNames.RolesCategory, 20);
@@ -362,7 +363,7 @@ public static class GameOptionsMenuPatch
                     categoryHeaderEditRole.gameObject.SetActive(enabled);
                     ModGameOptionsMenu.categoryHeaderEditRole.TryAdd(index, categoryHeaderEditRole);
 
-                    if (enabled) num -= 0.63f;*/
+                    if (enabled) num -= 0.63f;
                     CreateHeader("test", __instance.RolesMenu, ref num);
                 }
                 else if (option is RoleOptionItem)
@@ -445,9 +446,9 @@ public static class GameOptionsMenuPatch
                     //roleOptionSetting.buttons.Count = 0;
                     ModGameOptionsMenu.RoleOptionList.TryAdd(index, roleOptionSetting);
                     //break;
-                    PassiveButton minusButton = roleOptionSetting.transform.Find("Chance %").Find("MinusButton (1)").GetComponent<PassiveButton>();
+                    //PassiveButton minusButton = roleOptionSetting.transform.Find("Chance %").Find("MinusButton (1)").GetComponent<PassiveButton>();
                     PassiveButton plusButton = roleOptionSetting.transform.Find("Chance %").Find("PlusButton (1)").GetComponent<PassiveButton>();
-                    PassiveButton minusroleButton = roleOptionSetting.transform.Find("Role #").Find("MinusButton (1)").GetComponent<PassiveButton>();
+                    //PassiveButton minusroleButton = roleOptionSetting.transform.Find("Role #").Find("MinusButton (1)").GetComponent<PassiveButton>();
                     PassiveButton plusroleButton = roleOptionSetting.transform.Find("Role #").Find("PlusButton (1)").GetComponent<PassiveButton>();
                     //Debug.Log(roleOptionSetting.transform.GetChild(0).gameObject.name);
                     //Debug.Log(roleOptionSetting.transform.GetChild(1).gameObject.name);
@@ -463,9 +464,9 @@ public static class GameOptionsMenuPatch
                     //Debug.Log(roleOptionSetting.transform.Find("Chance %").Find("PlusButton (1)").GetChild(2).gameObject.name);
                     //Debug.Log(roleOptionSetting.transform.Find("Chance %").Find("PlusButton (1)").GetChild(3).gameObject.name);
                     plusButton.OnClick.RemoveAllListeners();
-                    minusButton.OnClick.RemoveAllListeners();
+                    //minusButton.OnClick.RemoveAllListeners();
                     plusroleButton.OnClick.RemoveAllListeners();
-                    minusroleButton.OnClick.RemoveAllListeners();
+                    //minusroleButton.OnClick.RemoveAllListeners();
 
                     //plusButton.OnClick.AddListener(new Action(() => IncreaseChance(roleOptionSetting, option.roles)));
                     plusButton.OnClick.AddListener(new Action(() => Debug.Log("TESTING THE BUTTON PLS WORK I DONT WANT TO TRY MANY THINGS AGAIN PLS")));
@@ -1372,6 +1373,7 @@ public class GameSettingMenuPatch
         cycle.OnClick.AddListener((Action)(() =>
         {
             if (GameModeBehaviour == null) __instance.ChangeTab(4, false);
+            //__instance.ChangeTab(4, false);
             GameModeBehaviour.Increase();
         }));
         var Offset = !IsRussian ? 1.15f : 2.25f;
@@ -1840,7 +1842,7 @@ public class StringOptionIncreasePatch
             {
                 // To prevent the Host from selecting CustomGameMode.HidenSeekTOHE
                 case GameModes.NormalFools when option.CurrentValue == 0:
-                case GameModes.Normal when option.CurrentValue == gameModeCount - 1:
+                //case GameModes.Normal when option.CurrentValue == gameModeCount - 1:
                 // To prevent the Host from selecting CustomGameMode.Standard/FFA
                 case GameModes.SeekFools when option.CurrentValue == gameModeCount:
                 case GameModes.HideNSeek when option.CurrentValue == gameModeCount:

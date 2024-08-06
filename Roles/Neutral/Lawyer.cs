@@ -29,8 +29,6 @@ public class Lawyer : RoleBase
         CustomRoles.Opportunist,
         CustomRoles.Convict,
         CustomRoles.CyberStar,
-        CustomRoles.Bodyguard,
-        CustomRoles.Dictator,
         CustomRoles.Mayor,
         CustomRoles.Doctor,
         CustomRoles.Amnesiac

@@ -25,7 +25,6 @@ namespace TOZ.Impostor
         private int Count;
         private float DefaultSpeed;
 
-        private bool IsGoose;
         private long LastNotify;
         private bool MeetingKill;
 
@@ -73,24 +72,11 @@ namespace TOZ.Impostor
 
         public override void Add(byte playerId)
         {
-            IsGoose = Main.PlayerStates[playerId].MainRole == CustomRoles.Goose;
-
-            if (!IsGoose)
-            {
-                AbductTimerLimit = OptionAbductTimerLimit.GetFloat();
-                MeetingKill = OptionMeetingKill.GetBool();
-                SpeedDuringDrag = OptionSpeedDuringDrag.GetFloat();
-                VictimCanUseAbilities = OptionVictimCanUseAbilities.GetBool();
-                Cooldown = Options.DefaultKillCooldown;
-            }
-            else
-            {
-                AbductTimerLimit = Goose.OptionAbductTimerLimit.GetFloat();
-                MeetingKill = false;
-                SpeedDuringDrag = Goose.OptionSpeedDuringDrag.GetFloat();
-                VictimCanUseAbilities = Goose.OptionVictimCanUseAbilities.GetBool();
-                Cooldown = Goose.Cooldown.GetFloat();
-            }
+            AbductTimerLimit = OptionAbductTimerLimit.GetFloat();
+            MeetingKill = OptionMeetingKill.GetBool();
+            SpeedDuringDrag = OptionSpeedDuringDrag.GetFloat();
+            VictimCanUseAbilities = OptionVictimCanUseAbilities.GetBool();
+            Cooldown = Options.DefaultKillCooldown;
 
             LateTask.New(() => DefaultSpeed = Main.AllPlayerSpeed[playerId], 9f, log: false);
 
@@ -103,14 +89,11 @@ namespace TOZ.Impostor
         }
 
         public override void SetKillCooldown(byte id) => Main.AllPlayerKillCooldown[id] = Cooldown;
-        public override bool CanUseImpostorVentButton(PlayerControl pc) => AbductVictim == null && !IsGoose;
+        public override bool CanUseImpostorVentButton(PlayerControl pc) => AbductVictim == null;
         public override bool CanUseKillButton(PlayerControl pc) => pc.IsAlive();
-        public override bool CanUseSabotage(PlayerControl pc) => !IsGoose && pc.IsAlive();
+        public override bool CanUseSabotage(PlayerControl pc) => pc.IsAlive();
 
-        public override void ApplyGameOptions(IGameOptions opt, byte playerId)
-        {
-            if (IsGoose) opt.SetVision(false);
-        }
+
 
         void SendRPC()
         {
@@ -177,23 +160,20 @@ namespace TOZ.Impostor
             Utils.NotifyRoles(SpecifySeer: Penguin_, SpecifyTarget: Penguin_);
         }
 
-        void LogSpeed() => Logger.Info($" Speed: {Main.AllPlayerSpeed[PenguinId]}", IsGoose ? "Goose" : "Penguin");
+        void LogSpeed() => Logger.Info($" Speed: {Main.AllPlayerSpeed[PenguinId]}", "Penguin");
 
         public override bool OnCheckMurder(PlayerControl killer, PlayerControl target)
         {
             if (!IsEnable) return true;
 
-            bool doKill = !IsGoose;
+            bool doKill = true;
             if (AbductVictim != null)
             {
                 if (target.PlayerId != AbductVictim.PlayerId)
                 {
                     // During an abduction, only the abductee can be killed.
-                    if (!IsGoose)
-                    {
-                        Penguin_.Kill(AbductVictim);
-                        Penguin_.ResetKillCooldown();
-                    }
+                    Penguin_.Kill(AbductVictim);
+                    Penguin_.ResetKillCooldown();
 
                     doKill = false;
                 }
@@ -202,7 +182,7 @@ namespace TOZ.Impostor
             }
             else
             {
-                if (!IsGoose && !killer.RpcCheckAndMurder(target, check: true)) return false;
+                if (!killer.RpcCheckAndMurder(target, check: true)) return false;
                 doKill = false;
                 AddVictim(target);
             }
@@ -212,7 +192,7 @@ namespace TOZ.Impostor
 
         public override void SetButtonTexts(HudManager hud, byte id)
         {
-            hud.KillButton?.OverrideText(AbductVictim != null && !IsGoose ? GetString("KillButtonText") : GetString("PenguinKillButtonText"));
+            hud.KillButton?.OverrideText(AbductVictim != null  ? GetString("KillButtonText") : GetString("PenguinKillButtonText"));
         }
 
         public override void OnReportDeadBody()
@@ -222,7 +202,6 @@ namespace TOZ.Impostor
             // If you meet a meeting with time running out, kill it even if you're on a ladder.
             if (AbductVictim != null && AbductTimer <= 0f)
             {
-                if (!IsGoose) Penguin_.Kill(AbductVictim);
                 RemoveVictim(allowDelay: false);
             }
 
@@ -230,7 +209,6 @@ namespace TOZ.Impostor
             {
                 if (!AmongUsClient.Instance.AmHost) return;
                 if (AbductVictim == null) return;
-                if (!IsGoose) Penguin_.Kill(AbductVictim);
                 RemoveVictim();
             }
         }
@@ -300,11 +278,8 @@ namespace TOZ.Impostor
                 if (AbductTimer <= 0f && !Penguin_.MyPhysics.Animations.IsPlayingAnyLadderAnimation())
                 {
                     // Set IsDead to true first (prevents ladder chase)
-                    if (!IsGoose)
-                    {
-                        AbductVictim.Data.IsDead = true;
-                        AbductVictim.Data.MarkDirty();
-                    }
+                    AbductVictim.Data.IsDead = true;
+                    AbductVictim.Data.MarkDirty();
 
                     // If the penguin himself is on a ladder, kill him after getting off the ladder.
                     if (!AbductVictim.MyPhysics.Animations.IsPlayingAnyLadderAnimation())
@@ -312,8 +287,6 @@ namespace TOZ.Impostor
                         var abductVictim = AbductVictim;
                         LateTask.New(() =>
                         {
-                            if (IsGoose) return;
-
                             var sId = abductVictim.NetTransform.lastSequenceId + 5;
                             abductVictim.NetTransform.SnapTo(Penguin_.transform.position, (ushort)sId);
                             Penguin_.Kill(abductVictim);

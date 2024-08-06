@@ -135,7 +135,7 @@ namespace TOZ.Impostor
 
                     if (!killer.IsShifted() && !IsCurseAndKill[killer.PlayerId])
                     {
-                        if (target.Is(CustomRoles.Needy) || target.Is(CustomRoles.Lazy)) return;
+                        if (target.Is(CustomRoles.Lazy)) return;
                         IsCursed = true;
                         killer.SetKillCooldown();
                         RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);

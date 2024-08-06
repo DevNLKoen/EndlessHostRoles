@@ -56,9 +56,6 @@ internal static class CustomRoleSelector
             case CustomGameMode.HotPotato:
                 AssignRoleToEveryone(CustomRoles.Potato);
                 return;
-            case CustomGameMode.Speedrun:
-                AssignRoleToEveryone(CustomRoles.Runner);
-                return;
             case CustomGameMode.HideAndSeek:
                 HnSManager.AssignRoles();
                 RoleResult = HnSManager.PlayerRoles.ToDictionary(x => Utils.GetPlayerById(x.Key), x => x.Value.Role);
@@ -91,7 +88,7 @@ internal static class CustomRoleSelector
         foreach (var role in Enum.GetValues<CustomRoles>())
         {
             int chance = role.GetMode();
-            if (role.IsVanilla() || chance == 0 || role.IsAdditionRole() || (role.OnlySpawnsWithPets() && !Options.UsePets.GetBool()) || (role != CustomRoles.Randomizer && role.IsCrewmate() && Options.AprilFoolsMode.GetBool()) || HnSManager.AllHnSRoles.Contains(role)) continue;
+            if (role.IsVanilla() || chance == 0 || role.IsAdditionRole() || (role.OnlySpawnsWithPets() && !Options.UsePets.GetBool()) || (role.IsCrewmate() && Options.AprilFoolsMode.GetBool()) || HnSManager.AllHnSRoles.Contains(role)) continue;
             switch (role)
             {
                 case CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor when !LoversData.Spawning:
@@ -110,12 +107,6 @@ internal static class CustomRoleSelector
             }
 
             int count = role.GetCount();
-
-            if (role == CustomRoles.Randomizer && Options.AprilFoolsMode.GetBool())
-            {
-                chance = 100;
-                count = 15;
-            }
 
             RoleAssignInfo info = new(role, chance, count);
 

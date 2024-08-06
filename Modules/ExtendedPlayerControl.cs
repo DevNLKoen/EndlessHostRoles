@@ -35,7 +35,7 @@ static class ExtendedPlayerControl
         }
         else
         {
-            if (!Cleanser.CleansedCanGetAddon.GetBool() && player.Is(CustomRoles.Cleansed)) return;
+            if (player.Is(CustomRoles.Cleansed)) return;
             Main.PlayerStates[player.PlayerId].SetSubRole(role, replaceAllAddons);
         }
 
@@ -295,12 +295,6 @@ static class ExtendedPlayerControl
 
         if (target == null) target = killer;
 
-        // Check Observer
-        if (!forObserver && !MeetingStates.FirstMeeting)
-        {
-            Main.AllPlayerControls.Where(x => x.Is(CustomRoles.Observer) && killer.PlayerId != x.PlayerId).Do(x => x.RpcGuardAndKill(target, colorId, true));
-        }
-
         // Host
         if (killer.AmOwner)
         {
@@ -439,7 +433,7 @@ static class ExtendedPlayerControl
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
 
-            Main.AllPlayerControls.Where(x => x.Is(CustomRoles.Observer) && target.PlayerId != x.PlayerId).Do(x => x.RpcGuardAndKill(target, 11, true, fromSetKCD: true));
+            Main.AllPlayerControls.Do(x => x.RpcGuardAndKill(target, 11, true, fromSetKCD: true));
         }
 
         if (player.GetCustomRole() is not CustomRoles.Inhibitor and not CustomRoles.Saboteur) player.ResetKillCooldown();
@@ -546,7 +540,7 @@ static class ExtendedPlayerControl
 
     public static string GetNameWithRole(this PlayerControl player, bool forUser = false)
     {
-        return $"{player?.Data?.PlayerName}" + (GameStates.IsInGame && Options.CurrentGameMode is not CustomGameMode.FFA and not CustomGameMode.MoveAndStop and not CustomGameMode.HotPotato and not CustomGameMode.Speedrun ? $" ({player?.GetAllRoleName(forUser).RemoveHtmlTags().Replace('\n', ' ')})" : string.Empty);
+        return $"{player?.Data?.PlayerName}" + (GameStates.IsInGame && Options.CurrentGameMode is not CustomGameMode.FFA and not CustomGameMode.MoveAndStop and not CustomGameMode.HotPotato ? $" ({player?.GetAllRoleName(forUser).RemoveHtmlTags().Replace('\n', ' ')})" : string.Empty);
     }
 
     public static string GetRoleColorCode(this PlayerControl player)
@@ -662,7 +656,6 @@ static class ExtendedPlayerControl
         switch (Options.CurrentGameMode)
         {
             case CustomGameMode.HotPotato or CustomGameMode.MoveAndStop:
-            case CustomGameMode.Speedrun when !SpeedrunManager.CanKill.Contains(pc.PlayerId):
                 return false;
         }
 
@@ -680,8 +673,6 @@ static class ExtendedPlayerControl
             CustomRoles.Tasker => false,
             // Hot Potato
             CustomRoles.Potato => false,
-            // Speedrun
-            CustomRoles.Runner => SpeedrunManager.CanKill.Contains(pc.PlayerId),
             // Hide And Seek
             CustomRoles.Seeker => true,
             CustomRoles.Hider => false,
@@ -704,7 +695,6 @@ static class ExtendedPlayerControl
     {
         if (!pc.IsAlive() || pc.Data.Role.Role == RoleTypes.GuardianAngel || Penguin.IsVictim(pc)) return false;
         if (pc.GetRoleTypes() == RoleTypes.Engineer) return false;
-        if (CopyCat.Instances.Any(x => x.CopyCatPC.PlayerId == pc.PlayerId)) return true;
 
         if (pc.Is(CustomRoles.Nimble) || Options.EveryoneCanVent.GetBool()) return true;
         if (pc.Is(CustomRoles.Bloodlust) || pc.Is(CustomRoles.Refugee)) return true;
@@ -773,13 +763,6 @@ static class ExtendedPlayerControl
         if (arsonist == null || target == null || Revolutionist.IsDraw == null) return false;
         Revolutionist.IsDraw.TryGetValue((arsonist.PlayerId, target.PlayerId), out bool isDraw);
         return isDraw;
-    }
-
-    public static bool IsRevealedPlayer(this PlayerControl player, PlayerControl target)
-    {
-        if (player == null || target == null || Farseer.IsRevealed == null) return false;
-        Farseer.IsRevealed.TryGetValue((player.PlayerId, target.PlayerId), out bool isDoused);
-        return isDoused;
     }
 
     public static void RpcSetDousedPlayer(this PlayerControl player, PlayerControl target, bool isDoused)

@@ -27,7 +27,7 @@ public class Agitater : RoleBase
     public long CurrentBombedPlayerTime;
     public byte LastBombedPlayer = byte.MaxValue;
 
-    public override bool IsEnable => playerIdList.Count > 0 || Randomizer.Exists;
+    public override bool IsEnable => playerIdList.Count > 0;
 
     public static void SetupCustomOption()
     {
