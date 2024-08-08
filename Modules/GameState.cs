@@ -81,16 +81,6 @@ public class PlayerState(byte playerId)
     {
         countTypes = role.GetCountTypes();
 
-        if (SubRoles.Contains(CustomRoles.Recruit))
-        {
-            countTypes = Jackal.SidekickCountMode.GetValue() switch
-            {
-                0 => CountTypes.Jackal,
-                1 => CountTypes.OutOfGame,
-                _ => role.GetCountTypes()
-            };
-        }
-
         SubRoles.ForEach(SetAddonCountTypes);
 
         Role = role.GetRoleClass();
@@ -147,80 +137,13 @@ public class PlayerState(byte playerId)
     {
         switch (role)
         {
-            case CustomRoles.Bloodlust:
-                countTypes = CountTypes.Bloodlust;
-                break;
-            case CustomRoles.Madmate:
-                TaskState.hasTasks = false;
-                TaskState.AllTasksCount = 0;
-                countTypes = Options.MadmateCountMode.GetInt() switch
-                {
-                    0 => CountTypes.OutOfGame,
-                    1 => CountTypes.Impostor,
-                    2 => CountTypes.Crew,
-                    _ => throw new NotImplementedException()
-                };
-                SubRoles.Remove(CustomRoles.Charmed);
-                SubRoles.Remove(CustomRoles.Recruit);
-                SubRoles.Remove(CustomRoles.Contagious);
-                SubRoles.Remove(CustomRoles.Rascal);
-                SubRoles.Remove(CustomRoles.Loyal);
-                SubRoles.Remove(CustomRoles.Undead);
-                break;
-            case CustomRoles.Charmed:
-                TaskState.hasTasks = false;
-                TaskState.AllTasksCount = 0;
-                countTypes = Succubus.CharmedCountMode.GetInt() switch
-                {
-                    0 => CountTypes.OutOfGame,
-                    1 => CountTypes.Succubus,
-                    2 => countTypes,
-                    _ => throw new NotImplementedException()
-                };
-                SubRoles.Remove(CustomRoles.Madmate);
-                SubRoles.Remove(CustomRoles.Recruit);
-                SubRoles.Remove(CustomRoles.Contagious);
-                SubRoles.Remove(CustomRoles.Rascal);
-                SubRoles.Remove(CustomRoles.Loyal);
-                SubRoles.Remove(CustomRoles.Undead);
-                break;
-            case CustomRoles.Undead:
-                TaskState.hasTasks = false;
-                TaskState.AllTasksCount = 0;
-                countTypes = Necromancer.UndeadCountMode.GetInt() switch
-                {
-                    0 => CountTypes.OutOfGame,
-                    1 => CountTypes.Necromancer,
-                    2 => countTypes,
-                    _ => throw new NotImplementedException()
-                };
-                SubRoles.Remove(CustomRoles.Madmate);
-                SubRoles.Remove(CustomRoles.Recruit);
-                SubRoles.Remove(CustomRoles.Contagious);
-                SubRoles.Remove(CustomRoles.Rascal);
-                SubRoles.Remove(CustomRoles.Loyal);
-                SubRoles.Remove(CustomRoles.Charmed);
-                break;
             case CustomRoles.LastImpostor:
-                SubRoles.Remove(CustomRoles.Mare);
                 break;
             case CustomRoles.Recruit:
                 TaskState.hasTasks = false;
                 TaskState.AllTasksCount = 0;
-                countTypes = Jackal.SidekickCountMode.GetInt() switch
-                {
-                    0 => CountTypes.Jackal,
-                    1 => CountTypes.OutOfGame,
-                    2 => countTypes,
-                    _ => throw new NotImplementedException()
-                };
-                SubRoles.Remove(CustomRoles.Madmate);
-                SubRoles.Remove(CustomRoles.Charmed);
                 SubRoles.Remove(CustomRoles.Contagious);
                 SubRoles.Remove(CustomRoles.Rascal);
-                SubRoles.Remove(CustomRoles.Loyal);
-                SubRoles.Remove(CustomRoles.Loyal);
-                SubRoles.Remove(CustomRoles.Undead);
                 break;
             case CustomRoles.Contagious:
                 TaskState.hasTasks = false;
@@ -232,12 +155,8 @@ public class PlayerState(byte playerId)
                     2 => countTypes,
                     _ => throw new NotImplementedException()
                 };
-                SubRoles.Remove(CustomRoles.Madmate);
                 SubRoles.Remove(CustomRoles.Recruit);
-                SubRoles.Remove(CustomRoles.Charmed);
                 SubRoles.Remove(CustomRoles.Rascal);
-                SubRoles.Remove(CustomRoles.Loyal);
-                SubRoles.Remove(CustomRoles.Undead);
                 break;
         }
     }
@@ -246,7 +165,7 @@ public class PlayerState(byte playerId)
     {
         SubRoles.Remove(role);
 
-        if (role is CustomRoles.Flashman or CustomRoles.Dynamo or CustomRoles.Spurt)
+        if (role is CustomRoles.Flashman)
         {
             Main.AllPlayerSpeed[PlayerId] = Main.RealOptionsData.GetFloat(FloatOptionNames.PlayerSpeedMod);
             PlayerGameOptionsSender.SetDirty(PlayerId);
@@ -261,7 +180,6 @@ public class PlayerState(byte playerId)
         if (AmongUsClient.Instance.AmHost)
         {
             RPC.SendDeathReason(PlayerId, deathReason);
-            Utils.CheckAndSpawnAdditionalRefugee(Utils.GetPlayerInfoById(PlayerId));
         }
     }
 
@@ -310,20 +228,6 @@ public class TaskState
         {
             bool alive = player.IsAlive();
 
-            if (player.Is(CustomRoles.Unlucky) && alive)
-            {
-                var Ue = IRandom.Instance;
-                if (Ue.Next(0, 100) < Options.UnluckyTaskSuicideChance.GetInt())
-                {
-                    player.Suicide();
-                }
-            }
-
-            if (alive && Mastermind.ManipulatedPlayers.ContainsKey(player.PlayerId))
-            {
-                Mastermind.OnManipulatedPlayerTaskComplete(player);
-            }
-
             // Ability Use Gain with this task completed
             if (alive)
             {
@@ -350,10 +254,6 @@ public class TaskState
             }
 
             var addons = Main.PlayerStates[player.PlayerId].SubRoles;
-
-            if (addons.Contains(CustomRoles.Stressed)) Stressed.OnTaskComplete(player);
-
-            Simon.RemoveTarget(player, Simon.Instruction.Task);
 
             // Update the player's task count for Task Managers
             foreach (var pc in Main.AllAlivePlayerControls)

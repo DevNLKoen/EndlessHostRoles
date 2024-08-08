@@ -163,7 +163,7 @@ namespace TOZ.Neutral
             if (GameStates.IsInTask && ArsonistTimer.ContainsKey(playerId))
             {
                 var arTarget = ArsonistTimer[playerId].PLAYER;
-                if (!player.IsAlive() || Pelican.IsEaten(playerId))
+                if (!player.IsAlive())
                 {
                     ArsonistTimer.Remove(playerId);
                     Utils.NotifyRoles(SpecifySeer: player, SpecifyTarget: arTarget, ForceLoop: true);

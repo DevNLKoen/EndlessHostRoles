@@ -148,7 +148,7 @@ namespace TOZ.Impostor
                         {
                             if (GameStates.IsInTask && killer.IsAlive())
                             {
-                                var list = Main.AllAlivePlayerControls.Where(a => !Pelican.IsEaten(a.PlayerId) && !a.inVent && a.PlayerId != killer.PlayerId).ToArray();
+                                var list = Main.AllAlivePlayerControls.Where(a => !a.inVent && a.PlayerId != killer.PlayerId).ToArray();
                                 TP(killer.NetTransform, list.RandomElement().Pos());
                             }
                         }, TPDelay.GetInt(), "Gambler Swap");
@@ -157,8 +157,7 @@ namespace TOZ.Impostor
                         killer.Notify(GetString("GamblerGet.IgnoreDefense"));
                         if ((target.Is(CustomRoles.Pestilence) && IgnorePestilence.GetBool())
                             || (Veteran.VeteranInProtect.ContainsKey(target.PlayerId) && IgnoreVeteranAlert.GetBool())
-                            || (Medic.InProtect(target.PlayerId) && IgnoreMedicShield.GetBool())
-                            || ((target.Is(CustomRoles.Jinx) || target.Is(CustomRoles.CursedWolf)) && IgnoreCursedWolfAndJinx.GetBool()))
+                            || (Medic.InProtect(target.PlayerId) && IgnoreMedicShield.GetBool()))
                         {
                             killer.Kill(target);
                             return false;
@@ -166,8 +165,7 @@ namespace TOZ.Impostor
 
                         if ((target.Is(CustomRoles.Pestilence) && !IgnorePestilence.GetBool())
                             || (Veteran.VeteranInProtect.ContainsKey(target.PlayerId) && !IgnoreVeteranAlert.GetBool())
-                            || (Medic.InProtect(target.PlayerId) && !IgnoreMedicShield.GetBool())
-                            || ((target.Is(CustomRoles.Jinx) || target.Is(CustomRoles.CursedWolf)) && !IgnoreCursedWolfAndJinx.GetBool()))
+                            || (Medic.InProtect(target.PlayerId) && !IgnoreMedicShield.GetBool()))
                         {
                             break;
                         }

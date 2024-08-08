@@ -31,7 +31,7 @@ class ExileControllerWrapUpPatch
         bool DecidedWinner = false;
         if (!AmongUsClient.Instance.AmHost) return;
         AntiBlackout.RestoreIsDead(doSend: false);
-        if (!Collector.CollectorWin(false) && exiled != null)
+        if (exiled != null)
         {
             if (!AntiBlackout.OverrideExiledPlayer && Main.ResetCamPlayerList.Contains(exiled.PlayerId))
                 exiled.Object?.ResetPlayerCam(1f);
@@ -40,38 +40,12 @@ class ExileControllerWrapUpPatch
             Main.PlayerStates[exiled.PlayerId].deathReason = PlayerState.DeathReason.Vote;
             var role = exiled.GetCustomRole();
 
-            if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Innocent) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == exiled.PlayerId))
-            {
-                if (!Options.InnocentCanWinByImp.GetBool() && role.IsImpostor())
-                {
-                    Logger.Info("冤罪的目标是内鬼，非常可惜啊", "Exeiled Winner Check");
-                }
-                else
-                {
-                    CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Innocent);
-                    Main.AllPlayerControls.Where(x => x.Is(CustomRoles.Innocent) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == exiled.PlayerId)
-                        .Do(x => CustomWinnerHolder.WinnerIds.Add(x.PlayerId));
-                    DecidedWinner = true;
-                }
-            }
-
-            if (role.Is(Team.Impostor) || role.Is(Team.Neutral))
-            {
-                Stressed.OnNonCrewmateEjected();
-            }
-            else
-            {
-                Stressed.OnCrewmateEjected();
-            }
-
             if (role.Is(Team.Impostor))
             {
                 Damocles.OnImpostorEjected();
             }
             else
             {
-                Cantankerous.OnCrewmateEjected();
-                Mafioso.OnCrewmateEjected();
                 Damocles.OnCrewmateEjected();
             }
 
@@ -83,12 +57,6 @@ class ExileControllerWrapUpPatch
                     CustomWinnerHolder.WinnerIds.Add(exiled.PlayerId);
                     DecidedWinner = true;
                     break;
-                case CustomRoles.Terrorist:
-                    Utils.CheckTerroristWin(exiled);
-                    break;
-                case CustomRoles.Devourer:
-                    Devourer.OnDevourerDied(exiled.PlayerId);
-                    break;
                 case CustomRoles.Medic:
                     Medic.IsDead(exiled.Object);
                     break;
@@ -97,25 +65,16 @@ class ExileControllerWrapUpPatch
             if (Executioner.CheckExileTarget(exiled)) DecidedWinner = true;
             if (Lawyer.CheckExileTarget(exiled /*, DecidedWinner*/)) DecidedWinner = false;
 
-            if (CustomWinnerHolder.WinnerTeam != CustomWinner.Terrorist) Main.PlayerStates[exiled.PlayerId].SetDead();
+            Main.PlayerStates[exiled.PlayerId].SetDead();
         }
 
         if (AmongUsClient.Instance.AmHost && Main.IsFixedCooldown)
             Main.RefixCooldownDelay = Options.DefaultKillCooldown - 3f;
 
-        Witch.RemoveSpelledPlayer();
-
         NiceSwapper.OnExileFinish();
 
         foreach (PlayerControl pc in Main.AllPlayerControls)
         {
-            if (pc.Is(CustomRoles.Warlock))
-            {
-                Warlock.CursedPlayers[pc.PlayerId] = null;
-                Warlock.IsCurseAndKill[pc.PlayerId] = false;
-                //RPC.RpcSyncCurseAndKill();
-            }
-
             pc.ResetKillCooldown();
             pc.RpcResetAbilityCooldown();
             PetsPatch.RpcRemovePet(pc);
@@ -134,8 +93,6 @@ class ExileControllerWrapUpPatch
             };
             if (map != null) Main.AllAlivePlayerControls.Do(map.RandomTeleport);
         }
-
-        Utils.CheckAndSpawnAdditionalRefugee(exiled);
 
         FallFromLadder.Reset();
         Utils.CountAlivePlayers(true);

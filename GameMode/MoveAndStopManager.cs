@@ -89,13 +89,13 @@ public class Counter(int totalGreenTime, int totalRedTime, long startTimeStamp, 
                     break;
                 // Change from red to green
                 case true when !IsYellow:
-                    TotalGreenTime = MoveAndStop ? MoveAndStopManager.RandomGreenTime(Symbol) : Asthmatic.RandomGreenTime();
+                    TotalGreenTime = MoveAndStopManager.RandomGreenTime(Symbol);
                     IsRed = false;
                     break;
                 default:
                     if (IsYellow && !IsRed) // Change from yellow to red
                     {
-                        TotalRedTime = MoveAndStop ? MoveAndStopManager.RandomRedTime(Symbol) : Asthmatic.RandomRedTime();
+                        TotalRedTime = MoveAndStopManager.RandomRedTime(Symbol);
                         IsYellow = false;
                         IsRed = true;
                     }

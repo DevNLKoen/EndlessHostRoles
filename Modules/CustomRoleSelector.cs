@@ -88,19 +88,12 @@ internal static class CustomRoleSelector
         foreach (var role in Enum.GetValues<CustomRoles>())
         {
             int chance = role.GetMode();
-            if (role.IsVanilla() || chance == 0 || role.IsAdditionRole() || (role.OnlySpawnsWithPets() && !Options.UsePets.GetBool()) || (role.IsCrewmate() && Options.AprilFoolsMode.GetBool()) || HnSManager.AllHnSRoles.Contains(role)) continue;
+            if (role.IsVanilla() || chance == 0 || role.IsAdditionRole() || (role.OnlySpawnsWithPets() && !Options.UsePets.GetBool()) || HnSManager.AllHnSRoles.Contains(role)) continue;
             switch (role)
             {
                 case CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor when !LoversData.Spawning:
-                case CustomRoles.Commander when optImpNum <= 1 && Commander.CannotSpawnAsSoloImp.GetBool():
-                case CustomRoles.Changeling when Changeling.GetAvailableRoles(check: true).Count == 0:
-                case CustomRoles.Camouflager when Camouflager.DoesntSpawnOnFungle.GetBool() && Main.CurrentMap == MapNames.Fungle:
-                case CustomRoles.DarkHide when Main.CurrentMap == MapNames.Fungle:
-                case CustomRoles.Pelican when Roles[RoleAssignType.Impostor].Any(x => x.Role == CustomRoles.Duellist):
-                case CustomRoles.Duellist when Roles[RoleAssignType.NeutralKilling].Any(x => x.Role == CustomRoles.Pelican):
                 case CustomRoles.VengefulRomantic:
                 case CustomRoles.RuthlessRomantic:
-                case CustomRoles.Deathknight:
                 case CustomRoles.GM:
                 case CustomRoles.NotAssigned:
                     continue;
@@ -532,7 +525,6 @@ internal static class CustomRoleSelector
         if (Crews.Length > 0) Logger.Info(string.Join(", ", Crews.Select(x => $"{x.Role} - {x.AssignedCount}/{x.MaxCount} ({x.SpawnChance}%)")), "CrewRoleResult");
 
         if (rd.Next(0, 100) < Jester.SunnyboyChance.GetInt() && FinalRolesList.Remove(CustomRoles.Jester)) FinalRolesList.Add(CustomRoles.Sunnyboy);
-        if (rd.Next(0, 100) < Sans.BardChance.GetInt() && FinalRolesList.Remove(CustomRoles.Sans)) FinalRolesList.Add(CustomRoles.Bard);
         if (rd.Next(0, 100) < Options.NukerChance.GetInt() && FinalRolesList.Remove(CustomRoles.Bomber)) FinalRolesList.Add(CustomRoles.Nuker);
 
         Logger.Info(string.Join(", ", FinalRolesList.Select(x => x.ToString())), "RoleResults");
@@ -606,10 +598,8 @@ internal static class CustomRoleSelector
             if (!role.IsAdditionRole()) continue;
             switch (role)
             {
-                case CustomRoles.Mare or CustomRoles.Glow or CustomRoles.Sleep when Main.CurrentMap == MapNames.Fungle:
-                case CustomRoles.Madmate when Options.MadmateSpawnMode.GetInt() != 0:
-                case CustomRoles.Lovers or CustomRoles.LastImpostor or CustomRoles.Workhorse or CustomRoles.Undead:
-                case CustomRoles.Nimble or CustomRoles.Physicist or CustomRoles.Bloodlust or CustomRoles.Finder or CustomRoles.Noisy: // Assigned at a different function due to role base change
+                case CustomRoles.Lovers or CustomRoles.LastImpostor or CustomRoles.Workhorse:
+                case CustomRoles.Nimble or CustomRoles.Physicist or CustomRoles.Finder or CustomRoles.Noisy: // Assigned at a different function due to role base change
                     continue;
             }
 

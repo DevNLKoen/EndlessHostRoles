@@ -222,8 +222,6 @@ class HudManagerPatch
                     {
                         var suffixes = state.SubRoles.Select(subRole => subRole switch
                         {
-                            CustomRoles.Asthmatic => Asthmatic.GetSuffixText(player.PlayerId),
-                            CustomRoles.Spurt => Spurt.GetSuffix(player, true),
                             _ => string.Empty
                         });
                         return string.Join(string.Empty, suffixes);
@@ -242,8 +240,7 @@ class HudManagerPatch
                         LowerInfoText.enabled = false;
                     }
 
-                    bool allowedRole = role is CustomRoles.Necromancer or CustomRoles.Deathknight;
-                    if (player.CanUseKillButton() && (allowedRole || !role.UsesPetInsteadOfKill()))
+                    if (player.CanUseKillButton() && (!role.UsesPetInsteadOfKill()))
                     {
                         __instance.KillButton?.ToggleVisible(player.IsAlive() && GameStates.IsInTask);
                         player.Data.Role.CanUseKillButton = true;
@@ -416,22 +413,12 @@ class SetHudActivePatch
         {
             case CustomRoles.Sheriff:
             case CustomRoles.Arsonist:
-            case CustomRoles.Pelican:
-            case CustomRoles.FFF:
             case CustomRoles.Medic:
-            case CustomRoles.DarkHide:
 
             case CustomRoles.KB_Normal:
                 __instance.SabotageButton?.ToggleVisible(false);
                 __instance.AbilityButton?.ToggleVisible(false);
                 __instance.ReportButton?.ToggleVisible(false);
-                break;
-            case CustomRoles.Parasite:
-            case CustomRoles.Refugee:
-                __instance.SabotageButton?.ToggleVisible(true);
-                break;
-            case CustomRoles.Magician:
-                __instance.SabotageButton?.ToggleVisible(true);
                 break;
         }
 
@@ -469,7 +456,7 @@ class MapBehaviourShowPatch
 
         if (opts.Mode is MapOptions.Modes.Normal or MapOptions.Modes.Sabotage)
         {
-            if (player.Is(CustomRoleTypes.Impostor) || player.CanUseSabotage() || player.Is(CustomRoles.Glitch) || player.Is(CustomRoles.WeaponMaster) || player.Is(CustomRoles.Magician) || player.Is(CustomRoles.Parasite) || player.Is(CustomRoles.Refugee) || (player.Is(CustomRoles.Jackal) && Jackal.CanSabotage.GetBool()) || (player.Is(CustomRoles.Traitor) && Traitor.CanSabotage.GetBool()))
+            if (player.Is(CustomRoleTypes.Impostor) || player.CanUseSabotage() || player.Is(CustomRoles.Glitch) || (player.Is(CustomRoles.Traitor) && Traitor.CanSabotage.GetBool()))
                 opts.Mode = MapOptions.Modes.Sabotage;
             else
                 opts.Mode = MapOptions.Modes.Normal;

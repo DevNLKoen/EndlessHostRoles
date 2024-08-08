@@ -63,7 +63,7 @@ namespace TOZ.Impostor
         public override void OnFixedUpdate(PlayerControl player)
         {
             if (!GameStates.IsInTask) return;
-            if (Pelican.IsEaten(player.PlayerId) || player.Data.IsDead) return;
+            if (player.Data.IsDead) return;
             if (!player.Is(CustomRoles.RiftMaker)) return;
             if (Marks.Count != 2) return;
             if (Vector2.Distance(Marks[0], Marks[1]) <= 4f)

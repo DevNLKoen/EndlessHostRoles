@@ -35,10 +35,7 @@ public class Romantic : RoleBase
 
     private static readonly Dictionary<CustomRoles, CustomRoles> ConvertingRolesAndAddons = new()
     {
-        [CustomRoles.Jackal] = CustomRoles.Sidekick,
         [CustomRoles.Virus] = CustomRoles.Contagious,
-        [CustomRoles.Deathknight] = CustomRoles.Undead,
-        [CustomRoles.Necromancer] = CustomRoles.Undead
     };
 
     public static bool HasPickedPartner => PartnerId != byte.MaxValue;
@@ -251,7 +248,6 @@ public class Romantic : RoleBase
         else if (Partner.Is(Team.Impostor)) // If Partner is Imp, Romantic joins the imp team as Refugee
         {
             Logger.Info($"Impostor Romantic Partner Died => Changing {RomanticPC.GetNameWithRole()} to Refugee", "Romantic");
-            RomanticPC.RpcSetCustomRole(CustomRoles.Refugee);
         }
         else if (Partner.HasKillButton() || partnerRole.IsNK() || partnerRole.IsTasklessCrewmate()) // If the Partner has a kill button (NK or CK), Romantic becomes the role they were
         {

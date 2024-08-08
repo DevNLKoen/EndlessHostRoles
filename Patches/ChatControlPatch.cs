@@ -158,7 +158,7 @@ public static class ChatManager
         string playername = player.GetNameWithRole();
         message = message.ToLower().TrimStart().TrimEnd();
 
-        if (!player.IsAlive() || !AmongUsClient.Instance.AmHost || (Silencer.ForSilencer.Contains(player.PlayerId) && player.IsAlive())) return;
+        if (!player.IsAlive() || !AmongUsClient.Instance.AmHost) return;
 
         int operate = message switch
         {

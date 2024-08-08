@@ -39,15 +39,15 @@ namespace TOZ.Impostor
         {
             On = true;
 
-            IsMedusa = Main.PlayerStates[playerId].MainRole == CustomRoles.Medusa;
+            IsMedusa = false;
 
             if (IsMedusa)
             {
-                HasImpostorVision = Medusa.HasImpostorVision.GetBool();
+               /* HasImpostorVision = Medusa.HasImpostorVision.GetBool();
                 CanVent = Medusa.CanVent.GetBool();
                 KillCooldown = Medusa.KillCooldown.GetFloat();
                 KCDAfterClean = Medusa.KillCooldownAfterStoneGazing.GetFloat();
-                WaitForKCDUp = Medusa.CannotStoneGazeWhenKCDIsntUp.GetBool();
+                WaitForKCDUp = Medusa.CannotStoneGazeWhenKCDIsntUp.GetBool();*/
             }
             else
             {

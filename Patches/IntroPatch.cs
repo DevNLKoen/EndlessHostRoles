@@ -171,7 +171,7 @@ class BeginCrewmatePatch
 {
     public static bool Prefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
     {
-        if (PlayerControl.LocalPlayer.Is(CustomRoleTypes.Neutral) && !PlayerControl.LocalPlayer.GetCustomRole().IsMadmate())
+        if (PlayerControl.LocalPlayer.Is(CustomRoleTypes.Neutral))
         {
             teamToDisplay = new();
             teamToDisplay.Add(PlayerControl.LocalPlayer);
@@ -186,14 +186,6 @@ class BeginCrewmatePatch
                     teamToDisplay.Add(Utils.GetPlayerById(Executioner.Target[id]));
                     break;
             }
-        }
-        else if (PlayerControl.LocalPlayer.Is(CustomRoles.Madmate) || PlayerControl.LocalPlayer.GetCustomRole().IsMadmate())
-        {
-            teamToDisplay = new();
-            teamToDisplay.Add(PlayerControl.LocalPlayer);
-            __instance.BeginImpostor(teamToDisplay);
-            __instance.overlayHandle.color = Palette.ImpostorRed;
-            return false;
         }
 
         if (PlayerControl.LocalPlayer.GetCustomRole() == CustomRoles.LovingCrewmate)
@@ -244,15 +236,7 @@ class BeginCrewmatePatch
 
         __instance.ImpostorText.gameObject.SetActive(false);
 
-        if (PlayerControl.LocalPlayer.Is(CustomRoles.Bloodlust))
-        {
-            __instance.TeamTitle.text = GetString("TeamCrewmate");
-            __instance.TeamTitle.color = __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Bloodlust);
-            PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
-            __instance.ImpostorText.gameObject.SetActive(true);
-            __instance.ImpostorText.text = GetString("SubText.Bloodlust");
-        }
-        else if (role is CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor)
+        if (role is CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor)
         {
             __instance.TeamTitle.color = __instance.BackgroundBar.material.color = Utils.GetRoleColor(role);
             PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(role.GetRoleTypes());
@@ -322,36 +306,19 @@ class BeginCrewmatePatch
                     CustomRoles.Mayor
                     => ShipStatus.Instance.ShortTasks.FirstOrDefault(task => task.TaskType == TaskTypes.FixShower)?.MinigamePrefab.OpenSound,
 
-                CustomRoles.AntiAdminer
-                    => ShipStatus.Instance.LongTasks.FirstOrDefault(task => task.TaskType == TaskTypes.ResetBreakers)?.MinigamePrefab.OpenSound,
-
-                CustomRoles.EvilTracker 
-                    => ShipStatus.Instance.ShortTasks.FirstOrDefault(task => task.TaskType == TaskTypes.DivertPower)?.MinigamePrefab.OpenSound,
-
-                CustomRoles.Spiritcaller
-                    => GetIntroSound(RoleTypes.GuardianAngel),
-
-                CustomRoles.Workaholic
-                    => DestroyableSingleton<HudManager>.Instance.TaskCompleteSound,
 
                 CustomRoles.TaskManager
                     => DestroyableSingleton<HudManager>.Instance.TaskUpdateSound,
 
-                CustomRoles.Opportunist or
-                    CustomRoles.FFF or
-                    CustomRoles.Revolutionist
+                CustomRoles.Opportunist
                     => GetIntroSound(RoleTypes.Crewmate),
 
                 CustomRoles.SabotageMaster or
                     CustomRoles.Engineer or
-                    CustomRoles.EngineerTOZ or
-                    CustomRoles.Inhibitor or
-                    CustomRoles.Saboteur or
-                    CustomRoles.Provocateur
+                    CustomRoles.EngineerTOZ
                     => ShipStatus.Instance.SabotageSound,
 
-                CustomRoles.Mastermind or
-                    CustomRoles.Gambler
+                CustomRoles.Gambler
                     => GetIntroSound(RoleTypes.Shapeshifter),
 
                 CustomRoles.Doctor or
@@ -361,18 +328,11 @@ class BeginCrewmatePatch
                 CustomRoles.GM
                     => DestroyableSingleton<HudManager>.Instance.TaskCompleteSound,
 
-                CustomRoles.Swooper or
-                    CustomRoles.Chameleon
+                CustomRoles.Chameleon
                     => PlayerControl.LocalPlayer.MyPhysics.ImpostorDiscoveredSound,
 
-                CustomRoles.Grenadier or
-                    CustomRoles.Miner or
-                    CustomRoles.Disperser
+                CustomRoles.Grenadier
                     => ShipStatus.Instance.VentMoveSounds.FirstOrDefault(),
-
-                CustomRoles.Tracker
-                    or CustomRoles.EvilTracker
-                    => GetIntroSound(RoleTypes.Tracker),
 
                 CustomRoles.Noisemaker
                     or CustomRoles.NoisemakerTOZ
@@ -401,15 +361,6 @@ class BeginCrewmatePatch
             __instance.TeamTitle.color = Utils.GetRoleColor(role);
             __instance.BackgroundBar.material.color = Utils.GetRoleColor(role);
             __instance.ImpostorText.gameObject.SetActive(false);
-        }
-
-        if (PlayerControl.LocalPlayer.Is(CustomRoles.Madmate) || PlayerControl.LocalPlayer.Is(CustomRoles.Parasite) || PlayerControl.LocalPlayer.Is(CustomRoles.Crewpostor))
-        {
-            __instance.TeamTitle.text = GetString("TeamMadmate");
-            __instance.TeamTitle.color = __instance.BackgroundBar.material.color = new Color32(255, 25, 25, byte.MaxValue);
-            PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
-            __instance.ImpostorText.gameObject.SetActive(true);
-            __instance.ImpostorText.text = GetString("SubText.Madmate");
         }
 
         if (CustomTeamManager.EnabledCustomTeams.Count > 0)
@@ -551,13 +502,6 @@ class BeginImpostorPatch
     public static bool Prefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
         var role = PlayerControl.LocalPlayer.GetCustomRole();
-        if (PlayerControl.LocalPlayer.Is(CustomRoles.Madmate) || role.IsMadmate())
-        {
-            yourTeam = new();
-            yourTeam.Add(PlayerControl.LocalPlayer);
-            __instance.overlayHandle.color = Palette.ImpostorRed;
-            return true;
-        }
 
         if (PlayerControl.LocalPlayer.IsCrewmate() && role.GetDYRole() == RoleTypes.Impostor)
         {
@@ -569,7 +513,7 @@ class BeginImpostorPatch
             return false;
         }
 
-        if (role.IsNeutral() || PlayerControl.LocalPlayer.Is(CustomRoles.Bloodlust))
+        if (role.IsNeutral())
         {
             yourTeam = new();
             yourTeam.Add(PlayerControl.LocalPlayer);

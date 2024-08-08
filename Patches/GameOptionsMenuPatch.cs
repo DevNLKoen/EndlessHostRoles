@@ -332,7 +332,7 @@ public static class GameOptionsMenuPatch
 
                     if (enabled) num -= 0.63f;
                 }
-                else if (option is RoleTitleOptionItem)
+                /*else if (option is RoleTitleOptionItem)
                 {
                     CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(__instance.RolesMenu.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
 
@@ -365,7 +365,7 @@ public static class GameOptionsMenuPatch
 
                     if (enabled) num -= 0.63f;
                     CreateHeader("test", __instance.RolesMenu, ref num);
-                }
+                }*/
                 else if (option is RoleOptionItem)
                 {
                     /*CategoryHeaderEditRole categoryHeaderEditRole = Object.Instantiate(__instance.RolesMenu.categoryHeaderEditRoleOrigin, Vector3.zero, Quaternion.identity, __instance.settingsContainer);
@@ -1936,6 +1936,7 @@ public static class RolesSettingsMenu_ChangeTabPatch
         }
     }
 }
+
 /*[HarmonyPatch(typeof(RolesSettingsMenu))]
 public static class RolesSettingsMenu_ChanceTabPatch
 {

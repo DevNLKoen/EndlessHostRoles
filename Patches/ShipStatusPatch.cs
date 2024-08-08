@@ -103,15 +103,6 @@ class RepairSystemPatch
 
         switch (systemType)
         {
-            case SystemTypes.Doors when player.Is(CustomRoles.Unlucky) && player.IsAlive():
-                var Ue = IRandom.Instance;
-                if (Ue.Next(0, 100) < Options.UnluckySabotageSuicideChance.GetInt())
-                {
-                    player.Suicide();
-                    return false;
-                }
-
-                break;
             case SystemTypes.Electrical when amount <= 4 && Main.NormalOptions.MapId == 4:
                 if (Options.DisableAirshipViewingDeckLightsPanel.GetBool() && Vector2.Distance(player.transform.position, new(-12.93f, -11.28f)) <= 2f) return false;
                 if (Options.DisableAirshipGapRoomLightsPanel.GetBool() && Vector2.Distance(player.transform.position, new(13.92f, 6.43f)) <= 2f) return false;
@@ -128,11 +119,7 @@ class RepairSystemPatch
                 if (player.Is(Team.Impostor) && !player.IsAlive() && Options.DeadImpCantSabotage.GetBool()) return false;
                 return player.GetCustomRole() switch
                 {
-                    CustomRoles.Jackal when Jackal.CanSabotage.GetBool() => true,
-                    CustomRoles.Sidekick when Jackal.CanSabotageSK.GetBool() => true,
                     CustomRoles.Traitor when Traitor.CanSabotage.GetBool() => true,
-                    CustomRoles.Parasite when player.IsAlive() => true,
-                    CustomRoles.Refugee when player.IsAlive() => true,
                     _ => Main.PlayerStates[player.PlayerId].Role.CanUseSabotage(player)
                 };
             case SystemTypes.Security when amount == 1:
@@ -177,7 +164,6 @@ class RepairSystemPatch
                     }
 
                     if (player.Is(CustomRoles.Damocles) && Damocles.countRepairSabotage) Damocles.OnRepairSabotage(player.PlayerId);
-                    if (player.Is(CustomRoles.Stressed) && Stressed.countRepairSabotage) Stressed.OnRepairSabotage(player);
                 }
 
                 break;
@@ -188,8 +174,6 @@ class RepairSystemPatch
             case SystemTypes.HeliSabotage:
             case SystemTypes.Electrical:
                 if (player.Is(CustomRoles.Damocles) && Damocles.countRepairSabotage) Damocles.OnRepairSabotage(player.PlayerId);
-                if (player.Is(CustomRoles.Stressed) && Stressed.countRepairSabotage) Stressed.OnRepairSabotage(player);
-                if (Main.PlayerStates[player.PlayerId].Role is Rogue rg) rg.OnFixSabotage();
                 break;
         }
     }

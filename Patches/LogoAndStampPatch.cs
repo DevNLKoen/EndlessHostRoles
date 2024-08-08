@@ -39,19 +39,16 @@ public static class CredentialsPatch
             DevsData = string.Empty;
             TransData = string.Empty;
 
-            DevsData += $"<color={Main.ModColor}>♥咔皮呆 & Gurge44</color> - <size=75%>{GetString("MainDev")}</size>";
             DevsData += $"\n<color={Main.ModColor}>♥IRIDESCENT</color> - <size=75%>{GetString("Art")}</size>";
             DevsData += $"\nNCSIMON - <size=75%>{GetString("RoleDev")}</size>";
             DevsData += $"\n天寸梦初 - <size=75%>{GetString("RoleDev")}&{GetString("TechSup")}</size>";
             DevsData += $"\nCommandf1 - <size=75%>{GetString("RoleDev")}&{GetString("FeatureDev")}</size>";
             DevsData += $"\n喜 - <size=75%>{GetString("RoleDev")}</size>";
             DevsData += $"\nSHAAARKY - <size=75%>{GetString("RoleDev")}</size>";
-            DevsData += $"\nGurge44 - <size=75%>{GetString("FeatureDev")}</size>";
 
             TransData += $"Tommy-XL - <size=75%>{GetString("TranEN")}&{GetString("TranRU")}</size>";
             TransData += $"\nTem - <size=75%>{GetString("TranEN")}&{GetString("TranRU")}</size>";
             TransData += $"\n阿龍 - <size=75%>{GetString("TranCHT")}</size>";
-            TransData += $"\nGurge44 - <size=75%>{GetString("TranEN")}</size>";
             TransData += $"\n法官 - <size=75%>{GetString("TranCHT")}</size>";
             TransData += $"\nSolarFlare - <size=75%>{GetString("TranEN")}</size>";
             TransData += $"\nchill_ultimated - <size=75%>{GetString("TranRU")}</size>";

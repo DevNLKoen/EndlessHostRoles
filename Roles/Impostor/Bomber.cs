@@ -118,7 +118,7 @@ namespace TOZ.Impostor
                 var pos = pc.Pos();
                 var dis = Vector2.Distance(pos, tg.Pos());
 
-                if (!tg.IsAlive() || Pelican.IsEaten(tg.PlayerId) || Medic.ProtectList.Contains(tg.PlayerId) || (tg.Is(CustomRoleTypes.Impostor) && ImpostorsSurviveBombs.GetBool()) || tg.inVent || tg.Is(CustomRoles.Pestilence)) continue;
+                if (!tg.IsAlive() || Medic.ProtectList.Contains(tg.PlayerId) || (tg.Is(CustomRoleTypes.Impostor) && ImpostorsSurviveBombs.GetBool()) || tg.inVent || tg.Is(CustomRoles.Pestilence)) continue;
                 if (dis > radius) continue;
                 if (tg.PlayerId == pc.PlayerId) continue;
 

@@ -27,7 +27,6 @@ public class Lawyer : RoleBase
         CustomRoles.CrewmateTOZ,
         CustomRoles.Jester,
         CustomRoles.Opportunist,
-        CustomRoles.Convict,
         CustomRoles.CyberStar,
         CustomRoles.Mayor,
         CustomRoles.Doctor,

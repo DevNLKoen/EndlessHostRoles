@@ -18,10 +18,7 @@ public class Amnesiac : RoleBase
 
     public static readonly CustomRoles[] AmnesiacIncompatibleNeutralMode =
     [
-        CustomRoles.Amnesiac,
-        CustomRoles.Pursuer,
-        CustomRoles.Totocalcio,
-        CustomRoles.Maverick
+        CustomRoles.Amnesiac
     ];
 
     private static readonly string[] RememberModes =
@@ -108,14 +105,6 @@ public class Amnesiac : RoleBase
 
         switch (targetRole)
         {
-            case CustomRoles.Jackal:
-                RememberedRole = CustomRoles.Sidekick;
-                amneNotifyString = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Amnesiac), GetString("RememberedNeutralKiller"));
-                break;
-            case CustomRoles.Necromancer:
-                RememberedRole = CustomRoles.Deathknight;
-                amneNotifyString = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Amnesiac), GetString("RememberedNeutralKiller"));
-                break;
             case CustomRoles.LovingCrewmate when loversAlive > 0:
                 target.RpcSetCustomRole(CustomRoles.CrewmateTOZ);
                 RememberedRole = CustomRoles.LovingCrewmate;
@@ -135,14 +124,12 @@ public class Amnesiac : RoleBase
                 amneNotifyString = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Amnesiac), GetString("RememberedCrewmate"));
                 break;
             case CustomRoles.LovingImpostor:
-                RememberedRole = CustomRoles.Refugee;
                 amneNotifyString = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Amnesiac), GetString("RememberedImpostor"));
                 break;
             default:
                 switch (target.GetTeam())
                 {
                     case Team.Impostor:
-                        RememberedRole = CustomRoles.Refugee;
                         amneNotifyString = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Amnesiac), GetString("RememberedImpostor"));
                         break;
                     case Team.Crewmate:
@@ -190,12 +177,6 @@ public class Amnesiac : RoleBase
     public override void OnReportDeadBody()
     {
         LocateArrow.RemoveAllTarget(AmnesiacId);
-    }
-
-    public override bool KnowRole(PlayerControl player, PlayerControl target)
-    {
-        if (player.Is(CustomRoles.Refugee) && target.Is(CustomRoleTypes.Impostor)) return true;
-        return player.Is(CustomRoleTypes.Impostor) && target.Is(CustomRoles.Refugee);
     }
 
     public override void SetButtonTexts(HudManager hud, byte id)

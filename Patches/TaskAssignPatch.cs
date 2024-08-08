@@ -149,13 +149,6 @@ class RpcSetTasksPatch
         if (pc.Is(CustomRoles.Workhorse))
             (hasCommonTasks, NumLongTasks, NumShortTasks) = Workhorse.TaskData;
 
-        // Capitalism is going to harm people~
-        if (Capitalism.CapitalismAssignTask.ContainsKey(pc.PlayerId))
-        {
-            NumShortTasks += Capitalism.CapitalismAssignTask[pc.PlayerId];
-            Capitalism.CapitalismAssignTask.Remove(pc.PlayerId);
-        }
-
         if (taskTypeIds.Length == 0) hasCommonTasks = false; // Set common to 0 when redistributing tasks
         switch (hasCommonTasks)
         {

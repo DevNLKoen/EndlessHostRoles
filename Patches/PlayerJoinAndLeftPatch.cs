@@ -189,16 +189,8 @@ class OnPlayerLeftPatch
                     Main.LoversPlayers.RemoveAll(x => x.PlayerId == data.Character.PlayerId);
                 }
 
-                switch (data.Character.GetCustomRole())
-                {
-                    case CustomRoles.Pelican:
-                        Pelican.OnPelicanDied(data.Character.PlayerId);
-                        break;
-                }
-
                 if (Executioner.Target.ContainsValue(data.Character.PlayerId)) Executioner.ChangeRoleByTarget(data.Character);
                 if (Lawyer.Target.ContainsValue(data.Character.PlayerId)) Lawyer.ChangeRoleByTarget(data.Character);
-                Postman.CheckAndResetTargets(data.Character);
 
                 Utils.AfterPlayerDeathTasks(data.Character, GameStates.IsMeeting);
 

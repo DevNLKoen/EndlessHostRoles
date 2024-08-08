@@ -18,7 +18,6 @@
 
 <a href="https://sites.google.com/view/TOZ-au" target="_blank"><img src="https://img.shields.io/badge/Website%20-%231DA1F2.svg?&style=for-the-badge&logo=vuedotjs&logoColor=white&color=3aa675"/></a>
 <a href="https://discord.gg/m3ayxfumC8" target="_blank"><img src="https://img.shields.io/badge/Discord%20-%231DA1F2.svg?&style=for-the-badge&logo=discord&logoColor=white&color=5662f6"/></a>
-<a href="https://github.com/Gurge44/EndlessHostRoles/releases/latest" target="_blank"><img src="https://img.shields.io/badge/Latest Version%20-%231DA1F2.svg?&style=for-the-badge&logo=github&logoColor=white&color=181717"/></a>
 
 </p>
 
@@ -38,92 +37,92 @@
 
 | Crewmates         | Impostors       | Neutrals          | Add-ons        |
 |-------------------|-----------------|-------------------|----------------|
-|                   | Abyssbringer    | Agitator          | Antidote       |
+|                   | Abyssbringer    | Agitator          |                |
 |                   | Anonymous       | Amnesiac          | Anti-TP        |
-|                   | Anti Adminer    | Arsonist          | Asthmatic      |
-|                   | Arrogance       | Bandit            | Autopsy        |
-|                   | Augmenter       | Bargainer         | Avenger        |
+|                   | Anti Adminer    | Arsonist          |                |
+|                   | Arrogance       |                   | Autopsy        |
+|                   | Augmenter       | Bargainer         |                |
 |                   | Bard            | Blood Knight      | Bait           |
-|                   | Blackmailer     | Bubble            | Busy           |
-|                   | Bomber          | Chemist           | Beartrap       |
-|                   | Bounty Hunter   | Cherokious        | Bewilder       |
-|                   | Butcher         | Collector         | Bloodlust      |
-|                   | Camouflager     | Deathknight       |                |
-|                   | Capitalist      | Demon             | Charmed        |
-| Celebrity         | Cantankerous    | Doppelganger      | Circumvent     |
+|                   | Blackmailer     | Demon             | Busy           |
+|                   | Bomber          |                   |                |
+|                   | Bounty Hunter   |                   |                |
+|                   | Butcher         |                   |                |
+|                   | Camouflager     |                   |                |
+|                   | Capitalist      |                   |                |
+| Celebrity         | Cantankerous    |                   | Circumvent     |
 | Chameleon         | Changeling      | Doomsayer         | Cleansed       |
-| Clairvoyant       | Chronomancer    | Eclipse           | Clumsy         |
+| Clairvoyant       | Chronomancer    |                   | Clumsy         |
 | Cleanser          | Cleaner         | Enderman          | Contagious     |
-| Convener          | Commander       | Evolver           | Damocles       |
+| Convener          | Commander       |                   | Damocles       |
 |                   | Consigliere     | Executioner       | Deadly Quota   |
 | Coroner           | Consort         | Follower          | Disco          |
-| Crusader          | Councillor      | The Glitch        | Diseased       |
-|                   | Crewpostor      | God               | Dynamo         |
+| Crusader          | Councillor      | The Glitch        |                |
+|                   | Crewpostor      | God               |                |
 | Deputy            | Cursed Wolf     | Hater             | Disregarded    |
 | Detective         | Deathpact       | Head Hunter       | Double Shot    |
-|                   | Devourer        | Hex Master        | Egoist         |
-| Dictator          | Disperser       | Hookshot          | Energetic      |
+|                   | Devourer        | Hex Master        |                |
+| Dictator          | Disperser       |                   | Energetic      |
 | Doctor            | Duellist        | Imitator          | Evil Spirit    |
-| Donut Delivery    | Dazzler         | Impartial         | Finder         |
-| Door Master       | Echo            | Innocent          | Flash          |
+| Donut Delivery    | Dazzler         |                   | Finder         |
+| Door Master       | Echo            |                   | Flash          |
 | Pacifist          | Escapist        | Jackal            | Fool           |
 | Drainer           | Eraser          | Jester            | Giant          |
 | Druid             | Evil Guesser    | Jinx              | Glow           |
 | Electric          | Evil Tracker    | Juggernaut        | Gravestone     |
 | Enigma            | Fireworker      | Lawyer            | Guardian Angel |
 | Escort            | Freezer         | Magician          | Guesser        |
-| Express           | Gambler         | Vector            | Haste          |
-| Investigator      | Gangster        | Maverick          |                |
+| Express           | Gambler         | Vector            |                |
+| Investigator      | Gangster        |                   |                |
 | Fortune Teller    | Generator       | Medusa            | Knighted       |
-| Gaulois           | Godfather       | Mycologist        | Last Impostor  |
-|                   | Greedy          | Necromancer       | Lazy           |
-| Grenadier         | Hangman         | Nonplus           | Lovers         |
-| Guess Manager     | Hitman          | Opportunist       | Loyal          |
-| Guardian          | Inhibitor       | Patroller         | Lucky          |
+| Gaulois           | Godfather       |                   | Last Impostor  |
+|                   | Greedy          |                   | Lazy           |
+| Grenadier         |                 |                   | Lovers         |
+| Guess Manager     |                 | Opportunist       |                |
+| Guardian          | Inhibitor       |                   |                |
 | Ignitor           | Kamikaze        | Pelican           | Madmate        |
 | Insight           | Kidnapper       | Pestilence        | Magnet         |
-| Inspector         | Killing Machine |                   | Mare           |
-| Inquirer          | Lightning       | Pickpocket        | Messenger      |
+| Inspector         | Killing Machine |                   |                |
+| Inquirer          | Lightning       |                   |                |
 | Jailor            | Librarian       | Plaguebearer      | Mimic          |
 | Judge             | Lurker          | Infection         |                |
 | Lazy Guy          | Mafioso         | Poisoner          | Mischievous    |
-| Lighter           | Mastermind      | Postman           | Necroview      |
-| Lookout           | Nemesis         | Predator          | Nimble         |
-| Luckey            | Mercenary       | Provocateur       | Noisy          |
-| Markseeker        | Miner           | Pursuer           | Oblivious      |
-| Marshall          | Morphling       | Pyromaniac        | Onbound        |
-| Mathematician     | Ninja           |	                  | Sleep          |
-| Mayor             | Nuker           | Reckless          | Phantasm       |
+| Lighter           | Mastermind      |                   | Necroview      |
+| Lookout           | Nemesis         |                   | Nimble         |
+| Luckey            | Mercenary       |                   | Noisy          |
+| Markseeker        | Miner           |                   | Oblivious      |
+| Marshall          | Morphling       | Pyromaniac        |                |
+| Mathematician     | Ninja           |	                  |                |
+| Mayor             | Nuker           | Reckless          |                |
 | Mechanic          | Nullifier       | Revolutionist     | Physicist      |
 | Medic             | Overheat        | Ritualist         | Rascal         |
 | Medium            | Parasite        | Rogue             | Reach          |
 | Merchant          | Penguin         | Romantic          | Recruit        |
 | Telecommunication | Puppeteer       | Roulette Grandeur | Rookie         |
 | Mole              | Quick Shooter   | Ruthless Romantic | Schizophrenic  |
-| Monarch           | Renegade        | Samurai           | Seer           |
+| Monarch           | Renegade        |                   | Seer           |
 | Mortician         | Rift Maker      | Schrödinger's Cat | Sleuth         |
 | Nice Eraser       | Saboteur        | Serial Killer     | Sonar          |
-| Nice Guesser      | Sapper          | Shifter           | Stained        |
+| Nice Guesser      | Sapper          | Shifter           |                |
 | Hacker            | Scavenger       | Sidekick          | Taskcounter    |
-| Swapper           | Silencer        | Simon             | Stealer        |
-| Nightmare         | Sniper          | Soul Hunter       | Stressed       |
-| Observer          | Soul Catcher    | Spiritcaller      | Swift          |
+| Swapper           |                 |                   | Stealer        |
+|                   | Sniper          | Soul Hunter       |                |
+| Observer          | Soul Catcher    |                   | Swift          |
 | Oracle            | Swapster        | Sprayer           | Sunglasses     |
-| Paranoid          | Swiftclaw       | Stalker           | Tiebreaker     |
-| Perceiver         | Swooper         | Cultist           | Torch          |
-| Psychic           | Stealth         | Sunnyboy          | Truant         |
-| Rabbit            | Time Thief      | Terrorist         | Undead         |
-| Randomizer        | Trapster        | Tiger             | Unlucky        |
+| Paranoid          |                 |                   | Tiebreaker     |
+| Perceiver         | Swooper         |                   | Torch          |
+| Psychic           |                 | Sunnyboy          |                |
+| Rabbit            | Time Thief      | Terrorist         |                |
+| Randomizer        | Trapster        | Tiger             |                |
 | Ricochet          | Trickster       | Traitor           |                |
-| Safeguard         | Twister         | Tremor            | Watcher        |
-| Scout             | Underdog        | Vengeance         | Workhorse      |
-| Security Guard    | Undertaker      | Vengeful Romantic | YouTuber       |
+| Safeguard         | Twister         |                   | Watcher        |
+| Scout             | Underdog        |                   | Workhorse      |
+| Security Guard    | Undertaker      | Vengeful Romantic |                |
 | Sentinel          | Vampire         | Virus             |                |
 | Sentry            | Ventriloquist   | Vulture           |                |
 | Sheriff           | Vindicator      |	                  |                |
 | Shiftguard        | Visionary       | Werewolf          |                |
 | Snitch            | Warlock         | Weapon Master     |                |
-| Soothsayer        | Wildling        | Workaholic        |                |
+| Soothsayer        | Wildling        |                   |                |
 | Spiritualist      | Witch           |                   |                |
 | Speedrunner       | Yin Yanger      |                   |                |
 | Speed Booster     | Zombie          |                   |                |
@@ -134,12 +133,10 @@
 | Tether            |                 |                   |                |
 | Time Manager      |                 |                   |                |
 | Time Master       |                 |                   |                |
-| Toilet Master     |                 |                   |                |
 | Tornado           |                 |                   |                |
 | Transmitter       |                 |                   |                |
 | Transporter       |                 |                   |                |
 | Tracefinder       |                 |                   |                |
-| Tunneler          |                 |                   |                |
 | Ventguard         |                 |                   |                |
 | Veteran           |                 |                   |                |
 | Vigilante         |                 |                   |                |
@@ -215,7 +212,6 @@
   name, not on the Shapeshift button => Changed the basis to regular Impostor
 - Eraser: Erase by Voting or by Kill Button & What to do when target is neutral
 - Hangman: Kill Cooldown after strangling
-- Mare (add-on): Can kill at all times, but if lights are not out, the kill cooldown is higher
 - Quick Shooter now works correctly
 - Serial Killer: Suicide Timer is displayed next to the role name, not on the Shapeshift button => Changed the basis to
   regular Impostor; Setting whether the Suicide Timer only starts after their first kill
@@ -234,25 +230,12 @@
 
 #### Neutrals
 
-- Medusa: Can only clean bodies if their kill cooldown is up
 - Poisoner: Kill Cooldown is reset when the poisoned target dies
 - Glitch is now The Glitch from TOU-R, it was completely rewritten, and I worked really hard on it
-- Provocateur: No longer suicides after selecting a target
-- Pursuer: Target doesn't die when trying to use their kill button, they'll just have their kill cooldown reset
 
-### To see the full list of unique roles and their descriptions, visit our website: [TOZ](https://sites.google.com/view/TOZ-au)
-
-## Note:
-
-- You can use parts of the code in here, but if you do, you'll have to credit me (Gurge44) or the mod by mentioning its
-  name (TOZ) and providing a link to this GitHub page. (Or leaving the in-game credits as they are is also fine!)
-- To play the mod, use the given dll in the release section.
 
 <br>
 
-![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=gurge44&show=reviews,discussions_started,discussions_answered,prs_merged,prs_merged_percentage&show_icons=true&theme=transparent&rank_icon=github)
-
-<br>
 
 ## Credit to these mods and their developers for the code and help:
 
@@ -281,7 +264,7 @@
 
 >
 > - Many role ideas
-> - Provided roles: AntiAdminer, CursedWolf, Workaholic, Greedier, DarkHide, Ignitor
+> - Provided roles: AntiAdminer, CursedWolf, Greedier, Ignitor
 > - Reference: Modify game announcement
 > - New settings UI for v2024.6.18
 >
@@ -357,32 +340,9 @@
 > - Reference: Disable the 5s timeout on custom servers
 >
 
-### Endless Host Roles (TOZ), with Endless Possibilities, brought to you by the Endless Network.
+##### Lead Developer:
 
-##### Developers:
-
-- Gurge44
-
-##### Contributors:
-
-- Dx
-- PH_Gaming
-- TommyXL
-- Drakos
-
-##### Special Thanks:
-
-- Seleneous
-- thewhiskas27
-- HyperAtill
-
-##### Translators:
-
-- Dx (PT-BR)
-- PH_Gaming (PT-BR)
-- Tomix (PT-BR)
-- aviiiv (PT-BR)
-- HyperAtill (RU)
+- NLKoen
 
 # License for the Custom Team Assigner application
 

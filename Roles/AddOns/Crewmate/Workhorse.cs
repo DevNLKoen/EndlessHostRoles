@@ -60,7 +60,7 @@ public class Workhorse : IAddon
     private static bool IsAssignTarget(PlayerControl pc)
     {
         if (!pc.IsAlive() || IsThisRole(pc.PlayerId)) return false;
-        if (pc.Is(CustomRoles.Lazy) || pc.Is(CustomRoles.Bloodlust)) return false;
+        if (pc.Is(CustomRoles.Lazy)) return false;
         if (pc.GetCustomRole().GetDYRole() == RoleTypes.Impostor || pc.GetCustomRole().GetVNRole() is CustomRoles.Impostor or CustomRoles.Shapeshifter) return false;
 
         var taskState = pc.GetTaskState();

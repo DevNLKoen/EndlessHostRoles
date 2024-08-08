@@ -41,7 +41,7 @@ namespace TOZ
         public CustomRoles ThisCustomRole => System.Enum.Parse<CustomRoles>(GetType().Name, true);
         public virtual bool IsExperimental => false;
 
-        public RoleOptionType ThisRoleType => RoleOptionType.Neutral_NonKilling; //{ get; }
+        //public RoleOptionType ThisRoleType => RoleOptionType.Neutral_NonKilling; //{ get; }
 
 
         // Some virtual methods that trigger actions, like venting, petting, CheckMurder, etc. These are not abstract because they have a default implementation. These should also have the same name as the methods in the derived classes.
@@ -57,12 +57,12 @@ namespace TOZ
 
         public virtual bool CanUseImpostorVentButton(PlayerControl pc)
         {
-            return pc.IsAlive() && (pc.Is(CustomRoleTypes.Impostor) || (pc.Is(CustomRoles.Bloodlust) && Bloodlust.CanVent.GetBool())) && Circumvent.CanUseImpostorVentButton(pc) && pc.Data.Role.Role is not RoleTypes.Crewmate and not RoleTypes.Engineer;
+            return pc.IsAlive() && (pc.Is(CustomRoleTypes.Impostor)) && Circumvent.CanUseImpostorVentButton(pc) && pc.Data.Role.Role is not RoleTypes.Crewmate and not RoleTypes.Engineer;
         }
 
         public virtual bool CanUseSabotage(PlayerControl pc)
         {
-            return pc.Is(Team.Impostor) || pc.Is(CustomRoles.Trickster) || pc.Is(CustomRoles.Mischievous) || (pc.Is(CustomRoles.Bloodlust) && Bloodlust.HasImpVision.GetBool()) && pc.IsAlive();
+            return pc.Is(Team.Impostor) || pc.Is(CustomRoles.Trickster) || pc.Is(CustomRoles.Mischievous);
         }
 
         public virtual void ApplyGameOptions(IGameOptions opt, byte playerId)

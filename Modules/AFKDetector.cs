@@ -42,7 +42,7 @@ namespace TOZ.Modules
             PlayerData[pc.PlayerId] = new()
             {
                 LastPosition = pc.Pos(),
-                Timer = 10f + (pc.Is(CustomRoles.Truant) ? Options.TruantWaitingTime.GetFloat() : 0f)
+                Timer = 10f
             };
         }
 

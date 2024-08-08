@@ -160,8 +160,6 @@ internal class ChangeRoleSettings
             Main.KillTimers = [];
             Main.SleuthMsgs = [];
             Main.CyberStarDead = [];
-            Main.KilledDiseased = [];
-            Main.KilledAntidote = [];
             Main.BaitAlive = [];
             Main.DontCancelVoteList = [];
             Main.LastEnteredVent = [];
@@ -174,35 +172,17 @@ internal class ChangeRoleSettings
             Main.LoversPlayers = [];
             Main.ShieldPlayer = Options.ShieldPersonDiedFirst.GetBool() ? Main.FirstDied : string.Empty;
             Main.FirstDied = string.Empty;
-            Main.MadmateNum = 0;
 
             Mayor.MayorUsedButtonCount = [];
-            Mario.MarioVentCount = [];
             Cleaner.CleanerBodies = [];
             Virus.InfectedBodies = [];
-            Workaholic.WorkaholicAlive = [];
             Virus.VirusNotify = [];
             Veteran.VeteranInProtect = [];
             Grenadier.GrenadierBlinding = [];
             Grenadier.MadGrenadierBlinding = [];
-            OverKiller.OverDeadPlayerList = [];
-            Warlock.WarlockTimer = [];
             Arsonist.IsDoused = [];
-            Revolutionist.IsDraw = [];
             Arsonist.ArsonistTimer = [];
-            Revolutionist.RevolutionistTimer = [];
-            Revolutionist.RevolutionistStart = [];
-            Revolutionist.RevolutionistLastTime = [];
-            Revolutionist.RevolutionistCountdown = [];
-            Warlock.CursedPlayers = [];
-            Mafia.MafiaRevenged = [];
-            Warlock.IsCurseAndKill = [];
-            Warlock.IsCursed = false;
             Detective.DetectiveNotify = [];
-            Provocateur.Provoked = [];
-            Godfather.GodfatherTarget = byte.MaxValue;
-            Crewpostor.TasksDone = [];
-            Messenger.Sent = [];
 
             ReportDeadBodyPatch.CanReport = [];
             SabotageMapPatch.TimerTexts = [];
@@ -227,7 +207,6 @@ internal class ChangeRoleSettings
             CheckForEndVotingPatch.EjectionText = string.Empty;
 
             Arsonist.CurrentDousingTarget = byte.MaxValue;
-            Revolutionist.CurrentDrawTarget = byte.MaxValue;
             Main.PlayerColors = [];
 
             RPC.SyncAllPlayerNames();
@@ -288,8 +267,6 @@ internal class ChangeRoleSettings
                 DoubleTrigger.Init();
                 Workhorse.Init();
                 Damocles.Initialize();
-                Stressed.Init();
-                Asthmatic.Init();
                 DoubleShot.Init();
                 Circumvent.Init();
             }
@@ -397,7 +374,7 @@ internal class SelectRolesPatch
 
             BasisChangingAddons.Clear();
 
-            try
+            /*try           UNKNOWN
             {
                 var rd = IRandom.Instance;
                 bool bloodlustSpawn = rd.Next(1, 100) <= (Options.CustomAdtRoleSpawnRate.TryGetValue(CustomRoles.Bloodlust, out var option3) ? option3.GetFloat() : 0) && CustomRoles.Bloodlust.IsEnable();
@@ -427,15 +404,12 @@ internal class SelectRolesPatch
             catch (Exception e)
             {
                 Utils.ThrowException(e);
-            }
+            }*/
 
 
             Dictionary<(byte, byte), RoleTypes> rolesMap = [];
 
             // Register Desync Impostor Roles
-            foreach (var kv in RoleResult.Where(x => x.Value.IsDesyncRole() || IsBloodlustPlayer(x.Key.PlayerId)))
-                AssignDesyncRole(kv.Value, kv.Key, senders, rolesMap, BaseRole: IsBloodlustPlayer(kv.Key.PlayerId) ? RoleTypes.Impostor : kv.Value.GetDYRole());
-
 
             MakeDesyncSender(senders, rolesMap);
         }
@@ -447,7 +421,7 @@ internal class SelectRolesPatch
 
         return;
 
-        bool IsBloodlustPlayer(byte id) => BasisChangingAddons.TryGetValue(CustomRoles.Bloodlust, out var list) && list.Contains(id);
+        //bool IsBloodlustPlayer(byte id) => BasisChangingAddons.TryGetValue(CustomRoles.Bloodlust, out var list) && list.Contains(id);
 
         // Below is the role assignment on the vanilla side.
     }
@@ -479,7 +453,6 @@ internal class SelectRolesPatch
             {
                 foreach ((PlayerControl PLAYER, RoleTypes _) in RpcSetRoleReplacer.StoragedData)
                 {
-                    if (IsBasisChangingPlayer(PLAYER.PlayerId, CustomRoles.Bloodlust)) continue;
                     var kp = RoleResult.FirstOrDefault(x => x.Key.PlayerId == PLAYER.PlayerId);
 
                     bool nimbleBanned = hasBanned && banned.Any(x => x.Key == kp.Value && x.Value.Contains(CustomRoles.Nimble));
@@ -516,7 +489,7 @@ internal class SelectRolesPatch
                 if (Main.AlwaysSpawnTogetherCombos.TryGetValue(OptionItem.CurrentPreset, out var combos) && combos.Values.Any(l => l.Contains(addon)))
                 {
                     var roles = combos.Where(x => x.Value.Contains(addon)).Select(x => x.Key).ToHashSet();
-                    var players = RoleResult.Where(x => roles.Contains(x.Value) && x.Value.IsCrewmate() && (addon == CustomRoles.Nimble || x.Value.GetRoleTypes() == RoleTypes.Crewmate) && !IsBasisChangingPlayer(x.Key.PlayerId, CustomRoles.Bloodlust)).Select(x => x.Key.PlayerId).ToHashSet();
+                    var players = RoleResult.Where(x => roles.Contains(x.Value) && x.Value.IsCrewmate() && (addon == CustomRoles.Nimble || x.Value.GetRoleTypes() == RoleTypes.Crewmate)).Select(x => x.Key.PlayerId).ToHashSet();
                     if (players.Count > 0)
                     {
                         value.RoleList = players;
@@ -560,12 +533,7 @@ internal class SelectRolesPatch
                 var kp = RoleResult.FirstOrDefault(x => x.Key.PlayerId == PLAYER.PlayerId);
                 RoleTypes roleType = kp.Value.GetRoleTypes();
 
-                if (IsBasisChangingPlayer(PLAYER.PlayerId, CustomRoles.Bloodlust))
-                {
-                    roleType = RoleTypes.Impostor;
-                    Logger.Warn($"{PLAYER.GetRealName()} was assigned Bloodlust, their role basis was changed to Impostor", "Bloodlust");
-                }
-                else if (IsBasisChangingPlayer(PLAYER.PlayerId, CustomRoles.Nimble))
+                if (IsBasisChangingPlayer(PLAYER.PlayerId, CustomRoles.Nimble))
                 {
                     if (roleType == RoleTypes.Crewmate)
                     {
@@ -659,7 +627,7 @@ internal class SelectRolesPatch
 
             foreach (var kv in RoleResult)
             {
-                if (kv.Value.IsDesyncRole() || IsBasisChangingPlayer(kv.Key.PlayerId, CustomRoles.Bloodlust)) continue;
+                if (kv.Value.IsDesyncRole()) continue;
                 AssignCustomRole(kv.Value, kv.Key);
             }
 
@@ -680,14 +648,14 @@ internal class SelectRolesPatch
                 {
                     foreach (var role in item.Value)
                     {
-                        if (role is CustomRoles.Nimble or CustomRoles.Physicist or CustomRoles.Bloodlust or CustomRoles.Finder or CustomRoles.Noisy) continue;
+                        if (role is CustomRoles.Nimble or CustomRoles.Physicist or CustomRoles.Finder or CustomRoles.Noisy) continue;
                         state.SetSubRole(role);
                         if (overrideLovers && role == CustomRoles.Lovers) Main.LoversPlayers.Add(Utils.GetPlayerById(item.Key));
                     }
                 }
             }
 
-            if (!overrideLovers && CustomRoles.Lovers.IsEnable() && (CustomRoles.FFF.IsEnable() ? -1 : rd.Next(1, 100)) <= Lovers.LoverSpawnChances.GetInt()) AssignLoversRolesFromList();
+            if (!overrideLovers && CustomRoles.Lovers.IsEnable() && (false ? -1 : rd.Next(1, 100)) <= Lovers.LoverSpawnChances.GetInt()) AssignLoversRolesFromList();
 
             // Add-on assignment
             var aapc = Main.AllAlivePlayerControls.Shuffle();
@@ -767,11 +735,7 @@ internal class SelectRolesPatch
 
             try
             {
-                Stressed.Add();
-                Asthmatic.Add();
                 Circumvent.Add();
-                Dynamo.Add();
-                Spurt.Add();
                 Lovers.Init();
             }
             catch (Exception e)
@@ -840,7 +804,7 @@ internal class SelectRolesPatch
             }
 
             // Add players with unclassified roles to the list of players who require ResetCam.
-            Main.ResetCamPlayerList.UnionWith(Main.PlayerStates.Where(p => (p.Value.MainRole.IsDesyncRole() && !p.Value.MainRole.UsesPetInsteadOfKill()) || p.Value.SubRoles.Contains(CustomRoles.Bloodlust)).Select(p => p.Key));
+            Main.ResetCamPlayerList.UnionWith(Main.PlayerStates.Where(p => (p.Value.MainRole.IsDesyncRole() && !p.Value.MainRole.UsesPetInsteadOfKill())).Select(p => p.Key));
             Utils.CountAlivePlayers(true);
             Utils.SyncAllSettings();
 
@@ -959,7 +923,7 @@ internal class SelectRolesPatch
             return;
         }
 
-        var allPlayers = Main.AllPlayerControls.Where(pc => !pc.Is(CustomRoles.GM) && (!pc.HasSubRole() || pc.GetCustomSubRoles().Count < Options.NoLimitAddonsNumMax.GetInt()) && !pc.Is(CustomRoles.God) && !pc.Is(CustomRoles.FFF) && !pc.Is(CustomRoles.Bomber) && !pc.Is(CustomRoles.Nuker) && !pc.Is(CustomRoles.Provocateur) && (!pc.IsCrewmate() || Lovers.CrewCanBeInLove.GetBool()) && (!pc.GetCustomRole().IsNeutral() || Lovers.NeutralCanBeInLove.GetBool()) && (!pc.IsImpostor() || Lovers.ImpCanBeInLove.GetBool())).ToList();
+        var allPlayers = Main.AllPlayerControls.Where(pc => !pc.Is(CustomRoles.GM) && (!pc.HasSubRole() || pc.GetCustomSubRoles().Count < Options.NoLimitAddonsNumMax.GetInt()) && !pc.Is(CustomRoles.God) && !pc.Is(CustomRoles.Bomber) && !pc.Is(CustomRoles.Nuker) && (!pc.IsCrewmate() || Lovers.CrewCanBeInLove.GetBool()) && (!pc.GetCustomRole().IsNeutral() || Lovers.NeutralCanBeInLove.GetBool()) && (!pc.IsImpostor() || Lovers.ImpCanBeInLove.GetBool())).ToList();
         const CustomRoles role = CustomRoles.Lovers;
         var count = Math.Clamp(RawCount, 0, allPlayers.Count);
         if (RawCount == -1) count = Math.Clamp(role.GetCount(), 0, allPlayers.Count);

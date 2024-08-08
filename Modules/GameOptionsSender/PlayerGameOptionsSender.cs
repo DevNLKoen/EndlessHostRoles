@@ -54,7 +54,7 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
         for (int index = 0; index < AllSenders.Count; index++)
         {
             GameOptionsSender allSender = AllSenders[index];
-            if (allSender is PlayerGameOptionsSender { IsDirty: false } sender && sender.player.IsAlive() && (sender.player.GetCustomRole().NeedUpdateOnLights() || sender.player.Is(CustomRoles.Torch) || sender.player.Is(CustomRoles.Mare)))
+            if (allSender is PlayerGameOptionsSender { IsDirty: false } sender && sender.player.IsAlive() && (sender.player.GetCustomRole().NeedUpdateOnLights() || sender.player.Is(CustomRoles.Torch)))
             {
                 sender.SetDirty();
             }
@@ -67,7 +67,7 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
         for (int index = 0; index < AllSenders.Count; index++)
         {
             GameOptionsSender allSender = AllSenders[index];
-            if (allSender is PlayerGameOptionsSender { IsDirty: false } sender && sender.player.IsAlive() && ((Grenadier.GrenadierBlinding.Count > 0 && (sender.player.IsImpostor() || (sender.player.GetCustomRole().IsNeutral() && Options.GrenadierCanAffectNeutral.GetBool()))) || (Grenadier.MadGrenadierBlinding.Count > 0 && !sender.player.GetCustomRole().IsImpostorTeam() && !sender.player.Is(CustomRoles.Madmate))))
+            if (allSender is PlayerGameOptionsSender { IsDirty: false } sender && sender.player.IsAlive() && ((Grenadier.GrenadierBlinding.Count > 0 && (sender.player.IsImpostor() || (sender.player.GetCustomRole().IsNeutral() && Options.GrenadierCanAffectNeutral.GetBool()))) || (Grenadier.MadGrenadierBlinding.Count > 0 && !sender.player.GetCustomRole().IsImpostorTeam())))
             {
                 sender.SetDirty();
             }
@@ -181,13 +181,10 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
             {
                 case CustomRoleTypes.Impostor:
                     AURoleOptions.ShapeshifterCooldown = Options.DefaultShapeshiftCooldown.GetFloat();
-                    AURoleOptions.GuardianAngelCooldown = Spiritcaller.SpiritAbilityCooldown.GetFloat();
                     break;
                 case CustomRoleTypes.Neutral:
-                    AURoleOptions.GuardianAngelCooldown = Spiritcaller.SpiritAbilityCooldown.GetFloat();
                     break;
                 case CustomRoleTypes.Crewmate:
-                    AURoleOptions.GuardianAngelCooldown = Spiritcaller.SpiritAbilityCooldown.GetFloat();
                     break;
             }
 
@@ -228,17 +225,10 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
 
             Main.PlayerStates[player.PlayerId].Role.ApplyGameOptions(opt, player.PlayerId);
 
-            if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Bewilder) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == player.PlayerId && !x.Is(CustomRoles.Hangman)))
-            {
-                opt.SetVision(false);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, Options.BewilderVision.GetFloat());
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, Options.BewilderVision.GetFloat());
-            }
-
             if ((Grenadier.GrenadierBlinding.Count > 0 &&
                  (role.IsImpostor() ||
                   (role.IsNeutral() && Options.GrenadierCanAffectNeutral.GetBool()))) ||
-                (Grenadier.MadGrenadierBlinding.Count > 0 && !role.IsImpostorTeam() && !player.Is(CustomRoles.Madmate)))
+                (Grenadier.MadGrenadierBlinding.Count > 0 && !role.IsImpostorTeam()))
             {
                 opt.SetVision(false);
                 opt.SetFloat(FloatOptionNames.CrewLightMod, Options.GrenadierCauseVision.GetFloat());
@@ -259,11 +249,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                 opt.SetFloat(FloatOptionNames.ImpostorLightMod, Sprayer.LoweredVision.GetFloat());
             }
 
-            Dazzler.SetDazzled(player, opt);
-            Deathpact.SetDeathpactVision(player, opt);
-
-            Spiritcaller.ReduceVision(opt, player);
-
             var array = Main.PlayerStates[player.PlayerId].SubRoles;
             foreach (CustomRoles subRole in array)
             {
@@ -277,15 +262,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                         break;
                     case CustomRoles.Giant:
                         Main.AllPlayerSpeed[player.PlayerId] = Options.GiantSpeed.GetFloat();
-                        break;
-                    case CustomRoles.Mare when Options.MareHasIncreasedSpeed.GetBool():
-                        Main.AllPlayerSpeed[player.PlayerId] = Options.MareSpeedDuringLightsOut.GetFloat();
-                        break;
-                    case CustomRoles.Sleep when Utils.IsActive(SystemTypes.Electrical):
-                        opt.SetVision(false);
-                        opt.SetFloat(FloatOptionNames.CrewLightMod, 0);
-                        opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0);
-                        Main.AllPlayerSpeed[player.PlayerId] = Main.MinSpeed;
                         break;
                     case CustomRoles.Torch:
                         if (!Utils.IsActive(SystemTypes.Electrical))
@@ -302,11 +278,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                         }
 
                         break;
-                    case CustomRoles.Bewilder:
-                        opt.SetVision(false);
-                        opt.SetFloat(FloatOptionNames.CrewLightMod, Options.BewilderVision.GetFloat());
-                        opt.SetFloat(FloatOptionNames.ImpostorLightMod, Options.BewilderVision.GetFloat());
-                        break;
                     case CustomRoles.Sunglasses:
                         opt.SetVision(false);
                         opt.SetFloat(FloatOptionNames.CrewLightMod, Options.SunglassesVision.GetFloat());
@@ -314,9 +285,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                         break;
                     case CustomRoles.Reach:
                         opt.SetInt(Int32OptionNames.KillDistance, 2);
-                        break;
-                    case CustomRoles.Madmate:
-                        opt.SetVision(Options.MadmateHasImpostorVision.GetBool());
                         break;
                     case CustomRoles.Nimble when player.GetRoleTypes() == RoleTypes.Engineer:
                         AURoleOptions.EngineerCooldown = Nimble.NimbleCD.GetFloat();
@@ -336,26 +304,6 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
                         AURoleOptions.NoisemakerAlertDuration = Noisy.NoisyAlertDuration.GetFloat();
                         break;
                 }
-            }
-
-            if (Magician.BlindPPL.ContainsKey(player.PlayerId))
-            {
-                opt.SetVision(false);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, 0);
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0);
-            }
-
-            if (Chemist.Instances.Any(x => x.IsBlinding && player.PlayerId != x.ChemistPC.PlayerId))
-            {
-                opt.SetVision(false);
-                opt.SetFloat(FloatOptionNames.CrewLightMod, 0);
-                opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0);
-            }
-
-            if (Changeling.ChangedRole.TryGetValue(player.PlayerId, out var changed) && changed && player.GetRoleTypes() != RoleTypes.Shapeshifter)
-            {
-                AURoleOptions.ShapeshifterCooldown = 300f;
-                AURoleOptions.ShapeshifterDuration = 1f;
             }
 
             if (Options.UsePhantomBasis.GetBool() && role.SimpleAbilityTrigger())

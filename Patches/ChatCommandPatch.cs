@@ -216,8 +216,6 @@ internal static class ChatCommands
 
         if (GuessManager.GuesserMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
         if (NiceSwapper.SwapMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
-        if (Councillor.MurderMsg(PlayerControl.LocalPlayer, text)) goto Canceled;
-        if (Mafia.MafiaMsgCheck(PlayerControl.LocalPlayer, text)) goto Canceled;
 
         Main.IsChatCommand = false;
 
@@ -239,8 +237,6 @@ internal static class ChatCommands
                 break;
             }
         }
-
-        if (Silencer.ForSilencer.Contains(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive()) goto Canceled;
 
         if (GameStates.IsInGame && (PlayerControl.LocalPlayer.IsAlive() || ExileController.Instance) && Lovers.PrivateChat.GetBool() && (ExileController.Instance || !GameStates.IsMeeting))
         {
@@ -313,17 +309,6 @@ internal static class ChatCommands
 
             var killer = player.GetRealKiller();
             if (killer == null && id != 3) yield break;
-
-            Team team = player.GetTeam();
-            string message = id switch
-            {
-                1 => string.Format(GetString("MessengerMessage.1"), GetString(Main.PlayerStates[killer.PlayerId].LastRoom.RoomId.ToString())),
-                2 => string.Format(GetString("MessengerMessage.2"), killer.GetCustomRole().ToColoredString()),
-                _ => string.Format(GetString("MessengerMessage.3"), Utils.ColorString(team.GetTeamColor(), GetString($"{team}")))
-            };
-
-            Utils.SendMessage(message, title: string.Format(GetString("MessengerTitle"), player.PlayerId.ColoredPlayerName()));
-            Messenger.Sent.Add(player.PlayerId);
         }
     }
 
@@ -711,19 +696,12 @@ internal static class ChatCommands
 
     private static void ChatCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
-        if (!Ventriloquist.On || !player.IsAlive() || !player.Is(CustomRoles.Ventriloquist) || player.PlayerId.GetAbilityUseLimit() < 1) return;
-        var vl2 = (Ventriloquist)Main.PlayerStates[player.PlayerId].Role;
-        if (vl2.Target == byte.MaxValue) return;
         if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId) ChatManager.SendPreviousMessagesToAll();
-        LateTask.New(() => Utils.GetPlayerById(vl2.Target)?.RpcSendChat(text[6..]), 0.2f, log: false);
         player.RpcRemoveAbilityUse();
     }
 
     private static void TargetCommand(ChatController __instance, PlayerControl player, string text, string[] args)
     {
-        if (!Ventriloquist.On || !player.IsAlive() || !player.Is(CustomRoles.Ventriloquist) || player.PlayerId.GetAbilityUseLimit() < 1) return;
-        var vl = (Ventriloquist)Main.PlayerStates[player.PlayerId].Role;
-        vl.Target = args.Length < 2 ? byte.MaxValue : byte.TryParse(args[1], out var targetId) ? targetId : byte.MaxValue;
         if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId) ChatManager.SendPreviousMessagesToAll();
     }
 
@@ -765,7 +743,7 @@ internal static class ChatCommands
             return;
         }
 
-        Utils.SendMessage("\n", player.PlayerId, string.Format(GetString("DeathCommand"), Utils.ColorString(Main.PlayerColors.TryGetValue(killer.PlayerId, out var kColor) ? kColor : Color.white, killer.GetRealName()), (killer.Is(CustomRoles.Bloodlust) ? CustomRoles.Bloodlust.ToColoredString() : string.Empty) + killer.GetCustomRole().ToColoredString()));
+        Utils.SendMessage("\n", player.PlayerId, string.Format(GetString("DeathCommand"), Utils.ColorString(Main.PlayerColors.TryGetValue(killer.PlayerId, out var kColor) ? kColor : Color.white, killer.GetRealName()), killer.GetCustomRole().ToColoredString()));
     }
 
     private static void MessageWaitCommand(ChatController __instance, PlayerControl player, string text, string[] args)
@@ -1541,20 +1519,14 @@ internal static class ChatCommands
             "自爆兵" or "自爆" => GetString("Bomber"),
             "邪惡的追踪者" or "邪恶追踪者" or "追踪" or "et" => GetString("EvilTracker"),
             "煙花商人" or "烟花" or "fw" => GetString("FireWorks"),
-            "夢魘" or "夜魇" => GetString("Mare"),
             "詭雷" => GetString("BoobyTrap"),
             "黑手黨" or "黑手" => GetString("Mafia"),
             "嗜血殺手" or "嗜血" or "sk" => GetString("SerialKiller"),
             "千面鬼" or "千面" => GetString("ShapeMaster"),
-            "狂妄殺手" or "狂妄" or "arr" => GetString("Sans"),
-            "殺戮機器" or "杀戮" or "机器" or "杀戮兵器" or "km" => GetString("Minimalism"),
-            "蝕時者" or "蚀时" or "偷时" or "tt" => GetString("TimeThief"),
-            "狙擊手" or "狙击" => GetString("Sniper"),
             "傀儡師" or "傀儡" => GetString("Puppeteer"),
             "殭屍" or "丧尸" => GetString("Zombie"),
             "吸血鬼" or "吸血" or "vamp" => GetString("Vampire"),
             "術士" => GetString("Warlock"),
-            "駭客" or "黑客" => GetString("Hacker"),
             "刺客" or "忍者" => GetString("Assassin"),
             "礦工" => GetString("Miner"),
             "逃逸者" or "逃逸" => GetString("Escapee"),
@@ -1581,13 +1553,11 @@ internal static class ChatCommands
             "告密者" or "告密" => GetString("Snitch"),
             "增速者" or "增速" => GetString("SpeedBooster"),
             "時間操控者" or "时间操控人" or "时间操控" or "tm" => GetString("TimeManager"),
-            "陷阱師" or "陷阱" or "小奖" => GetString("Trapper"),
             "傳送師" or "传送" or "trans" => GetString("Transporter"),
             "縱火犯" or "纵火" or "arso" => GetString("Arsonist"),
             "處刑人" or "处刑" or "exe" => GetString("Executioner"),
             "小丑" or "丑皇" or "jest" => GetString("Jester"),
             "投機者" or "投机" or "oppo" => GetString("Opportunist"),
-            "馬里奧" or "马力欧" => GetString("Mario"),
             "恐怖分子" or "恐怖" or "terro" => GetString("Terrorist"),
             "豺狼" or "蓝狼" or "狼" => GetString("Jackal"),
             "神" or "上帝" => GetString("God"),
@@ -1598,40 +1568,26 @@ internal static class ChatCommands
             "破平者" or "破平" => GetString("Brakar"),
             "執燈人" or "执灯" or "灯人" => GetString("Torch"),
             "膽小" or "胆小" or "obli" => GetString("Oblivious"),
-            "迷惑者" or "迷幻" or "bew" => GetString("Bewilder"),
             "sun" => GetString("Sunglasses"),
             "蠢蛋" or "笨蛋" or "蠢狗" or "傻逼" => GetString("Fool"),
-            "冤罪師" or "冤罪" or "inno" => GetString("Innocent"),
             "資本家" or "资本主义" or "资本" or "cap" or "capi" => GetString("Capitalism"),
             "老兵" or "vet" => GetString("Veteran"),
             "加班狂" or "加班" => GetString("Workhorse"),
-            "復仇者" or "复仇" => GetString("Avanger"),
             "鵜鶘" or "pel" or "peli" => GetString("Pelican"),
             "保鏢" or "bg" => GetString("Bodyguard"),
-            "up" or "up主" or "yt" => GetString("Youtuber"),
-            "利己主義者" or "利己主义" or "利己" or "ego" => GetString("Egoist"),
             "贗品商" or "赝品" => GetString("Counterfeiter"),
             "擲雷兵" or "掷雷" or "闪光弹" or "gren" or "grena" => GetString("Grenadier"),
-            "竊票者" or "偷票" or "偷票者" or "窃票师" or "窃票" => GetString("TicketsStealer"),
             "教父" => GetString("Gangster"),
             "革命家" or "革命" or "revo" => GetString("Revolutionist"),
-            "fff團" or "fff" or "fff团" => GetString("FFF"),
             "清理工" or "清潔工" or "清洁工" or "清理" or "清洁" or "janitor" => GetString("Cleaner"),
             "醫生" => GetString("Medicaler"),
             "占卜師" or "占卜" or "ft" => GetString("Divinator"),
             "雙重人格" or "双重" or "双人格" or "人格" or "schizo" or "scizo" or "shizo" => GetString("DualPersonality"),
-            "玩家" => GetString("Gamer"),
-            "情報販子" or "情报" or "贩子" => GetString("Messenger"),
-            "球狀閃電" or "球闪" or "球状" => GetString("BallLightning"),
-            "潛藏者" or "潜藏" => GetString("DarkHide"),
             "貪婪者" or "贪婪" => GetString("Greedier"),
-            "工作狂" or "工作" or "worka" => GetString("Workaholic"),
             "呪狼" or "咒狼" or "cw" => GetString("CursedWolf"),
             "寶箱怪" or "宝箱" => GetString("Mimic"),
-            "集票者" or "集票" or "寄票" or "机票" => GetString("Collector"),
             "活死人" or "活死" => GetString("Glitch"),
             "奪魂者" or "多混" or "夺魂" or "sc" => GetString("ImperiusCurse"),
-            "自爆卡車" or "自爆" or "卡车" or "provo" => GetString("Provocateur"),
             "快槍手" or "快枪" or "qs" => GetString("QuickShooter"),
             "隱蔽者" or "隐蔽" or "小黑人" => GetString("Concealer"),
             "抹除者" or "抹除" => GetString("Eraser"),
@@ -1645,12 +1601,10 @@ internal static class ChatCommands
             "隱匿者" or "隐匿" or "隐身" or "隐身人" or "印尼" => GetString("Swooper"),
             "船鬼" or "cp" => GetString("Crewpostor"),
             "嗜血騎士" or "血骑" or "骑士" or "bk" => GetString("BloodKnight"),
-            "賭徒" => GetString("Totocalcio"),
             "分散机" => GetString("Disperser"),
             "和平之鸽" or "和平之鴿" or "和平的鸽子" or "和平" or "dop" or "dove of peace" => GetString("DovesOfNeace"),
             "持槍" or "持械" or "手长" => GetString("Reach"),
             "monarch" => GetString("Monarch"),
-            "sch" => GetString("SchrodingersCat"),
             "glitch" or "Glitch" => GetString("Glitch"),
             _ => text
         };
@@ -1786,8 +1740,7 @@ internal static class ChatCommands
         string[] args = text.Split(' ');
 
         if (GuessManager.GuesserMsg(player, text) ||
-            NiceSwapper.SwapMsg(player, text) ||
-            Councillor.MurderMsg(player, text))
+            NiceSwapper.SwapMsg(player, text))
         {
             canceled = true;
             LastSentCommand[player.PlayerId] = now;
@@ -1814,14 +1767,6 @@ internal static class ChatCommands
                 if (command.IsCanceled) canceled = true;
                 break;
             }
-        }
-
-        if (Silencer.ForSilencer.Contains(player.PlayerId) && player.IsAlive() && !player.IsHost())
-        {
-            ChatManager.SendPreviousMessagesToAll();
-            canceled = true;
-            LastSentCommand[player.PlayerId] = now;
-            return;
         }
 
         if (GameStates.IsInGame && !ChatUpdatePatch.LoversMessage && (player.IsAlive() || ExileController.Instance) && Lovers.PrivateChat.GetBool() && (ExileController.Instance || !GameStates.IsMeeting))

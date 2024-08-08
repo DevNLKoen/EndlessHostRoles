@@ -32,7 +32,6 @@ public static class Options
     public enum GameStateInfo
     {
         ImpCount,
-        MadmateCount,
         ConvertedCount,
         NNKCount,
         NKCount,
@@ -54,8 +53,7 @@ public static class Options
         "FFA",
         "MoveAndStop",
         "HotPotato",
-        "HideAndSeek",
-        "Speedrun"
+        "HideAndSeek"
     ];
 
     private static Dictionary<CustomRoles, int> roleCounts;
@@ -121,7 +119,6 @@ public static class Options
         "CamouflageMode.Moe",
         "CamouflageMode.Pyro",
         "CamouflageMode.ryuk",
-        "CamouflageMode.Gurge44",
         "CamouflageMode.TommyXL"
     ];
 
@@ -196,7 +193,6 @@ public static class Options
 
 
     // Detailed Ejections //
-    public static OptionItem ConfirmEgoistOnEject;
     public static OptionItem ConfirmLoversOnEject;
 
     public static OptionItem UniqueNeutralRevealScreen;
@@ -212,14 +208,7 @@ public static class Options
     public static OptionItem DefaultShapeshiftCooldown;
     public static OptionItem DeadImpCantSabotage;
     public static OptionItem ImpKnowAlliesRole;
-    public static OptionItem ImpKnowWhosMadmate;
-    public static OptionItem MadmateKnowWhosImp;
-    public static OptionItem MadmateKnowWhosMadmate;
 
-    public static OptionItem MadmateHasImpostorVision;
-
-    public static OptionItem ImpCanKillMadmate;
-    public static OptionItem MadmateCanKillImp;
     public static OptionItem JackalCanKillSidekick;
     public static OptionItem SidekickCanKillJackal;
     public static OptionItem SidekickCanKillSidekick;
@@ -235,15 +224,12 @@ public static class Options
     public static OptionItem GGCanGuessTime;
     public static OptionItem GGTryHideMsg;
     public static OptionItem LuckeyProbability;
-    public static OptionItem LuckyProbability;
     public static OptionItem VindicatorAdditionalVote;
     public static OptionItem VindicatorHideVote;
     public static OptionItem DoctorTaskCompletedBatteryCharge;
-    public static OptionItem TrapperBlockMoveTime;
     public static OptionItem DetectiveCanknowKiller;
     public static OptionItem TransporterTeleportMax;
     public static OptionItem CanTerroristSuicideWin;
-    public static OptionItem InnocentCanWinByImp;
     public static OptionItem BaitNotification;
     public static OptionItem DoctorVisibleToEveryone;
     public static OptionItem ArsonistDouseTime;
@@ -254,8 +240,6 @@ public static class Options
     public static OptionItem ArsonistMaxPlayersToIgnite;
     public static OptionItem LegacyMafia;
     public static OptionItem NotifyGodAlive;
-    public static OptionItem MarioVentNumWin;
-    public static OptionItem MarioVentCD;
     public static OptionItem VeteranSkillCooldown;
     public static OptionItem VeteranSkillDuration;
     public static OptionItem TimeMasterSkillCooldown;
@@ -326,33 +310,9 @@ public static class Options
     public static OptionItem RevolutionistVentCountDown;
     public static OptionItem ShapeImperiusCurseShapeshiftDuration;
     public static OptionItem ImperiusCurseShapeshiftCooldown;
-    public static OptionItem CrewpostorCanKillAllies;
-    public static OptionItem CrewpostorKnowsAllies;
-    public static OptionItem AlliesKnowCrewpostor;
-    public static OptionItem CrewpostorKillAfterTask;
-    public static OptionItem CrewpostorLungeKill;
     public static OptionItem ObliviousBaitImmune;
-    public static OptionItem UnluckyTaskSuicideChance;
-    public static OptionItem UnluckyKillSuicideChance;
-    public static OptionItem UnluckyVentSuicideChance;
-    public static OptionItem UnluckyReportSuicideChance;
-    public static OptionItem UnluckySabotageSuicideChance;
-    public static OptionItem AsthmaticMinRedTime;
-    public static OptionItem AsthmaticMaxRedTime;
-    public static OptionItem AsthmaticMinGreenTime;
-    public static OptionItem AsthmaticMaxGreenTime;
     public static OptionItem DiscoChangeInterval;
 
-    public static OptionItem TruantWaitingTime;
-
-    // RASCAL //
-    public static OptionItem RascalAppearAsMadmate;
-
-    // Mare Add-on
-    public static OptionItem MareKillCD;
-    public static OptionItem MareKillCDNormally;
-    public static OptionItem MareHasIncreasedSpeed;
-    public static OptionItem MareSpeedDuringLightsOut;
 
     public static OptionItem AutoPlayAgain;
     public static OptionItem AutoPlayAgainCountdown;
@@ -365,12 +325,6 @@ public static class Options
     public static OptionItem PhantomCanVent;
 
     public static OptionItem PhantomSnatchesWin;
-
-    public static OptionItem DiseasedCDOpt;
-    public static OptionItem DiseasedCDReset;
-
-    public static OptionItem AntidoteCDOpt;
-    public static OptionItem AntidoteCDReset;
 
     public static OptionItem BaitDelayMin;
     public static OptionItem BaitDelayMax;
@@ -557,9 +511,6 @@ public static class Options
     public static OptionItem SpawnAdditionalRefugeeWhenNKAlive;
     public static OptionItem SpawnAdditionalRefugeeMinAlivePlayers;
 
-    public static OptionItem AprilFoolsMode;
-
-
     // Voting Modes
     public static OptionItem VoteMode;
     private static OptionItem WhenSkipVote;
@@ -584,19 +535,6 @@ public static class Options
         "TieMode.Random"
     ];
 
-    public static readonly string[] MadmateSpawnModeStrings =
-    [
-        "MadmateSpawnMode.Assign",
-        "MadmateSpawnMode.FirstKill",
-        "MadmateSpawnMode.SelfVote"
-    ];
-
-    public static readonly string[] MadmateCountModeStrings =
-    [
-        "MadmateCountMode.None",
-        "MadmateCountMode.Imp",
-        "MadmateCountMode.Crew"
-    ];
 
     public static readonly string[] SidekickCountMode =
     [
@@ -684,27 +622,13 @@ public static class Options
     public static OptionItem NameDisplayAddons;
     public static OptionItem AddBracketsToAddons;
     public static OptionItem NoLimitAddonsNumMax;
-    public static OptionItem BewilderVision;
     public static OptionItem SunglassesVision;
-
-    public static OptionItem MadmateSpawnMode;
-    public static OptionItem MadmateCountMode;
-    public static OptionItem SheriffCanBeMadmate;
-    public static OptionItem MayorCanBeMadmate;
-    public static OptionItem NGuesserCanBeMadmate;
-    public static OptionItem SnitchCanBeMadmate;
-    public static OptionItem JudgeCanBeMadmate;
-    public static OptionItem MarshallCanBeMadmate;
-    public static OptionItem FarseerCanBeMadmate;
 
     public static OptionItem MadSnitchTasks;
     public static OptionItem FlashmanSpeed;
     public static OptionItem GiantSpeed;
-    public static OptionItem ImpEgoistVisibalToAllies;
     public static OptionItem TicketsPerKill;
     public static OptionItem DualVotes;
-    public static OptionItem ImpCanBeLoyal;
-    public static OptionItem CrewCanBeLoyal;
     public static OptionItem MinWaitAutoStart;
     public static OptionItem MaxWaitAutoStart;
     public static OptionItem PlayerAutoStart;
@@ -804,9 +728,9 @@ public static class Options
                 var sb = new System.Text.StringBuilder();
                 var grouped = Enum.GetValues<CustomRoles>().GroupBy(x =>
                 {
-                    if (x is CustomRoles.GM or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor or CustomRoles.Convict || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("TOZ")) return 4;
+                    if (x is CustomRoles.GM or CustomRoles.Konan or CustomRoles.NotAssigned or CustomRoles.LovingCrewmate or CustomRoles.LovingImpostor || x.IsForOtherGameMode() || x.IsVanilla() || x.ToString().Contains("TOZ")) return 4;
                     if (x.IsAdditionRole()) return 3;
-                    if (x.IsImpostor() || x.IsMadmate()) return 0;
+                    if (x.IsImpostor()) return 0;
                     if (x.IsNeutral()) return 1;
                     if (x.IsCrewmate()) return 2;
                     return 4;
@@ -963,20 +887,6 @@ public static class Options
         ImpKnowAlliesRole = new BooleanOptionItem(150, "ImpKnowAlliesRole", true, TabGroup.ImpostorRoles)
             .SetGameMode(CustomGameMode.Standard)
             .SetHeader(true);
-        ImpKnowWhosMadmate = new BooleanOptionItem(151, "ImpKnowWhosMadmate", false, TabGroup.ImpostorRoles)
-            .SetGameMode(CustomGameMode.Standard);
-        ImpCanKillMadmate = new BooleanOptionItem(152, "ImpCanKillMadmate", true, TabGroup.ImpostorRoles)
-            .SetGameMode(CustomGameMode.Standard);
-
-        MadmateKnowWhosMadmate = new BooleanOptionItem(153, "MadmateKnowWhosMadmate", false, TabGroup.ImpostorRoles)
-            .SetHeader(true)
-            .SetGameMode(CustomGameMode.Standard);
-        MadmateKnowWhosImp = new BooleanOptionItem(154, "MadmateKnowWhosImp", true, TabGroup.ImpostorRoles)
-            .SetGameMode(CustomGameMode.Standard);
-        MadmateCanKillImp = new BooleanOptionItem(155, "MadmateCanKillImp", true, TabGroup.ImpostorRoles)
-            .SetGameMode(CustomGameMode.Standard);
-        MadmateHasImpostorVision = new BooleanOptionItem(156, "MadmateHasImpostorVision", true, TabGroup.ImpostorRoles)
-            .SetGameMode(CustomGameMode.Standard);
 
         RefugeeKillCD = new FloatOptionItem(157, "RefugeeKillCD", new(0f, 180f, 2.5f), 25f, TabGroup.ImpostorRoles)
             .SetGameMode(CustomGameMode.Standard)
@@ -1052,7 +962,7 @@ public static class Options
                 MainLoadingText = $"Building Add-on Settings ({addonType.Key})";
                 int index = 0;
 
-                new BooleanOptionItem(titleId, $"ROT.AddonType.{addonType.Key}", false, TabGroup.Addons)
+                new TextOptionItem(titleId, $"ROT.AddonType.{addonType.Key}", TabGroup.Addons)
                     .SetGameMode(CustomGameMode.Standard)
                     .SetColor(addonType.Key.GetAddonTypeColor())
                     .SetHeader(true);
@@ -1164,15 +1074,6 @@ public static class Options
                     }
 
                 yield return null;
-                }
-
-                if (roleClasses.Key == RoleOptionType.Impostor)
-                {
-                    new TextOptionItem(titleId, "ROT.MadMates", TabGroup.ImpostorRoles)
-                        .SetHeader(true)
-                        .SetGameMode(CustomGameMode.Standard)
-                        .SetColor(Palette.ImpostorRed);
-                    titleId += 10;
                 }
 
             yield return null;
@@ -1344,10 +1245,6 @@ public static class Options
         ShowTeamNextToRoleNameOnEject = new BooleanOptionItem(19812, "ShowTeamNextToRoleNameOnEject", false, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
-        ConfirmEgoistOnEject = new BooleanOptionItem(19813, "ConfirmEgoistOnEject", true, TabGroup.GameSettings)
-            .SetGameMode(CustomGameMode.Standard)
-            .SetColor(new Color32(255, 238, 232, byte.MaxValue))
-            .SetHeader(true);
         ConfirmLoversOnEject = new BooleanOptionItem(19815, "ConfirmLoversOnEject", true, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
@@ -1718,12 +1615,6 @@ public static class Options
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(Color.magenta)
             .SetParent(SpawnAdditionalRefugeeOnImpsDead);
-
-        AprilFoolsMode = new BooleanOptionItem(23860, "AprilFoolsMode", Main.IsAprilFools, TabGroup.TaskSettings)
-            .SetGameMode(CustomGameMode.Standard)
-            .SetHeader(true)
-            .SetColor(new Color32(255, 153, 153, byte.MaxValue));
-
 
         // Disable Short Tasks
         DisableShortTasks = new BooleanOptionItem(23000, "DisableShortTasks", false, TabGroup.TaskSettings)

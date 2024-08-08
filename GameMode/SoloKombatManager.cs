@@ -277,7 +277,6 @@ internal static class SoloKombatManager
         OriginalSpeed.Remove(target.PlayerId);
         OriginalSpeed.Add(target.PlayerId, Main.AllPlayerSpeed[target.PlayerId]);
 
-        target.TP(Pelican.GetBlackRoomPS());
         Main.AllPlayerSpeed[target.PlayerId] = 0.3f;
         target.MarkDirtySettings();
 
@@ -336,14 +335,6 @@ internal static class SoloKombatManager
 
             if (AmongUsClient.Instance.AmHost)
             {
-                foreach (var pc in Main.AllPlayerControls.Where(pc => !pc.SoloAlive()).ToArray())
-                {
-                    if (pc.inVent && KB_BootVentWhenDead.GetBool()) pc.MyPhysics.RpcExitVent(2);
-                    var pos = Pelican.GetBlackRoomPS();
-                    var dis = Vector2.Distance(pos, pc.Pos());
-                    if (dis > 1f) pc.TP(pos);
-                }
-
                 if (LastFixedUpdate == Utils.TimeStamp) return;
                 LastFixedUpdate = Utils.TimeStamp;
 
@@ -360,13 +351,6 @@ internal static class SoloKombatManager
                         PlayerHP[pc.PlayerId] = Math.Min(PlayerHPMax[pc.PlayerId], PlayerHP[pc.PlayerId]);
                         SendRPCSyncKBPlayer(pc.PlayerId);
                         notifyRoles = true;
-                    }
-
-                    if (pc.SoloAlive() && !pc.inVent)
-                    {
-                        var pos = Pelican.GetBlackRoomPS();
-                        var dis = Vector2.Distance(pos, pc.Pos());
-                        if (dis < 1.1f) PlayerRandomSpwan(pc);
                     }
 
                     if (BackCountdown.ContainsKey(pc.PlayerId))

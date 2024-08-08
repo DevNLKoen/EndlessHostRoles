@@ -404,7 +404,7 @@ static class ExtendedPlayerControl
         {
             if (Math.Abs(time - (-1f)) < 0.5f) player.AddKCDAsAbilityCD();
             else player.AddAbilityCD((int)Math.Round(time));
-            if (player.GetCustomRole() is not CustomRoles.Necromancer and not CustomRoles.Deathknight) return;
+            return;
         }
 
         if (!player.CanUseKillButton()) return;
@@ -436,7 +436,7 @@ static class ExtendedPlayerControl
             Main.AllPlayerControls.Do(x => x.RpcGuardAndKill(target, 11, true, fromSetKCD: true));
         }
 
-        if (player.GetCustomRole() is not CustomRoles.Inhibitor and not CustomRoles.Saboteur) player.ResetKillCooldown();
+        player.ResetKillCooldown();
     }
 
     public static void RpcSpecificMurderPlayer(this PlayerControl killer, PlayerControl target = null)
@@ -642,7 +642,7 @@ static class ExtendedPlayerControl
     public static bool HasKillButton(this PlayerControl pc)
     {
         CustomRoles role = pc.GetCustomRole();
-        if (!pc.IsAlive() || pc.Data.Role.Role == RoleTypes.GuardianAngel || Pelican.IsEaten(pc.PlayerId)) return false;
+        if (!pc.IsAlive() || pc.Data.Role.Role == RoleTypes.GuardianAngel) return false;
         if (role.GetDYRole() == RoleTypes.Impostor || role.GetVNRole() is CustomRoles.Impostor or CustomRoles.Shapeshifter) return true;
         return pc.Is(CustomRoleTypes.Impostor) || pc.IsNeutralKiller() || role.IsTasklessCrewmate();
     }
@@ -650,8 +650,6 @@ static class ExtendedPlayerControl
     public static bool CanUseKillButton(this PlayerControl pc)
     {
         if (!pc.IsAlive()) return false;
-        if (Mastermind.ManipulatedPlayers.ContainsKey(pc.PlayerId)) return true;
-        if (Penguin.IsVictim(pc)) return false;
 
         switch (Options.CurrentGameMode)
         {
@@ -659,9 +657,7 @@ static class ExtendedPlayerControl
                 return false;
         }
 
-        if (Pelican.IsEaten(pc.PlayerId)) return false;
         if (pc.Data.Role.Role == RoleTypes.GuardianAngel) return false;
-        if (pc.Is(CustomRoles.Bloodlust)) return true;
 
         return pc.GetCustomRole() switch
         {
@@ -693,11 +689,10 @@ static class ExtendedPlayerControl
 
     public static bool CanUseImpostorVentButton(this PlayerControl pc)
     {
-        if (!pc.IsAlive() || pc.Data.Role.Role == RoleTypes.GuardianAngel || Penguin.IsVictim(pc)) return false;
+        if (!pc.IsAlive() || pc.Data.Role.Role == RoleTypes.GuardianAngel) return false;
         if (pc.GetRoleTypes() == RoleTypes.Engineer) return false;
 
         if (pc.Is(CustomRoles.Nimble) || Options.EveryoneCanVent.GetBool()) return true;
-        if (pc.Is(CustomRoles.Bloodlust) || pc.Is(CustomRoles.Refugee)) return true;
 
         return pc.GetCustomRole() switch
         {
@@ -709,8 +704,6 @@ static class ExtendedPlayerControl
             CustomRoles.Tasker => false,
             // Hot Potato
             CustomRoles.Potato => false,
-            // Speedrun
-            CustomRoles.Runner => false,
 
             _ => Main.PlayerStates.TryGetValue(pc.PlayerId, out var state) && state.Role.CanUseImpostorVentButton(pc)
         };
@@ -760,9 +753,8 @@ static class ExtendedPlayerControl
 
     public static bool IsDrawPlayer(this PlayerControl arsonist, PlayerControl target)
     {
-        if (arsonist == null || target == null || Revolutionist.IsDraw == null) return false;
-        Revolutionist.IsDraw.TryGetValue((arsonist.PlayerId, target.PlayerId), out bool isDraw);
-        return isDraw;
+        if (arsonist == null || target == null) return false;
+        return true;
     }
 
     public static void RpcSetDousedPlayer(this PlayerControl player, PlayerControl target, bool isDoused)
@@ -809,54 +801,12 @@ static class ExtendedPlayerControl
         };
         if (player.PlayerId == LastImpostor.currentId)
             LastImpostor.SetKillCooldown();
-        if (player.Is(CustomRoles.Mare))
-            if (IsActive(SystemTypes.Electrical)) Main.AllPlayerKillCooldown[player.PlayerId] = Options.MareKillCD.GetFloat();
-            else Main.AllPlayerKillCooldown[player.PlayerId] = Options.MareKillCDNormally.GetFloat();
-        if (player.Is(CustomRoles.Bloodlust))
-            Main.AllPlayerKillCooldown[player.PlayerId] = Bloodlust.KCD.GetFloat();
-
-        if (Main.KilledDiseased.TryGetValue(player.PlayerId, out int value))
-        {
-            Main.AllPlayerKillCooldown[player.PlayerId] += value * Options.DiseasedCDOpt.GetFloat();
-            Logger.Info($"KCD of player set to {Main.AllPlayerKillCooldown[player.PlayerId]}", "Diseased");
-        }
-
-        if (Main.KilledAntidote.TryGetValue(player.PlayerId, out int value1))
-        {
-            var kcd = Main.AllPlayerKillCooldown[player.PlayerId] - value1 * Options.AntidoteCDOpt.GetFloat();
-            if (kcd < 0) kcd = 0;
-            Main.AllPlayerKillCooldown[player.PlayerId] = kcd;
-            Logger.Info($"KCD of player set to {Main.AllPlayerKillCooldown[player.PlayerId]}", "Antidote");
-        }
-    }
-
-    public static void TrapperKilled(this PlayerControl killer, PlayerControl target)
-    {
-        Logger.Info($"{target?.Data?.PlayerName} was Trapper", "Trapper");
-        var tmpSpeed = Main.AllPlayerSpeed[killer.PlayerId];
-        Main.AllPlayerSpeed[killer.PlayerId] = Main.MinSpeed;
-        ReportDeadBodyPatch.CanReport[killer.PlayerId] = false;
-        killer.MarkDirtySettings();
-        LateTask.New(() =>
-        {
-            Main.AllPlayerSpeed[killer.PlayerId] = tmpSpeed;
-            ReportDeadBodyPatch.CanReport[killer.PlayerId] = true;
-            killer.MarkDirtySettings();
-            RPC.PlaySoundRPC(killer.PlayerId, Sounds.TaskComplete);
-        }, Options.TrapperBlockMoveTime.GetFloat(), "Trapper BlockMove");
     }
 
     public static bool IsDouseDone(this PlayerControl player)
     {
         if (!player.Is(CustomRoles.Arsonist)) return false;
         var count = GetDousedPlayerCount(player.PlayerId);
-        return count.Item1 >= count.Item2;
-    }
-
-    public static bool IsDrawDone(this PlayerControl player) // Determine whether the conditions to win are met
-    {
-        if (!player.Is(CustomRoles.Revolutionist)) return false;
-        var count = GetDrawPlayerCount(player.PlayerId, out _);
         return count.Item1 >= count.Item2;
     }
 
@@ -897,16 +847,11 @@ static class ExtendedPlayerControl
         if (Options.CurrentGameMode == CustomGameMode.SoloKombat) return;
         if (target == null) target = killer;
 
-        CheckAndSpawnAdditionalRefugee(target.Data);
-
-        if (target.GetTeam() is Team.Impostor or Team.Neutral) Stressed.OnNonCrewmateDead();
-
         if (killer.Is(CustomRoles.Damocles)) Damocles.OnMurder(killer.PlayerId);
         else if (killer.Is(Team.Impostor)) Damocles.OnOtherImpostorMurder();
         else if (target.Is(Team.Impostor)) Damocles.OnImpostorDeath();
 
-        if (killer.Is(CustomRoles.Bloodlust)) FixedUpdatePatch.AddExtraAbilityUsesOnFinishedTasks(killer);
-        else IncreaseAbilityUseLimitOnKill(killer);
+        IncreaseAbilityUseLimitOnKill(killer);
 
         target.SetRealKiller(killer, NotOverRide: true);
 
@@ -914,9 +859,6 @@ static class ExtendedPlayerControl
         {
             case true when killer.shapeshifting:
                 LateTask.New(() => { killer.RpcMurderPlayer(target, true); }, 1.5f, "Shapeshifting Suicide Delay");
-                return;
-            case false when !killer.Is(CustomRoles.Pestilence) && Main.PlayerStates[target.PlayerId].Role is SchrodingersCat cat:
-                cat.OnCheckMurderAsTarget(killer, target);
                 return;
             default:
                 killer.RpcMurderPlayer(target, true);
@@ -952,12 +894,11 @@ static class ExtendedPlayerControl
         return rangePlayers;
     }
 
-    public static bool IsNeutralKiller(this PlayerControl player) => player.Is(CustomRoles.Bloodlust) || player.GetCustomRole().IsNK();
+    public static bool IsNeutralKiller(this PlayerControl player) => player.GetCustomRole().IsNK();
     public static bool IsNeutralBenign(this PlayerControl player) => player.GetCustomRole().IsNB();
     public static bool IsNeutralEvil(this PlayerControl player) => player.GetCustomRole().IsNE();
     public static bool IsNeutralChaos(this PlayerControl player) => player.GetCustomRole().IsNC();
-    public static bool IsSnitchTarget(this PlayerControl player) => player.Is(CustomRoles.Bloodlust) || player.GetCustomRole().IsSnitchTarget();
-    public static bool IsMadmate(this PlayerControl player) => player.Is(CustomRoles.Madmate) || player.GetCustomRole().IsMadmate();
+    public static bool IsSnitchTarget(this PlayerControl player) => player.GetCustomRole().IsSnitchTarget();
 
     public static bool KnowDeathReason(this PlayerControl seer, PlayerControl target)
         => (seer.Is(CustomRoles.Doctor)
@@ -980,7 +921,6 @@ static class ExtendedPlayerControl
         {
             Prefix = role switch
             {
-                CustomRoles.Mafia => CanMafiaKill() ? "After" : "Before",
                 _ => Prefix
             };
         }
@@ -1011,19 +951,18 @@ static class ExtendedPlayerControl
 
     public static PlainShipRoom GetPlainShipRoom(this PlayerControl pc)
     {
-        if (!pc.IsAlive() || Pelican.IsEaten(pc.PlayerId)) return null;
+        if (!pc.IsAlive()) return null;
         var Rooms = ShipStatus.Instance.AllRooms;
         return Rooms.Where(room => room.roomArea).FirstOrDefault(room => pc.Collider.IsTouching(room.roomArea));
     }
 
-    public static bool IsImpostor(this PlayerControl pc) => !pc.Is(CustomRoles.Bloodlust) && pc.GetCustomRole().IsImpostor();
-    public static bool IsCrewmate(this PlayerControl pc) => !pc.Is(CustomRoles.Bloodlust) && pc.GetCustomRole().IsCrewmate();
+    public static bool IsImpostor(this PlayerControl pc) => pc.GetCustomRole().IsImpostor();
+    public static bool IsCrewmate(this PlayerControl pc) => pc.GetCustomRole().IsCrewmate();
 
-    public static CustomRoleTypes GetCustomRoleTypes(this PlayerControl pc) => pc.Is(CustomRoles.Bloodlust) ? CustomRoleTypes.Neutral : pc.GetCustomRole().GetCustomRoleTypes();
+    public static CustomRoleTypes GetCustomRoleTypes(this PlayerControl pc) => false ? CustomRoleTypes.Neutral : pc.GetCustomRole().GetCustomRoleTypes();
 
     public static RoleTypes GetRoleTypes(this PlayerControl pc) => pc.GetCustomSubRoles() switch
     {
-        { } x when x.Contains(CustomRoles.Bloodlust) => RoleTypes.Impostor,
         { } x when x.Contains(CustomRoles.Nimble) => RoleTypes.Engineer,
         { } x when x.Contains(CustomRoles.Physicist) => RoleTypes.Scientist,
         { } x when x.Contains(CustomRoles.Finder) => RoleTypes.Tracker,
@@ -1035,13 +974,13 @@ static class ExtendedPlayerControl
         role > CustomRoles.NotAssigned ? target.GetCustomSubRoles().Contains(role) : target.GetCustomRole() == role;
 
     public static bool Is(this PlayerControl target, CustomRoleTypes type) => target.GetCustomRoleTypes() == type;
-    public static bool Is(this PlayerControl target, RoleTypes type) => (target.Is(CustomRoles.Bloodlust) && type == RoleTypes.Impostor) || target.GetCustomRole().GetRoleTypes() == type;
+    public static bool Is(this PlayerControl target, RoleTypes type) => (false && type == RoleTypes.Impostor) || target.GetCustomRole().GetRoleTypes() == type;
     public static bool Is(this PlayerControl target, CountTypes type) => target.GetCountTypes() == type;
 
     public static bool Is(this PlayerControl target, Team team) => team switch
     {
-        Team.Impostor => target.GetCustomRole().IsImpostorTeamV2() && !target.Is(CustomRoles.Bloodlust),
-        Team.Neutral => target.GetCustomRole().IsNeutralTeamV2() || target.Is(CustomRoles.Bloodlust),
+        Team.Impostor => target.GetCustomRole().IsImpostorTeamV2(),
+        Team.Neutral => target.GetCustomRole().IsNeutralTeamV2(),
         Team.Crewmate => target.GetCustomRole().IsCrewmateTeamV2(),
         Team.None => target.Is(CustomRoles.GM) || target.Is(CountTypes.None) || target.Is(CountTypes.OutOfGame),
         _ => false
@@ -1050,8 +989,7 @@ static class ExtendedPlayerControl
     public static Team GetTeam(this PlayerControl target)
     {
         var subRoles = target.GetCustomSubRoles();
-        if (target.Is(CustomRoles.Bloodlust) || subRoles.Any(x => x.IsConverted())) return Team.Neutral;
-        if (subRoles.Contains(CustomRoles.Madmate)) return Team.Impostor;
+        if (subRoles.Any(x => x.IsConverted())) return Team.Neutral;
         var role = target.GetCustomRole();
         if (role.IsImpostorTeamV2()) return Team.Impostor;
         if (role.IsNeutralTeamV2()) return Team.Neutral;

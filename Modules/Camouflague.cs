@@ -60,7 +60,6 @@ public static class Camouflage
             4 => new NetworkedPlayerInfo.PlayerOutfit().Set("", 0, "hat_mira_headset_yellow", "skin_SuitB", "visor_lollipopCrew", "pet_EmptyPet", ""), // Moe
             5 => new NetworkedPlayerInfo.PlayerOutfit().Set("", 17, "hat_pkHW01_Witch", "skin_greedygrampaskin", "visor_Plsno", "pet_Pusheen", ""), // Pyro
             6 => new NetworkedPlayerInfo.PlayerOutfit().Set("", 7, "hat_crownDouble", "skin_D2Saint14", "visor_anime", "pet_Bush", ""), // ryuk
-            7 => new NetworkedPlayerInfo.PlayerOutfit().Set("", 7, "hat_pk04_Snowman", "", "", "", ""), // Gurge44
             8 => new NetworkedPlayerInfo.PlayerOutfit().Set("", 17, "hat_baseball_Black", "skin_Scientist-Darkskin", "visor_pusheenSmileVisor", "pet_Pip", ""), // TommyXL
             _ => CamouflageOutfit
         };
@@ -76,11 +75,11 @@ public static class Camouflage
 
     public static void CheckCamouflage()
     {
-        if (!AmongUsClient.Instance.AmHost || (!Options.CommsCamouflage.GetBool() && !Camouflager.On)) return;
+        if (!AmongUsClient.Instance.AmHost || (!Options.CommsCamouflage.GetBool())) return;
 
         var oldIsCamouflage = IsCamouflage;
 
-        IsCamouflage = (Utils.IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool()) || Camouflager.IsActive;
+        IsCamouflage = (Utils.IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool());
 
         if (oldIsCamouflage != IsCamouflage)
         {
@@ -108,7 +107,7 @@ public static class Camouflage
 
     public static void RpcSetSkin(PlayerControl target, bool ForceRevert = false, bool RevertToDefault = false, bool GameEnd = false)
     {
-        if (!AmongUsClient.Instance.AmHost || (!Options.CommsCamouflage.GetBool() && !Camouflager.On) || target == null || (BlockCamouflage && !ForceRevert && !RevertToDefault && !GameEnd)) return;
+        if (!AmongUsClient.Instance.AmHost || (!Options.CommsCamouflage.GetBool()) || target == null || (BlockCamouflage && !ForceRevert && !RevertToDefault && !GameEnd)) return;
 
         var id = target.PlayerId;
 
@@ -123,15 +122,8 @@ public static class Camouflage
                 id = Main.ShapeshiftTarget[id];
             }
 
-            if (!GameEnd && Doppelganger.DoppelPresentSkin.TryGetValue(id, out NetworkedPlayerInfo.PlayerOutfit value)) newOutfit = value;
             else
             {
-                if (GameEnd && Doppelganger.DoppelVictim.TryGetValue(id, out string value1))
-                {
-                    var dpc = Utils.GetPlayerById(id);
-                    dpc?.RpcSetName(value1);
-                }
-
                 newOutfit = PlayerSkins[id];
             }
         }

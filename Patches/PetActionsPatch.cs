@@ -64,7 +64,6 @@ class ExternalRpcPetPatch
             && !physics.Animations.IsPlayingEnterVentAnimation()
             && !physics.Animations.IsPlayingClimbAnimation()
             && !physics.Animations.IsPlayingAnyLadderAnimation()
-            && !Pelican.IsEaten(pc.PlayerId)
             && GameStates.IsInTask
             && pc.GetCustomRole().PetActivatedAbility())
             physics.CancelPet();
@@ -88,19 +87,11 @@ class ExternalRpcPetPatch
             pc.MyPhysics.Animations.IsPlayingEnterVentAnimation() ||
             pc.MyPhysics.Animations.IsPlayingClimbAnimation() ||
             pc.MyPhysics.Animations.IsPlayingAnyLadderAnimation() ||
-            Pelican.IsEaten(pc.PlayerId) ||
-            Penguin.IsVictim(pc) ||
             !AmongUsClient.Instance.AmHost ||
             GameStates.IsLobby
            )
             return;
 
-        if (Mastermind.ManipulatedPlayers.ContainsKey(pc.PlayerId))
-        {
-            var killTarget = SelectKillButtonTarget(pc);
-            if (killTarget != null) Mastermind.ForceKillForManipulatedPlayer(pc, killTarget);
-            return;
-        }
 
         if (pc.HasAbilityCD()) return;
 
@@ -109,22 +100,20 @@ class ExternalRpcPetPatch
         if (target != null) hasKillTarget = true;
         if (!pc.CanUseKillButton()) hasKillTarget = false;
 
-        if (pc.GetCustomRole().UsesPetInsteadOfKill() && hasKillTarget && (pc.Data.RoleType != RoleTypes.Impostor || pc.GetCustomRole() is CustomRoles.Necromancer or CustomRoles.Deathknight))
+        if (pc.GetCustomRole().UsesPetInsteadOfKill() && hasKillTarget && (pc.Data.RoleType != RoleTypes.Impostor))
         {
             pc.AddKCDAsAbilityCD();
             if (Main.PlayerStates[pc.PlayerId].Role.OnCheckMurder(pc, target))
             {
                 pc.RpcCheckAndMurder(target);
             }
-
-            if (pc.Is(CustomRoles.Refugee)) pc.SetKillCooldown();
         }
         else
         {
             Main.PlayerStates[pc.PlayerId].Role.OnPet(pc);
         }
 
-        if (pc.HasAbilityCD() || (Main.PlayerStates[pc.PlayerId].Role is Sniper { IsAim: true })) return;
+        if (pc.HasAbilityCD()) return;
 
         pc.AddAbilityCD();
     }

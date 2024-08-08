@@ -312,7 +312,7 @@ public static class ElectricTaskInitializePatch
         {
             foreach (PlayerControl pc in Main.AllAlivePlayerControls)
             {
-                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Mare) || pc.Is(CustomRoles.Torch) || pc.Is(CustomRoles.Sleep))
+                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Torch))
                 {
                     Utils.NotifyRoles(SpecifyTarget: pc, ForceLoop: true);
                 }
@@ -340,7 +340,7 @@ public static class ElectricTaskCompletePatch
         {
             foreach (PlayerControl pc in Main.AllAlivePlayerControls)
             {
-                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Mare) || pc.Is(CustomRoles.Torch) || pc.Is(CustomRoles.Sleep))
+                if (pc.GetCustomRole().NeedUpdateOnLights() || pc.Is(CustomRoles.Torch))
                 {
                     Utils.NotifyRoles(SpecifyTarget: pc, ForceLoop: true);
                 }
@@ -377,11 +377,7 @@ public static class SabotageSystemTypeRepairDamagePatch
         if (player.Is(Team.Impostor) && !player.IsAlive() && Options.DeadImpCantSabotage.GetBool()) return false;
         bool allow = player.GetCustomRole() switch
         {
-            CustomRoles.Jackal when Jackal.CanSabotage.GetBool() => true,
-            CustomRoles.Sidekick when Jackal.CanSabotageSK.GetBool() => true,
             CustomRoles.Traitor when Traitor.CanSabotage.GetBool() => true,
-            CustomRoles.Parasite when player.IsAlive() => true,
-            CustomRoles.Refugee when player.IsAlive() => true,
             _ => Main.PlayerStates[player.PlayerId].Role.CanUseSabotage(player) && Main.PlayerStates[player.PlayerId].Role.OnSabotage(player)
         };
 

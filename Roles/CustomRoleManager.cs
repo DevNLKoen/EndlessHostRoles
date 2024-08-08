@@ -92,24 +92,14 @@ public static class CustomRoleManager
                     case CustomRoles.Torch:
                         //Torch.ApplyGameOptions(opt);
                         break;
-                    case CustomRoles.Bewilder:
-                        //Bewilder.ApplyVisionOptions(opt);
-                        break;
                     case CustomRoles.Reach:
                         //Reach.ApplyGameOptions(opt);
-                        break;
-                    case CustomRoles.Madmate:
-                        //Madmate.ApplyGameOptions(opt);
-                        break;
-                    case CustomRoles.Mare:
-                        //Mare.ApplyGameOptions(player.PlayerId);
                         break;
                 }
             }
 
         // Add-ons
         //if (Glow.IsEnable) Glow.ApplyGameOptions(opt, player); //keep this at last
-        //if (Bewilder.IsEnable) Bewilder.ApplyGameOptions(opt, player);
         //if (Ghoul.IsEnable) Ghoul.ApplyGameOptions(player);
     }
 
@@ -121,13 +111,10 @@ public static class CustomRoleManager
         if (killer == target) return true;
         var canceled = false;
 
-        var killerSubRoles = killer.GetCustomSubRoles();
+        //TODOvar killerSubRoles = killer.GetCustomSubRoles();
 
         // If Target is possessed by Dollmaster swap controllers.
         //target = DollMaster.SwapPlayerInfo(target);
-
-        if (killer.Is(CustomRoles.Sheriff) && target.Is(CustomRoles.Doppelganger))
-            //target = Doppelganger.SwapPlayerInfoFromRom(target); // If player is victim to Doppelganger swap each other's controllers
 
         Logger.Info("Start", "PlagueBearer.CheckAndInfect");
 
@@ -181,14 +168,14 @@ public static class CustomRoleManager
         // And the player can also die during the Meeting
         // ################################
 
-        PlayerControl trueDMKiller = killer; // Save real killer.
+        //TODOPlayerControl trueDMKiller = killer; // Save real killer.
 
 
-        var killerSubRoles = killer.GetCustomSubRoles();
-        var targetSubRoles = target.GetCustomSubRoles();
+        //TODOvar killerSubRoles = killer.GetCustomSubRoles();
+        //TODOvar targetSubRoles = target.GetCustomSubRoles();
 
         // Check suicide
-        var isSuicide = killer.PlayerId == target.PlayerId;
+        //TODOvar isSuicide = killer.PlayerId == target.PlayerId;
 
         // target was murder by killer
 

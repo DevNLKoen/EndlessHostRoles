@@ -153,7 +153,7 @@ namespace TOZ.Neutral
 
         public static bool CanBeInfected(PlayerControl pc)
         {
-            return !pc.Is(CustomRoles.Virus) && !pc.Is(CustomRoles.Contagious) && !pc.Is(CustomRoles.Loyal);
+            return !pc.Is(CustomRoles.Virus) && !pc.Is(CustomRoles.Contagious);
         }
     }
 }

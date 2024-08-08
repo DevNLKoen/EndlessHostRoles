@@ -53,8 +53,6 @@ internal class PingTrackerUpdatePatch
         if (Options.NoGameEnd.GetBool()) Sb.Append("\r\n<size=1.2>").Append(Utils.ColorString(Color.red, GetString("NoGameEnd"))).Append("</size>");
         if (!GameStates.IsModHost) Sb.Append("\r\n<size=1.2>").Append(Utils.ColorString(Color.red, GetString("Warning.NoModHost"))).Append("</size>");
         if (DebugModeManager.IsDebugMode) Sb.Append("\r\n<size=1.2>").Append(Utils.ColorString(Color.green, GetString("DebugMode"))).Append("</size>");
-        
-        if (Main.IsAprilFools || Options.AprilFoolsMode.GetBool()) Sb.Append("\r\n<size=1.2>").Append(Utils.ColorString(Color.yellow, "CHEESE")).Append("</size>");
     }
 }
 
@@ -65,8 +63,6 @@ internal class VersionShowerStartPatch
     {
         Main.CredentialsText = $"<size=1.5><color={Main.ModColor}>Town Of ZLoos</color> v{Main.PluginDisplayVersion} <color=#a54aff>by</color> <color=#ffff00>NLKoen</color>";
         const string menuText = $"<color={Main.ModColor}>Town Of ZLoos</color> v{Main.PluginDisplayVersion}\r\n<color=#a54aff>By</color> <color=#ffff00>NLKoen</color>";
-
-        if (Main.IsAprilFools) Main.CredentialsText = "<color=#00bfff>Endless Madness</color> v11.45.14 <color=#a54aff>by</color> <color=#ffff00>No one</color>";
 
         var credentials = Object.Instantiate(__instance.text);
         credentials.text = menuText;

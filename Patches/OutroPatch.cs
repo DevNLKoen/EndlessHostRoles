@@ -33,17 +33,7 @@ class EndGamePatch
         Main.ChangedRole = false;
 
         foreach ((byte id, PlayerState state) in Main.PlayerStates)
-        {
-            if (Doppelganger.playerIdList.Count > 0 && Doppelganger.DoppelVictim.ContainsKey(id))
-            {
-                var dpc = Utils.GetPlayerById(id);
-                if (dpc != null)
-                {
-                    dpc.RpcSetName(Doppelganger.DoppelVictim[id]);
-                    Main.AllPlayerNames[id] = Doppelganger.DoppelVictim[id];
-                }
-            }
-
+        {  
             SummaryText[id] = Utils.SummaryTexts(id, disableColor: false);
             if (state.SubRoles.Count == 0) continue;
             Main.LastAddOns[id] = $"<size=70%>{id.ColoredPlayerName()}: {state.SubRoles.Join(x => x.ToColoredString())}</size>";
@@ -93,7 +83,6 @@ class EndGamePatch
         }
 
         Arsonist.IsDoused = [];
-        Revolutionist.IsDraw = [];
 
         Main.VisibleTasksCount = false;
 
@@ -286,10 +275,6 @@ class SetEverythingUpPatch
             case CustomWinner.Impostor:
                 CustomWinnerColor = Utils.GetRoleColorCode(CustomRoles.Impostor);
                 __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Impostor);
-                break;
-            case CustomWinner.Egoist:
-                CustomWinnerColor = Utils.GetRoleColorCode(CustomRoles.Egoist);
-                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Egoist);
                 break;
             case CustomWinner.Terrorist:
                 __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Terrorist);

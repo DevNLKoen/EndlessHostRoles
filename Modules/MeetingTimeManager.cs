@@ -44,19 +44,7 @@ public class MeetingTimeManager
 
         ResetMeetingTime();
         int BonusMeetingTime = 0;
-        int MeetingTimeMinTimeThief = 0;
-        int MeetingTimeMax = 300;
 
-        if (TimeThief.playerIdList.Count > 0)
-        {
-            MeetingTimeMinTimeThief = TimeThief.LowerLimitVotingTime.GetInt();
-            BonusMeetingTime += TimeThief.TotalDecreasedMeetingTime();
-        }
-
-
-        int TotalMeetingTime = DiscussionTime + VotingTime;
-
-        if (TimeThief.playerIdList.Count > 0) BonusMeetingTime = Math.Clamp(TotalMeetingTime + BonusMeetingTime, MeetingTimeMinTimeThief, MeetingTimeMax) - TotalMeetingTime;
 
         if (BonusMeetingTime >= 0)
         {

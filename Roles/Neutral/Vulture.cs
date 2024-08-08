@@ -26,9 +26,6 @@ public class Vulture : RoleBase
     private static readonly CustomRoles[] ChangeRoles =
     [
         CustomRoles.Amnesiac,
-        CustomRoles.Pursuer,
-        CustomRoles.Maverick,
-        CustomRoles.Totocalcio,
         CustomRoles.Opportunist,
         CustomRoles.Crewmate,
         CustomRoles.Jester

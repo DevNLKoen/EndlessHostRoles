@@ -89,7 +89,7 @@ namespace TOZ.Impostor
         static bool PlaceBomb(PlayerControl pc)
         {
             if (pc == null) return false;
-            if (!pc.IsAlive() || Pelican.IsEaten(pc.PlayerId)) return false;
+            if (!pc.IsAlive()) return false;
 
             Bombs.TryAdd(pc.Pos(), TimeStamp);
 

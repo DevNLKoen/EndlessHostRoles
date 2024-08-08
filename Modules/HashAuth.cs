@@ -10,7 +10,7 @@ public class HashAuth(string hashValue, string salt = null, HashAlgorithm algori
     public bool CheckString(string value)
     {
         var hash = CalculateHash(value);
-        return true;// hashValue == hash;
+        return hashValue == hash;
     }
 
     private string CalculateHash(string source) => CalculateHash(source, salt, algorithm);
